@@ -1,0 +1,38 @@
+﻿a[href="#"] {
+    color: inherit;
+}
+
+any-order {
+    display: grid;
+    grid-template-rows: 10rem 10rem;
+    grid-template-columns: 10rem 10rem;
+    align-items: stretch;
+    justify-items: stretch;
+    max-inline-size: 40rem;
+    gap: var(--size-5);
+
+    &::part(slot1), &::part(slot2), &::part(slot3), &::part(slot4) {
+        display: flex;
+        border-radius: var(--radius-3);
+        font-size: var(--font-size-3);
+        font-weight: var(--font-weight-5);
+        box-shadow: var(--shadow-6);
+        place-content: center;
+        place-items: center;
+        color: white;
+    }
+
+    &::part(slot1) {
+        background-image: var(--gradient-8);
+    }
+
+    &::part(slot2) {
+        background-image: var(--gradient-23);
+    }
+    &::part(slot3) {
+        background-image: var(--gradient-1);
+    }
+    &::part(slot4) {
+        background-image: var(--gradient-29);
+    }
+}

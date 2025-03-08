@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- 👇 Source generators must target netstandard 2.0 -->
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- 👇 We don't want to reference the source generator dll directly in consuming projects -->
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <!-- 👇 New project, why not! -->
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>true</ImplicitUsings>
+        <LangVersion>latest</LangVersion>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <!-- Generates a package at build -->
+    </PropertyGroup>
+
+    <!-- This ensures the library will be packaged as a source generator when we use `dotnet pack` -->
+    <ItemGroup>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.13.0" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.2" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Buffers" Version="4.6.0" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.IO.Hashing" Version="9.0.2" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Memory" Version="4.6.0" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Numerics.Vectors" Version="4.6.0" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Text.Encodings.Web" Version="9.0.2" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Text.Json" Version="9.0.2" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0" GeneratePathProperty="true" PrivateAssets="all" />
+    </ItemGroup>
+
+
+    <PropertyGroup>
+        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+    </PropertyGroup>
+
+    <Target Name="GetDependencyTargetPaths">
+        <ItemGroup>
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_IO_Hashing)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Encodings_Web)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Buffers)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Memory)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Numerics_Vectors)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Runtime_CompilerServices_Unsafe)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_Bcl_AsyncInterfaces)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Threading_Tasks_Extensions)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+        </ItemGroup>
+    </Target>
+</Project>

@@ -1,0 +1,19 @@
+{
+    "editor.semanticHighlighting.enabled": false,
+    "emmet.includeLanguages": {
+        "csharp": "html"
+    },
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "sourceentity.name.tag.html",
+                "settings": {
+                    "foreground": "#FF0000",
+                    "fontStyle": "bold",
+                
+                }
+            }
+        ]
+    },
+    "workbench.colorTheme": "Default Dark Modern"
+}

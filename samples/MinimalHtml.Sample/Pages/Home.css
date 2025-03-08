@@ -1,0 +1,13 @@
+﻿p {
+    background-color: unset;
+}
+
+@custom-media --viewport-medium (width <= 50rem);
+
+@media (--viewport-medium) {
+    p {
+        background-color: var(--pink-7);
+        background-clip: border-box;
+        object-fit: contain;
+    }
+}

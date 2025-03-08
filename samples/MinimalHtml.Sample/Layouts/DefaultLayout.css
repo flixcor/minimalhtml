@@ -1,0 +1,140 @@
+﻿@import "open-props/normalize.min.css";      
+@import "open-props/buttons.min.css";
+
+body {
+  display: flex;
+  gap: var(--size-5);
+  --body-padding-inline: clamp(var(--size-2), 5vw, var(--size-15));
+}
+
+main {
+  
+  --border: solid var(--surface-2) var(--border-size-2);
+  display: grid;
+  gap: var(--size-4);
+  grid-auto-rows: max-content;
+  min-inline-size: 50vw;
+  padding-inline-end: var(--body-padding-inline);
+  flex: 1;
+  overflow-x: auto;
+  max-height: 100vh;
+  max-height: 100lvh;
+
+  > :first-child {
+    margin-block-start: var(--size-5);
+  }
+}
+
+[aria-current="page"] {
+  color: var(--link-visited);
+}
+
+table {
+  min-inline-size: min(100%, var(--size-content-3));
+}
+
+footer {
+  margin-block-start: auto;
+}
+
+header {
+  border-inline-end: 1px var(--surface-2) solid;
+  position: relative;
+  height: 100lvh;
+
+  flex-shrink: 0;
+
+  button {
+    font-size: .625rem;
+    visibility: hidden;
+    opacity: 0;
+    border: none;
+    text-shadow: none;
+    box-shadow: none;
+    background: none;
+    grid-column: -1 / -1;
+  }
+
+  :not(.backdrop) {
+    z-index: 2;
+  }
+}
+
+nav {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+nav a {
+  color: var(--text-2);
+}
+
+nav ul {
+  list-style: none;
+  display: grid;
+  gap: var(--size-2);
+  padding-inline-start: var(--body-padding-inline);
+  padding-inline-end: var(--size-4);
+  padding-block: var(--size-5);
+  align-content: baseline;
+}
+
+.backdrop {
+  display: none;
+  position: absolute;
+  inset: 0;
+  height: 200%;
+  backdrop-filter: blur(8px);
+  mask-image: linear-gradient(to bottom,
+      black 0% 50%,
+      transparent 50% 100%);
+  pointer-events: none;
+}
+
+@media screen and (width <=50rem) {
+  main {
+    padding-inline-start: 3.375em;
+  }
+
+  .backdrop {
+    display: block;
+  }
+
+  header {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transition: translate ease 200ms;
+    translate: 0% 0%;
+    background: color-mix(in srgb, var(--surface-1), transparent 25%);
+    z-index: 1;
+
+    ul {
+      padding-inline-end: 3rem;
+      gap: var(--size-5);
+    }
+
+    button {
+      visibility: visible;
+
+    }
+
+    &:focus-within button:not(:focus) {
+      visibility: hidden;
+    }
+
+
+    &:not(:focus-within) {
+      translate: calc(-100% + 2.75rem) 0%;
+
+      button {
+        opacity: 100%;
+        transition: opacity 200ms 200ms;
+
+
+      }
+    }
+  }
+}
