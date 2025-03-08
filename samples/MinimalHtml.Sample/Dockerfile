@@ -23,22 +23,22 @@ RUN apt-get -y install nodejs
 RUN corepack enable
 ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
-WORKDIR /sample
-COPY ["sample/MinimalHtml.Sample/MinimalHtml.Sample.csproj", "MinimalHtml.Sample/"]
-COPY ["sample/MinimalHtml.Sample/package.json", "MinimalHtml.Sample/"]
-COPY ["sample/MinimalHtml.Sample/pnpm-lock.yaml", "MinimalHtml.Sample/"]
+WORKDIR /samples
+COPY ["samples/MinimalHtml.Sample/MinimalHtml.Sample.csproj", "MinimalHtml.Sample/"]
+COPY ["samples/MinimalHtml.Sample/package.json", "MinimalHtml.Sample/"]
+COPY ["samples/MinimalHtml.Sample/pnpm-lock.yaml", "MinimalHtml.Sample/"]
 WORKDIR /src
 COPY ["src/MinimalForms/MinimalForms.csproj", "MinimalForms/"]
 COPY ["src/MinimalHtml.AspNetCore/MinimalHtml.AspNetCore.csproj", "MinimalHtml.AspNetCore/"]
 COPY ["src/MinimalHtml/MinimalHtml.csproj", "MinimalHtml/"]
 COPY ["src/MinimalHtml.SourceGenerator/MinimalHtml.SourceGenerator.csproj", "MinimalHtml.SourceGenerator/"]
 COPY ["src/MinimalForms.ModelGenerator/MinimalForms.ModelGenerator.csproj", "MinimalForms.ModelGenerator/"]
-WORKDIR "/sample/MinimalHtml.Sample"
+WORKDIR "/samples/MinimalHtml.Sample"
 RUN dotnet restore "./MinimalHtml.Sample.csproj" -r linux-$TARGETARCH
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 WORKDIR "/"
 COPY . .
-WORKDIR "/sample/MinimalHtml.Sample"
+WORKDIR "/samples/MinimalHtml.Sample"
 
 # This stage is used to publish the service project to be copied to the final stage
 RUN pnpm run build
