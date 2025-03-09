@@ -29,6 +29,22 @@ namespace MinimalHtml.AspNetCore
                         }
                     }
 
+                    var isEncoded = false;
+
+                    if (descriptor.TryGetProperty("ResponseHeaders"u8, out var headers))
+                    {
+                        foreach (var item in headers.EnumerateArray())
+                        {
+                            if (item.TryGetProperty("Name"u8, out var name) && name.ValueEquals("Content-Encoding"u8))
+                            {
+                                isEncoded = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (isEncoded) continue;
+
                     if (descriptor.TryGetProperty("EndpointProperties"u8, out var properties) && descriptor.TryGetProperty("Route"u8, out var route))
                     {
                         string? label = null;
@@ -56,7 +72,7 @@ namespace MinimalHtml.AspNetCore
                             }
                         }
 
-                        if (!string.IsNullOrWhiteSpace(label))
+                        if (!string.IsNullOrWhiteSpace(label) && !label.EndsWith(".map"))
                         {
                             var asset = new Asset(TrimUrl(route.GetString()!), integrity, []);
                             result[TrimUrl(label)] = asset;

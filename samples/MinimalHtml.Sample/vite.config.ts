@@ -35,7 +35,6 @@ export default defineConfig({
         assetFileNames: "[name].[ext]",
       },
     },
-    outDir: 'wwwroot',
-    emptyOutDir: true,
+    outDir: 'wwwroot'
   },
 })

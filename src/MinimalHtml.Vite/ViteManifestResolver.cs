@@ -34,28 +34,55 @@ namespace MinimalHtml.Vite
 
             ImmutableArray<Asset> HandleImports(JsonElement element)
             {
+                var list = new List<Asset>();
                 if (element.TryGetProperty("imports"u8, out var imports))
                 {
-                    var list = new List<Asset>();
-                    foreach (var importKey in imports.EnumerateArray().Select(i => i.GetString()))
+                    foreach (var import in imports.EnumerateArray())
                     {
-                        if (!importDict.TryGetValue(importKey, out var importedAsset))
-                        {
-                            var import = props[importKey];
-                            props.Remove(importKey);
-                            importedAsset = new Asset(importKey, null, HandleImports(import));
-                            importDict[importKey] = importedAsset;
-                            var isEntry = import.TryGetProperty("isEntry"u8, out var e) && e.GetBoolean();
-                            if (isEntry)
-                            {
-                                result[importKey] = importedAsset;
-                            }
-                        }
-                        list.Add(importedAsset);
+                        list.Add(GetImport(import.GetString()));
                     }
-                    return [.. list];
                 }
-                return [];
+                if (element.TryGetProperty("assets"u8, out imports))
+                {
+                    foreach (var import in imports.EnumerateArray())
+                    {
+                        list.Add(GetImport(import.GetString()));
+                    }
+                }
+                if (element.TryGetProperty("css"u8, out imports))
+                {
+                    foreach (var import in imports.EnumerateArray())
+                    {
+                        list.Add(GetImport(import.GetString()));
+                    }
+                }
+                return [.. list];
+            }
+
+            Asset GetImport(string importKey)
+            {
+                if (importDict.TryGetValue(importKey, out var importedAsset))
+                {
+                    return importedAsset;
+                }
+
+                if (props.TryGetValue(importKey, out var import))
+                {
+                    importedAsset = new Asset(importKey, null, HandleImports(import));
+                    props.Remove(importKey);
+                    var isEntry = import.TryGetProperty("isEntry"u8, out var e) && e.GetBoolean();
+                    if (isEntry)
+                    {
+                        result[importKey] = importedAsset;
+                    }
+                }
+                else
+                {
+                    importedAsset = new Asset(importKey, null, []);
+                }
+
+                importDict[importKey] = importedAsset;
+                return importedAsset;
             }
         }
     }

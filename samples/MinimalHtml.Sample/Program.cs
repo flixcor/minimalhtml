@@ -1,5 +1,4 @@
 ﻿global using static MinimalHtml.PropHelper;
-global using static MinimalHtml.Sample.Assets;
 using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample;
 using MinimalHtml.Sample.Components;

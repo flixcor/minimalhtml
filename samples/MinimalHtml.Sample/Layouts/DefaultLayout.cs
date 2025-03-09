@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Immutable;
+using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample.Components;
 
 namespace MinimalHtml.Sample.Layouts;
@@ -8,6 +10,7 @@ public readonly struct LayoutProps<T>
     public required T Context { get; init; }
     public required Template<T> Body { get; init; }
     public required Template<string> NavLink { get; init; }
+    public required ImmutableDictionary<string, Asset> ImportedAssets { get; init; }
     public Template? Head { get; init; }
 }
 
@@ -16,6 +19,7 @@ public readonly struct LayoutProps
     public required Template Body { get; init; }
     public required Template<string> NavLink { get; init; }
     public Template? Head { get; init; }
+    public required ImmutableDictionary<string, Asset> ImportedAssets { get; init; }
     
     public static implicit operator LayoutProps<Template>(LayoutProps value) => new()
     {
@@ -23,6 +27,7 @@ public readonly struct LayoutProps
         Body = static (page, template) => template(page),
         NavLink = value.NavLink,
         Head = value.Head,
+        ImportedAssets = value.ImportedAssets
     };
 }
 
@@ -30,11 +35,17 @@ public static class DefaultLayout
 {
     private class LayoutResult<T>(Template<T> page, T context, Template? head = null, int statusCode = 200) : IResult
     {
-        public Task ExecuteAsync(HttpContext httpContext)
+        public async Task ExecuteAsync(HttpContext httpContext)
         {
             var navLink = httpContext.RequestServices.GetRequiredService<NavLink>();
-            var props = new LayoutProps<T>{ Body = page, Context = context, NavLink = navLink.Render, Head = head };
-            return new HtmlResult<LayoutProps<T>>(props, Render, statusCode).ExecuteAsync(httpContext);
+            var importedAssets = ImmutableDictionary<string, Asset>.Empty;
+            var resolver = httpContext.RequestServices.GetService<AspNetAssetResolver>();
+            if (resolver != null)
+            {
+                importedAssets = await resolver.GetImportMap();
+            }
+            var props = new LayoutProps<T>{ Body = page, Context = context, NavLink = navLink.Render, Head = head, ImportedAssets = importedAssets };
+            await new HtmlResult<LayoutProps<T>>(props, Render, statusCode).ExecuteAsync(httpContext);
         }
     }
 
@@ -53,7 +64,7 @@ public static class DefaultLayout
              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
              <meta name="view-transition" content="same-origin" />
                  <!-- the props -->
-
+             {{(ImportMap, context.ImportedAssets)}}
              {{Assets.SvgFavIcon:/favicon.svg}}
              {{Assets.Script:Layouts/DefaultLayout.ts}}
              {{Assets.Style:Layouts/DefaultLayout.css}}
@@ -109,4 +120,16 @@ public static class DefaultLayout
          </body>
          </html>
          """);
+
+    private static Flushed ImportMap(HtmlWriter page, ImmutableDictionary<string, Asset> importedAssets) => page.Html($$"""
+        <script type="importmap">
+        {
+            "imports": {
+            {{(importedAssets.Select((k, i) => (k.Key, k.Value.Src, i == importedAssets.Count - 1)), ImportMapAsset)}}
+            }
+        }
+        </script>
+        """);
+
+    private static Flushed ImportMapAsset(HtmlWriter page, (string key, string value, bool last) tup) => page.Html($""" "{tup.key}": "{tup.value}"{(tup.last ? "" : ",")} """);
 }

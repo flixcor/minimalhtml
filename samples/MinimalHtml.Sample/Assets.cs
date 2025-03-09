@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using MinimalHtml.AspNetCore;
-
-namespace MinimalHtml.Sample
+﻿namespace MinimalHtml.Sample
 {
     public static class Assets
     {
@@ -11,6 +8,7 @@ namespace MinimalHtml.Sample
         {
             var asset = await page.GetAsset(context.id);
             return await page.Html($"""
+             {(asset.Imports, Preload)}
              <script 
                  src="{asset.Src}"
                  {IfTrueish("integrity", asset.Integrity)}
@@ -23,6 +21,7 @@ namespace MinimalHtml.Sample
         {
             var asset = await page.GetAsset(id);
             return await page.Html($"""
+             {(asset.Imports, Preload)}
              <link 
                  href="{asset.Src}"
                  rel="stylesheet"
@@ -35,6 +34,7 @@ namespace MinimalHtml.Sample
         {
             var asset = await page.GetAsset(id);
             return await page.Html($"""
+             {(asset.Imports, Preload)}
              <link 
                  href="{asset.Src}"
                  rel="icon"
@@ -49,12 +49,32 @@ namespace MinimalHtml.Sample
         {
             var asset = await page.GetAsset(id);
             return await page.Html($$"""
+             {{(asset.Imports, Preload)}}
              <script type="module">
              if ("serviceWorker" in navigator) {
                 navigator.serviceWorker.register("{{asset.Src}}", {scope: "/"})
              }
              </script>
              """);
+        }
+
+        private static Flushed Preload(HtmlWriter page, Asset asset)
+        {
+            var span = asset.Src.AsSpan();
+            var lastIndex = span.LastIndexOf('.');
+            if (lastIndex == -1) return default;
+            var ext = span.Slice(lastIndex + 1);
+            var (rel, loadAs, cors) = ext switch
+            {
+                "js" => ("modulepreload", "", ""),
+                "woff2" => ("preload", "font", "anonymous"),
+                "css" => ("preload", "style", ""),
+                _ => ("preload", "image", "")
+            };
+            return page.Html($"""
+                {(asset.Imports, Preload)}
+                <link href="{asset.Src}" rel="{rel}" {IfTrueish("as", loadAs)} {IfTrueish("crossorigin", cors)} />
+                """);
         }
     }
 }

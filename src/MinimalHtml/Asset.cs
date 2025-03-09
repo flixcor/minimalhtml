@@ -11,11 +11,10 @@ namespace MinimalHtml
     {
         public static readonly GetAsset Noop = (id) => new ValueTask<Asset>(new Asset(id, null, []));
 
-        public static async ValueTask<ImmutableDictionary<string, Asset>> Combine(this GetAssetDictionary left, GetAssetDictionary right)
+        public static async ValueTask<ImmutableDictionary<string, Asset>> Combine(this ValueTask<ImmutableDictionary<string, Asset>> left, ValueTask<ImmutableDictionary<string, Asset>> right)
         {
-            var leftTask = left();
-            var rightDict = await right();
-            var leftDict = await leftTask;
+            var rightDict = await right;
+            var leftDict = await left;
 
             var result = new Dictionary<string, Asset>();
 
