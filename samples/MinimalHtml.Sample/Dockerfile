@@ -30,6 +30,7 @@ COPY ["samples/MinimalHtml.Sample/pnpm-lock.yaml", "MinimalHtml.Sample/"]
 WORKDIR /src
 COPY ["src/MinimalForms/MinimalForms.csproj", "MinimalForms/"]
 COPY ["src/MinimalHtml.AspNetCore/MinimalHtml.AspNetCore.csproj", "MinimalHtml.AspNetCore/"]
+COPY ["src/MinimalHtml.Vite/MinimalHtml.Vite.csproj", "MinimalHtml.Vite/"]
 COPY ["src/MinimalHtml/MinimalHtml.csproj", "MinimalHtml/"]
 COPY ["src/MinimalHtml.SourceGenerator/MinimalHtml.SourceGenerator.csproj", "MinimalHtml.SourceGenerator/"]
 COPY ["src/MinimalForms.ModelGenerator/MinimalForms.ModelGenerator.csproj", "MinimalForms.ModelGenerator/"]
