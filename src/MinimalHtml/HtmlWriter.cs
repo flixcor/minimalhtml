@@ -10,7 +10,7 @@ using System.Text.Encodings.Web;
 namespace MinimalHtml
 {
 
-    public record HtmlWriter(PipeWriter Writer, CancellationToken Token);
+    public record HtmlWriter(PipeWriter Writer, GetAsset GetAsset, CancellationToken Token);
 
     public delegate Flushed Template<in T>(HtmlWriter page, T context);
     public delegate Flushed Template(HtmlWriter page);
