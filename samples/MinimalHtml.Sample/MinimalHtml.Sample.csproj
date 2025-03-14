@@ -13,21 +13,7 @@
         <!--<LangVersion>preview</LangVersion>-->
     </PropertyGroup>
     
-    <PropertyGroup>
-        <CompressionIncludePatterns>
-            $(CompressionIncludePatterns);
-            **/*.ts;
-        </CompressionIncludePatterns>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    </PropertyGroup>
-    
-    <ItemGroup>
-        <StaticWebAssetContentTypeMapping Include="text/javascript" Pattern="*.ts" Priority="10" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <AdditionalFiles Include="Components\TabList.css" />
-    </ItemGroup>
+
 
     <ItemGroup>
       <Content Include="wwwroot\.vite\**" />

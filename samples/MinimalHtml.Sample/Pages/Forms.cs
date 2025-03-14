@@ -116,7 +116,7 @@ namespace MinimalHtml.Sample.Pages
     public partial class FormModel : IBindableFromHttpContext<FormModel>
     {
         [Zod]
-        private static readonly Expression<Func<IZodRoot, IZodRoot>> s_config = (_) => _
+        private static readonly Expression<Func<IZodRoot, IZodRoot>> s_config = (x) => x
             .Array("Options").OfNumbers().Build()
             .Number("Number").Nullable().Build()
             .Bool("Boolean").Build()

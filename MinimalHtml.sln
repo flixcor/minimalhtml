@@ -13,13 +13,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.SourceGenerator
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalForms.ModelGenerator", "src\MinimalForms.ModelGenerator\MinimalForms.ModelGenerator.csproj", "{E2F8483D-42CF-3716-F6CA-74CD86AB20C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.CssModules", "src\MinimalHtml.CssModules\MinimalHtml.CssModules.csproj", "{5BABBE76-8169-08CD-8367-78D0E11A1F5C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalForms.Test", "test\MinimalForms.Test\MinimalForms.Test.csproj", "{D3142370-E3C9-C1E5-C7DF-EFA48F2AC751}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.Sample", "samples\MinimalHtml.Sample\MinimalHtml.Sample.csproj", "{71CA9903-27E7-2E3D-EAE5-A097089D12EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.Vite", "src\MinimalHtml.Vite\MinimalHtml.Vite.csproj", "{A05CBB40-54BC-4AB7-A62A-08785E162EB8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{70D09F92-2887-4DA0-972D-7EB870C94D8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "forms", "forms", "{2BE17DD4-0A69-45F9-97B6-1831E73D41FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +51,6 @@ Global
 		{E2F8483D-42CF-3716-F6CA-74CD86AB20C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2F8483D-42CF-3716-F6CA-74CD86AB20C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2F8483D-42CF-3716-F6CA-74CD86AB20C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BABBE76-8169-08CD-8367-78D0E11A1F5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BABBE76-8169-08CD-8367-78D0E11A1F5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BABBE76-8169-08CD-8367-78D0E11A1F5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BABBE76-8169-08CD-8367-78D0E11A1F5C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D3142370-E3C9-C1E5-C7DF-EFA48F2AC751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D3142370-E3C9-C1E5-C7DF-EFA48F2AC751}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3142370-E3C9-C1E5-C7DF-EFA48F2AC751}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,6 +66,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{57516551-1CE2-31F6-A0A9-F26CC6765588} = {2BE17DD4-0A69-45F9-97B6-1831E73D41FE}
+		{E2F8483D-42CF-3716-F6CA-74CD86AB20C1} = {2BE17DD4-0A69-45F9-97B6-1831E73D41FE}
+		{D3142370-E3C9-C1E5-C7DF-EFA48F2AC751} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{71CA9903-27E7-2E3D-EAE5-A097089D12EC} = {70D09F92-2887-4DA0-972D-7EB870C94D8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {32DC0DDA-35A0-47F6-B653-F1E3F48FAFA7}

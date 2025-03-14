@@ -65,10 +65,10 @@ public static class DefaultLayout
              <meta name="view-transition" content="same-origin" />
                  <!-- the props -->
              {{(ImportMap, context.ImportedAssets)}}
-             {{Assets.SvgFavIcon:/favicon.svg}}
+             {{Assets.SvgFavIcon:favicon.svg}}
              {{Assets.Script:Layouts/DefaultLayout.ts}}
              {{Assets.Style:Layouts/DefaultLayout.css}}
-             {{Assets.ServiceWorker:/serviceworker.js}}
+             {{Assets.ServiceWorker:serviceworker.js}}
              {{context.Head}}
              <script type="speculationrules">
                 {
@@ -83,40 +83,40 @@ public static class DefaultLayout
          </head>
          <body>
              <header>
-             <div class="backdrop"></div>
-             <nav>
-                 <button>Menu</button>
-                 <ul>
-                     <li>
-                         <a {{context.NavLink:/}}>Progressive enhancement</a>
-                     </li>
-                     <li>
-                         <a {{context.NavLink:/streaming}}>Streaming</a>
-                     </li>
-                     <li>
-                         <a {{context.NavLink:/xss}}>Cross site scripting</a>
-                     </li>
-                     <li>
-                         <a {{context.NavLink:/forms}}>Forms</a>
-                     </li>
-                     <li>
-                         <a {{context.NavLink:/lit}}>Lit</a>
-                     </li>
-                     <li>
-                         <a {{context.NavLink:/active-search}}>Active search</a>
-                     </li>
-                     <li>
-                         <a {{context.NavLink:/any-order}}>Unordered streaming</a>
-                     </li>
-                     <li>
-                         <a {{context.NavLink:/swr}}>Stale while revalidate</a>
-                     </li>
-                 </ul>
-             </nav>
-         </header>
-         <main role="main">
-             {{(context.Body,context.Context)}}
-         </main>
+                 <div class="backdrop"></div>
+                 <nav>
+                     <button>Menu</button>
+                     <ul>
+                         <li>
+                             <a {{context.NavLink:/}}>Progressive enhancement</a>
+                         </li>
+                         <li>
+                             <a {{context.NavLink:/streaming}}>Streaming</a>
+                         </li>
+                         <li>
+                             <a {{context.NavLink:/xss}}>Cross site scripting</a>
+                         </li>
+                         <li>
+                             <a {{context.NavLink:/forms}}>Forms</a>
+                         </li>
+                         <li>
+                             <a {{context.NavLink:/lit}}>Lit</a>
+                         </li>
+                         <li>
+                             <a {{context.NavLink:/active-search}}>Active search</a>
+                         </li>
+                         <li>
+                             <a {{context.NavLink:/any-order}}>Unordered streaming</a>
+                         </li>
+                         <li>
+                             <a {{context.NavLink:/swr}}>Stale while revalidate</a>
+                         </li>
+                     </ul>
+                 </nav>
+             </header>
+             <main role="main">
+                 {{(context.Body,context.Context)}}
+             </main>
          </body>
          </html>
          """);
