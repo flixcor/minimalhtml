@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import glob from 'fast-glob'
 import { readFile, stat } from "fs/promises";
+import jit from "lightningcss-jit-props"
+import { resolve } from "node:path"
 
 const findSrc = /Assets\.[A-Za-z]+:~?\/?([^}]+)}/g;
 
@@ -15,13 +17,24 @@ async function getInputs() {
   );
   const all = await Promise.all(promises);
   const distinct = [...new Set(all.flat())];
-  const exists = (await Promise.all(distinct.map(x=> stat(x).then(() => x).catch(() => false as const)))).filter(x => !!x)
+  const exists = (await Promise.all(distinct.map(x => stat(x).then(() => x).catch(() => false as const)))).filter(x => !!x)
 
   return exists as string[];
 }
 
 export default defineConfig({
   appType: 'custom',
+  css: {
+    transformer: 'lightningcss',
+    lightningcss: {
+      visitor: jit({
+        files: [
+          resolve(__dirname, 'node_modules/open-props/open-props.min.css'),
+        ]
+      }),
+      errorRecovery: true
+    }
+  },
   build: {
     // generate .vite/manifest.json in outDir
     manifest: true,

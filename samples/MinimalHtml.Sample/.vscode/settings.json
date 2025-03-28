@@ -1,4 +1,5 @@
 {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.semanticHighlighting.enabled": false,
     "emmet.includeLanguages": {
         "csharp": "html"
