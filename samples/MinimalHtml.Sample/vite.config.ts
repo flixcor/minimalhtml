@@ -3,7 +3,7 @@ import glob from 'fast-glob'
 import { readFile, stat } from "fs/promises";
 import { writeFileSync } from 'node:fs';
 import jit from "lightningcss-jit-props"
-import { resolve, basename } from "node:path"
+import { resolve } from "node:path"
 
 const findSrc = /Assets\.[A-Za-z]+:~?\/?([^}]+)}/g;
 
