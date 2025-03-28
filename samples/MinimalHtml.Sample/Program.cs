@@ -44,5 +44,6 @@ Forms.Map(app);
 ActiveSearchPage.Map(app);
 AnyOrder.Map(app);
 StaleWhileRevalidate.Map(app);
+CssModules.Map(app);
 
 app.Run();

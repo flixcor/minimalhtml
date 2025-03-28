@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{70D09F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "forms", "forms", "{2BE17DD4-0A69-45F9-97B6-1831E73D41FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.CssModules", "src\MinimalHtml.CssModules\MinimalHtml.CssModules.csproj", "{5BABBE76-8169-08CD-8367-78D0E11A1F5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{A05CBB40-54BC-4AB7-A62A-08785E162EB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A05CBB40-54BC-4AB7-A62A-08785E162EB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A05CBB40-54BC-4AB7-A62A-08785E162EB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BABBE76-8169-08CD-8367-78D0E11A1F5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BABBE76-8169-08CD-8367-78D0E11A1F5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BABBE76-8169-08CD-8367-78D0E11A1F5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BABBE76-8169-08CD-8367-78D0E11A1F5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

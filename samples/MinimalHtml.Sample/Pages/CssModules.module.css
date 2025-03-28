@@ -1,0 +1,17 @@
+@scope(.wrapper) {
+    p {
+        background-color: unset;
+    }
+}
+
+@custom-media --viewport-medium (width <=50rem);
+
+@media (width <=50rem) {
+    @scope(.wrapper) {
+        p {
+            background-color: var(--pink-7);
+            background-clip: border-box;
+            object-fit: contain;
+        }
+    }
+}

@@ -22,7 +22,15 @@ namespace MinimalHtml.Vite
                 props.Remove(first.Key);
                 var isEntry = first.Value.TryGetProperty("isEntry"u8, out var e) && e.GetBoolean();
                 var src = first.Value.GetProperty("file"u8).GetString() ?? first.Key;
-                var asset = new Asset(src, null, HandleImports(first.Value));
+                Asset asset;
+                if(src.EndsWith(".module.js") && first.Value.GetProperty("src"u8).GetString().EndsWith(".module.css"))
+                {
+                    asset = HandleImports(first.Value)[0];
+                }
+                else
+                {
+                    asset = new Asset(src, null, HandleImports(first.Value));
+                }
                 importDict[first.Key] = asset;
                 if (isEntry)
                 {

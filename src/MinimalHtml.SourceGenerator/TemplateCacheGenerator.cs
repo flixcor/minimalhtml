@@ -10,7 +10,7 @@ namespace MinimalHtml.SourceGenerator
     [Generator]
     public class TemplateCacheGenerator : IIncrementalGenerator
     {
-        private static readonly Regex s_escapeRegex = new(@"\n|""");
+        private static readonly Regex s_escapeRegex = new(@"\r|\n|""");
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
@@ -51,7 +51,12 @@ namespace MinimalHtml.SourceGenerator
             var regex = new Regex($@"^ {{{indentation}}}", RegexOptions.Multiline);
             foreach (var item in interpolation.Contents)
             {
-                var str = s_escapeRegex.Replace(regex.Replace(item, ""), x => x.Value == "\n" ? "\\n" : "\\\"");
+                var str = s_escapeRegex.Replace(regex.Replace(item, ""), x => x.Value switch
+                {
+                    "\n" => "\\n",
+                    "\r" => "\\r",
+                    _ => "\\\""
+                });
                 if (string.IsNullOrEmpty(str)) continue;
                 yield return str;
             }

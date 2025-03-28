@@ -111,6 +111,9 @@ public static class DefaultLayout
                          <li>
                              <a {{context.NavLink:/swr}}>Stale while revalidate</a>
                          </li>
+                         <li>
+                             <a {{context.NavLink:/css-modules}}>CSS modules</a>
+                         </li>
                      </ul>
                  </nav>
              </header>

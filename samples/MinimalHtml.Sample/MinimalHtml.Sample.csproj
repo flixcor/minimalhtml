@@ -18,6 +18,18 @@
     <ItemGroup>
       <Content Include="wwwroot\.vite\**" />
     </ItemGroup>
+    
+
+
+    <ItemGroup>
+      <Content Remove="**\*.module.css.json" />
+    </ItemGroup>
+    
+
+
+    <ItemGroup>
+      <AdditionalFiles Include="**\*.module.css.json" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Bogus" Version="35.6.1" />
@@ -45,6 +57,7 @@
       <ProjectReference Include="..\..\src\MinimalHtml.Vite\MinimalHtml.Vite.csproj" />
       <ProjectReference Include="..\..\src\MinimalHtml\MinimalHtml.csproj" />
       <ProjectReference Include="..\..\src\MinimalHtml.SourceGenerator\MinimalHtml.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+      <ProjectReference Include="..\..\src\MinimalHtml.CssModules\MinimalHtml.CssModules.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\..\src\MinimalForms.ModelGenerator\MinimalForms.ModelGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 

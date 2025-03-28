@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 import glob from 'fast-glob'
 import { readFile, stat } from "fs/promises";
+import { writeFileSync } from 'node:fs';
 import jit from "lightningcss-jit-props"
-import { resolve } from "node:path"
+import { resolve, basename } from "node:path"
 
 const findSrc = /Assets\.[A-Za-z]+:~?\/?([^}]+)}/g;
 
@@ -25,7 +26,14 @@ async function getInputs() {
 export default defineConfig({
   appType: 'custom',
   css: {
-    transformer: 'lightningcss',
+    // transformer: 'lightningcss',
+    modules: {
+      getJSON(cssFileName, json, outputFileName) {
+        console.error(cssFileName, json, outputFileName)
+        var jsonFileName = cssFileName + '.json'
+        writeFileSync(jsonFileName, JSON.stringify(json));
+      }
+    },
     lightningcss: {
       visitor: jit({
         files: [
