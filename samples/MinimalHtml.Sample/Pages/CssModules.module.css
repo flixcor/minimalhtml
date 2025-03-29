@@ -6,7 +6,7 @@
 
 @custom-media --viewport-medium (width <=50rem);
 
-@media (width <=50rem) {
+@media (--viewport-medium) {
     @scope(.wrapper) {
         p {
             background-color: var(--pink-7);
