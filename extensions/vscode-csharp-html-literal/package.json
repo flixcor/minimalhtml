@@ -1,0 +1,31 @@
+{
+  "name": "csharp-html-literal",
+  "displayName": "Csharp Html Literal Syntax Highlighting",
+  "description": "Syntax highlighting for Html in Csharp String Literals.",
+  "version": "0.0.1",
+  "publisher": "flixcor",
+  "engines": {
+    "vscode": "^1.64.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flixcor/minimal-html.git"
+  },
+  "contributes": {
+    "grammars": [
+      {
+        "path": "./syntaxes/csharp-html.json",
+        "scopeName": "source.cs.html.injection",
+        "injectTo": [
+          "source.cs"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.inline.html": "html"
+        }
+      }
+    ]
+  }
+}

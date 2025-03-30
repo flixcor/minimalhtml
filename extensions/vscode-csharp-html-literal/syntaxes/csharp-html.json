@@ -1,0 +1,50 @@
+{
+  "scopeName": "source.cs.html.injection",
+  "injectionSelector": "L:source.cs",
+  "patterns": [
+    {
+      "include": "#html-string-literal-without-dot"
+    },
+    {
+      "include": "#html-string-literal-with-dot"
+    },
+    {
+      "include": "#html-string-literal-interpolated-without-dot"
+    },
+    {
+      "include": "#html-string-literal-interpolated-with-dot"
+    }
+  ],
+  "repository": {
+    "html-string-literal-interpolated-with-dot": {
+      "begin": "(\\.)(Html)(\\()(\\$\"{3})",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.accessor.cs"
+        },
+        "2": {
+          "name": "entity.name.function.cs"
+        },
+        "3": {
+          "name": "punctuation.parenthesis.open.cs"
+        },
+        "4": {
+          "name": "string.quoted.double.cs"
+        }
+      },
+      "end": "\"{3}",
+      "endCaptures": {
+        "0": {
+          "name": "string.quoted.double.cs"
+        }
+      },
+      "patterns": [
+        {
+          "include": "text.html.basic"
+        },
+        {
+					"include": "source.cs#raw-interpolation"
+				}
+      ]
+    }
+}
