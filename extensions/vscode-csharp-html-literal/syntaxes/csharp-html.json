@@ -3,21 +3,12 @@
   "injectionSelector": "L:source.cs",
   "patterns": [
     {
-      "include": "#html-string-literal-without-dot"
-    },
-    {
-      "include": "#html-string-literal-with-dot"
-    },
-    {
-      "include": "#html-string-literal-interpolated-without-dot"
-    },
-    {
       "include": "#html-string-literal-interpolated-with-dot"
     }
   ],
   "repository": {
     "html-string-literal-interpolated-with-dot": {
-      "begin": "(\\.)(Html)(\\()(\\$\"{3})",
+      "begin": "(\\.)(Html)(\\()(\\$+\"{3})",
       "beginCaptures": {
         "1": {
           "name": "punctuation.accessor.cs"
@@ -43,8 +34,9 @@
           "include": "text.html.basic"
         },
         {
-					"include": "source.cs#raw-interpolation"
-				}
+          "include": "source.cs#raw-interpolation"
+        }
       ]
     }
+  }
 }
