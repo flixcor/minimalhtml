@@ -65,7 +65,7 @@ public static class DefaultLayout
              <meta name="view-transition" content="same-origin" />
                  <!-- the props -->
              {{(ImportMap, context.ImportedAssets)}}
-             {{Assets.SvgFavIcon:favicon.svg}}
+             {{Assets.SvgFavIcon:img/favicon.svg}}
              {{Assets.Script:Layouts/DefaultLayout.ts}}
              {{Assets.Style:Layouts/DefaultLayout.css}}
              {{Assets.ServiceWorker:serviceworker.js}}

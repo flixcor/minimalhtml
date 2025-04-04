@@ -32,7 +32,7 @@ namespace MinimalHtml.Vite
                     asset = new Asset(src, null, HandleImports(first.Value));
                 }
                 importDict[first.Key] = asset;
-                if (isEntry)
+                if (isEntry || (!src.EndsWith(".js") && !src.EndsWith(".css")))
                 {
                     result[first.Key] = asset;
                 }
