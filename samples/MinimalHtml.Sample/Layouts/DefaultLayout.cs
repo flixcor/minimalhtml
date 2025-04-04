@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Immutable;
+using System.Reflection;
 using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample.Components;
 
@@ -48,6 +49,11 @@ public static class DefaultLayout
             await new HtmlResult<LayoutProps<T>>(props, Render, statusCode).ExecuteAsync(httpContext);
         }
     }
+
+    private static readonly string? s_version = Assembly
+        .GetExecutingAssembly()
+        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+        .InformationalVersion;
 
     public static IResult WithLayout<T>(this IResultExtensions _, Template<T> page, T context, Template? head = null, int statusCode = 200)
         => new LayoutResult<T>(page, context, head, statusCode);
@@ -120,6 +126,9 @@ public static class DefaultLayout
              <main role="main">
                  {{(context.Body,context.Context)}}
              </main>
+             <footer>
+                <p>Version: {{s_version}}</p>
+             </footer>
          </body>
          </html>
          """);

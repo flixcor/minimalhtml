@@ -138,3 +138,11 @@ nav ul {
     }
   }
 }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  margin-inline: 50%;
+  transform: translateX(-50%);
+  opacity: 50%;
+}

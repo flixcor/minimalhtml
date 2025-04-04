@@ -23,6 +23,7 @@ RUN apt-get -y install nodejs
 RUN corepack enable
 ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
+ARG REVISION=latest
 WORKDIR /samples
 COPY ["samples/MinimalHtml.Sample/MinimalHtml.Sample.csproj", "MinimalHtml.Sample/"]
 COPY ["samples/MinimalHtml.Sample/package.json", "MinimalHtml.Sample/"]
@@ -44,7 +45,7 @@ WORKDIR "/samples/MinimalHtml.Sample"
 
 # This stage is used to publish the service project to be copied to the final stage
 RUN pnpm run build
-RUN dotnet publish "./MinimalHtml.Sample.csproj" -o /app -r linux-$TARGETARCH --no-restore
+RUN dotnet publish "./MinimalHtml.Sample.csproj" -o /app -r linux-$TARGETARCH --no-restore /p:SourceRevisionId=$REVISION
 RUN rm -f /app/*.dbg /app/*.Development.json /app/package.json /app/tsconfig.json
 
 # This stage is used as the base for the final stage when launching from VS to support debugging in regular mode (Default when not using the Debug configuration)

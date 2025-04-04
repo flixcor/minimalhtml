@@ -32,6 +32,8 @@ jobs:
           cache-from: type=registry,ref=flixcor/minimalhtml-sample:buildcache
           cache-to: type=registry,ref=flixcor/minimalhtml-sample:buildcache,mode=max
           platforms: linux/amd64,linux/arm64
+          build-args: |
+            REVISION=${{ github.sha }}
 
       - name: update container image on Magic Containers
         uses: BunnyWay/actions/container-update-image@main
