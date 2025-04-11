@@ -33,10 +33,6 @@ table {
   min-inline-size: min(100%, var(--size-content-3));
 }
 
-footer {
-  margin-block-start: auto;
-}
-
 header {
   border-inline-end: 1px var(--surface-2) solid;
   position: relative;
@@ -137,12 +133,4 @@ nav ul {
       }
     }
   }
-}
-
-footer {
-  position: fixed;
-  bottom: 0;
-  margin-inline: 50%;
-  transform: translateX(-50%);
-  opacity: 50%;
 }

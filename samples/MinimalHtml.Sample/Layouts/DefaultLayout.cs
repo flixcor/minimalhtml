@@ -53,7 +53,9 @@ public static class DefaultLayout
     private static readonly string? s_version = Assembly
         .GetExecutingAssembly()
         .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-        .InformationalVersion;
+        .InformationalVersion
+        .Split('+')
+        ?.LastOrDefault();
 
     public static IResult WithLayout<T>(this IResultExtensions _, Template<T> page, T context, Template? head = null, int statusCode = 200)
         => new LayoutResult<T>(page, context, head, statusCode);
@@ -120,15 +122,14 @@ public static class DefaultLayout
                          <li>
                              <a {{context.NavLink:/css-modules}}>CSS modules</a>
                          </li>
+                         <li><p>Version: {{s_version}}</p></li>
                      </ul>
+                    
                  </nav>
              </header>
              <main role="main">
                  {{(context.Body,context.Context)}}
              </main>
-             <footer>
-                <p>Version: {{s_version}}</p>
-             </footer>
          </body>
          </html>
          """);
