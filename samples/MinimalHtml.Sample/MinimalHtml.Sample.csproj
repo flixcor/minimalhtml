@@ -59,6 +59,7 @@
       <ProjectReference Include="..\..\src\MinimalHtml.SourceGenerator\MinimalHtml.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\..\src\MinimalHtml.CssModules\MinimalHtml.CssModules.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\..\src\MinimalForms.ModelGenerator\MinimalForms.ModelGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+      <ProjectReference Include="..\ServiceDefaults1\ServiceDefaults1.csproj" />
     </ItemGroup>
 
 </Project>

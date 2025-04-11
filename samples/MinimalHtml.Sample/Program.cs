@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 var builder = WebApplication.CreateSlimBuilder(args);
 builder.WebHost.UseStaticWebAssets();
 #endif
+builder.AddServiceDefaults();
 builder.Services.AddSingleton<FakeDatabase>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
