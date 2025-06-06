@@ -109,7 +109,36 @@ namespace MinimalHtml.Sample.Pages
 
     public partial class FormModelJsonConverter: JsonConverter<FormModel>
     {
+        public override FormModel? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType != JsonTokenType.StartObject) return null;
+            FormModel.NumberType number = default;
+            FormModel.BooleanType boolean = default;
+            FormModel.MyFileType myFile = default;
+            
+            while (reader.Read() && reader.TokenType == JsonTokenType.PropertyName)
+            {
+                if (reader.ValueTextEquals("number"u8) && reader.Read() && reader.TokenType == JsonTokenType.Number)
+                {
+                    number = reader.GetDecimal();
+                }
+                else if (reader.ValueTextEquals("boolean"u8) && reader.Read() && (reader.TokenType == JsonTokenType.True || reader.TokenType == JsonTokenType.False))
+                {
+                    boolean = reader.GetBoolean();
+                }
+                else if (reader.ValueTextEquals("myFile"u8) && reader.Read() && reader.TokenType == JsonTokenType.StartObject)
+                {
+                    var path = Path.GetTempFileName();
+                    var file = File.OpenWrite(path);
+                    Memory<byte> contentType = default;
+                    Memory<byte> fileName = default;
+                    var formFile = new MinimalForms.FormFile(fileName, contentType, path);
+                    myFile = new FormModel.MyFileType([formFile]);
+                }
+            }
 
+            return new FormModel{ Number = number, Boolean = boolean, MyFile = myFile };
+        }
     }
 
     [JsonConverter(typeof(FormModelJsonConverter))]
