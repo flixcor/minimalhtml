@@ -90,46 +90,51 @@ public static class DefaultLayout
                 </script>
          </head>
          <body>
-             <header>
-                 <div class="backdrop"></div>
-                 <nav>
-                     <button>Menu</button>
-                     <ul>
-                         <li>
-                             <a {{context.NavLink:/}}>Progressive enhancement</a>
-                         </li>
-                         <li>
-                             <a {{context.NavLink:/streaming}}>Streaming</a>
-                         </li>
-                         <li>
-                             <a {{context.NavLink:/xss}}>Cross site scripting</a>
-                         </li>
-                         <li>
-                             <a {{context.NavLink:/forms}}>Forms</a>
-                         </li>
-                         <li>
-                             <a {{context.NavLink:/lit}}>Lit</a>
-                         </li>
-                         <li>
-                             <a {{context.NavLink:/active-search}}>Active search</a>
-                         </li>
-                         <li>
-                             <a {{context.NavLink:/any-order}}>Unordered streaming</a>
-                         </li>
-                         <li>
-                             <a {{context.NavLink:/swr}}>Stale while revalidate</a>
-                         </li>
-                         <li>
-                             <a {{context.NavLink:/css-modules}}>CSS modules</a>
-                         </li>
-                         <li><p>Version: {{s_version}}</p></li>
-                     </ul>
-                    
-                 </nav>
-             </header>
-             <main role="main">
-                 {{(context.Body,context.Context)}}
-             </main>
+         <template shadowrootmode="open">
+             <slot name="header"></slot>
+             <slot name="main"></slot>
+             <slot name="footer"></slot>
+         </template>
+         <header slot="header">
+            <div class="backdrop"></div>
+            <nav>
+                <button>Menu</button>
+                <ul>
+                    <li>
+                        <a {{context.NavLink:/}}>Progressive enhancement</a>
+                    </li>
+                    <li>
+                        <a {{context.NavLink:/streaming}}>Streaming</a>
+                    </li>
+                    <li>
+                        <a {{context.NavLink:/xss}}>Cross site scripting</a>
+                    </li>
+                    <li>
+                        <a {{context.NavLink:/forms}}>Forms</a>
+                    </li>
+                    <li>
+                        <a {{context.NavLink:/lit}}>Lit</a>
+                    </li>
+                    <li>
+                        <a {{context.NavLink:/active-search}}>Active search</a>
+                    </li>
+                    <li>
+                        <a {{context.NavLink:/any-order}}>Unordered streaming</a>
+                    </li>
+                    <li>
+                        <a {{context.NavLink:/swr}}>Stale while revalidate</a>
+                    </li>
+                    <li>
+                        <a {{context.NavLink:/css-modules}}>CSS modules</a>
+                    </li>
+                    <li><p>Version: {{s_version}}</p></li>
+                </ul>
+            </nav>
+         </header>
+         <footer slot="footer">Copyright {{DateTime.Now.Year}}</footer>
+         <main role="main" slot="main">
+           {{(context.Body,context.Context)}}
+         </main>
          </body>
          </html>
          """);

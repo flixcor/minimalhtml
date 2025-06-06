@@ -109,7 +109,7 @@ namespace MinimalHtml.Sample.Pages
 
     public partial class FormModelJsonConverter: JsonConverter<FormModel>
     {
-        public override FormModel? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public FormModel? FakeRead(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject) return null;
             FormModel.NumberType number = default;
