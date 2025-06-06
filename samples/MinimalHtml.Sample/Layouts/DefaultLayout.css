@@ -17,9 +17,6 @@ main {
   min-inline-size: 50vw;
   padding-inline-end: var(--body-padding-inline);
   flex: 1;
-  overflow-x: auto;
-  max-height: 100vh;
-  max-height: 100lvh;
 
   > :first-child {
     margin-block-start: var(--size-5);
@@ -41,8 +38,11 @@ table {
 
 header {
   border-inline-end: 1px var(--surface-2) solid;
-  position: relative;
-  height: 100lvh;
+  position: sticky;
+  top: 0;
+  height: max-content;
+  min-height: 100lvh;
+  grid-row: 1 / -1;
 
   flex-shrink: 0;
 
@@ -94,8 +94,12 @@ nav ul {
 }
 
 @media screen and (width <=50rem) {
-  main {
+  main, footer {
     padding-inline-start: 3.375em;
+  }
+
+  footer {
+    grid-column: 1 / 1;
   }
 
   .backdrop {
