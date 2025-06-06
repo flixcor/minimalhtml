@@ -105,7 +105,7 @@ namespace MinimalHtml.Sample.Filters
             {
                 if (sizeHint + _index >= _rented.Length)
                 {
-                    var span = _rented.AsSpan().Slice(0, _index);
+                    var span = _rented.AsSpan().Slice(0, Math.Min(_rented.Length, _index));
                     _xxHash3.Append(span);
                     inner.Write(span);
                     s_pool.Return(_rented);
