@@ -41,7 +41,7 @@ header {
   position: sticky;
   top: 0;
   height: max-content;
-  min-height: 100lvh;
+  min-height: 100dvh;
   grid-row: 1 / -1;
 
   flex-shrink: 0;
