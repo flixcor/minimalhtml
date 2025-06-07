@@ -1,6 +1,8 @@
 ﻿@import "open-props/normalize.min.css";      
 @import "open-props/buttons.min.css";
-
+@view-transition {
+  navigation: auto;
+}
 body {
   display: grid;
   grid-template-columns: auto auto;
