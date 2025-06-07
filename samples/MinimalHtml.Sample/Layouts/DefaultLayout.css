@@ -42,8 +42,9 @@ header {
   border-inline-end: 1px var(--surface-2) solid;
   position: sticky;
   top: 0;
+  bottom: 0;
   height: max-content;
-  min-height: 100dvh;
+  min-height: 100lvh;
   grid-row: 1 / -1;
 
   flex-shrink: 0;
