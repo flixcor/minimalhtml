@@ -18,7 +18,6 @@ public class TemplateEncoder
             .Add('\'', () => "'"u8)
             .Add('&', () => "&"u8));
 
-
     private readonly TextEncoder _encoder;
     private readonly ImmutableDictionary<char, Func<ReadOnlySpan<byte>>> _dict;
     private readonly SearchValues<char> _searchValues;

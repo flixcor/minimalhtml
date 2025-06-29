@@ -7,36 +7,17 @@ namespace MinimalHtml;
 public static class HtmlTemplateExtensions
 {
     public static ValueTask<FlushResult> Html(
-        this PipeWriter writer,
-        CancellationToken token,
-        [InterpolatedStringHandlerArgument(nameof(writer), nameof(token))]
+        this (PipeWriter Page, CancellationToken Token) tuple,
+        [InterpolatedStringHandlerArgument(nameof(tuple))]
         [StringSyntax("Html")]
         ref HtmlTemplateHandler handler
         ) =>
         handler.Result;
 
     public static ValueTask<FlushResult> Html(
-        this PipeWriter writer,
-        [InterpolatedStringHandlerArgument(nameof(writer))]
-        [StringSyntax("Html")]
-        ref HtmlTemplateHandler handler
-        ) =>
-        handler.Result;
-
-    public static ValueTask<FlushResult> Html(
-        this PipeWriter writer,
+        this (PipeWriter Page, CancellationToken Token) tuple,
         IFormatProvider? provider,
-        CancellationToken token,
-        [InterpolatedStringHandlerArgument(nameof(writer), nameof(provider), nameof(token))]
-        [StringSyntax("Html")]
-        ref HtmlTemplateHandler handler
-        ) =>
-        handler.Result;
-
-    public static ValueTask<FlushResult> Html(
-        this PipeWriter writer,
-        IFormatProvider? provider,
-        [InterpolatedStringHandlerArgument(nameof(writer), nameof(provider))]
+        [InterpolatedStringHandlerArgument(nameof(tuple), nameof(provider))]
         [StringSyntax("Html")]
         ref HtmlTemplateHandler handler
         ) =>
@@ -48,21 +29,13 @@ public readonly ref struct HtmlTemplateHandler : ITemplateHandler
 {
     private readonly TemplateHandler _inner;
 
-    public HtmlTemplateHandler(int literalLength, int formattedCount, PipeWriter page) : this(literalLength, formattedCount, page, null, default)
+    public HtmlTemplateHandler(int literalLength, int formattedCount, (PipeWriter Page, CancellationToken Token) tuple) : this(literalLength, formattedCount, tuple, null)
     {
     }
 
-    public HtmlTemplateHandler(int literalLength, int formattedCount, PipeWriter page, IFormatProvider? formatProvider) : this(literalLength, formattedCount, page, formatProvider, default)
+    public HtmlTemplateHandler(int literalLength, int formattedCount, (PipeWriter Page, CancellationToken Token) tuple, IFormatProvider? formatProvider)
     {
-    }
-
-    public HtmlTemplateHandler(int literalLength, int formattedCount, PipeWriter page, CancellationToken token) : this(literalLength, formattedCount, page, null, token)
-    {
-    }
-
-    public HtmlTemplateHandler(int literalLength, int formattedCount, PipeWriter page, IFormatProvider? formatProvider, CancellationToken token)
-    {
-        _inner = new TemplateHandler(literalLength, formattedCount, page, TemplateEncoder.Html, formatProvider, token);
+        _inner = new TemplateHandler(literalLength, formattedCount, tuple, TemplateEncoder.Html, formatProvider);
     }
 
     public ValueTask<FlushResult> Result => _inner.Result;

@@ -41,12 +41,12 @@ public ref struct TemplateHandler : ITemplateHandler
 
     public ValueTask<FlushResult> Result { get; private set; } = new();
 
-    public TemplateHandler(int literalLength, int formattedCount, PipeWriter page, TemplateEncoder? encoder, IFormatProvider? formatProvider = null, CancellationToken token = default)
+    public TemplateHandler(int literalLength, int formattedCount, (PipeWriter Page, CancellationToken Token) tuple, TemplateEncoder? encoder, IFormatProvider? formatProvider = null)
     {
-        _writer = page;
+        _writer = tuple.Page;
         _formatProvider = formatProvider;
         _encoder = encoder ?? TemplateEncoder.Html;
-        _token = token;
+        _token = tuple.Token;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -167,14 +167,14 @@ public ref struct TemplateHandler : ITemplateHandler
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
-        return await handler(page, token);
+        return await handler((page, token));
     }
 
     private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, T state, Template<T> handler, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
-        return await handler(page, state, token);
+        return await handler((page, token), state);
     }
 
     private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, ValueTask<T> task, Template<T> handler, CancellationToken token)
@@ -187,7 +187,7 @@ public ref struct TemplateHandler : ITemplateHandler
         }
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         var prop = await task;
-        return await handler(page, prop, token);
+        return await handler((page, token), prop);
     }
 
     private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, IAsyncEnumerable<T> enumerable, Template<T> template, CancellationToken token)
@@ -207,7 +207,7 @@ public ref struct TemplateHandler : ITemplateHandler
                     if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
                 }
                 if (!await next) return flushResult;
-                flushResult = await template(page, enumerator.Current, token);
+                flushResult = await template((page, token), enumerator.Current);
                 if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
             }
         }
@@ -225,7 +225,7 @@ public ref struct TemplateHandler : ITemplateHandler
         using var enumerator = enumerable.GetEnumerator();
         while (enumerator.MoveNext())
         {
-            flushResult = await template(page, enumerator.Current, token);
+            flushResult = await template((page, token), enumerator.Current);
             if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         }
         return flushResult;
