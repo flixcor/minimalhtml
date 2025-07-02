@@ -1,6 +1,5 @@
 ﻿using System.Buffers;
-using System.Collections.Immutable;
-using System.Text.Encodings.Web;
+using System.Collections.Frozen;
 using System.Text.Unicode;
 
 namespace MinimalHtml;
@@ -9,49 +8,76 @@ public class TemplateEncoder
 {
     private const int MaxStackAlloc = 256;
 
-    public static readonly TemplateEncoder Html = new(
-        HtmlEncoder.Default,
-        ImmutableDictionary.Create<char, Func<ReadOnlySpan<byte>>>()
-            .Add('<', () => "<"u8)
-            .Add('>', () => ">"u8)
-            .Add('"', () => "\""u8)
-            .Add('\'', () => "'"u8)
-            .Add('&', () => "&"u8));
+    public static readonly TemplateEncoder Html = new([
+        '<',
+        '>',
+        '"',
+        '\'',
+        '&',
+        ], [
+        (byte)'<',
+        (byte)'>',
+        (byte)'"',
+        (byte)'\'',
+        (byte)'&',
+        ], [
+        "&lt;"u8.ToArray(),
+        "&gt;"u8.ToArray(),
+        "&quot;"u8.ToArray(),
+        "&#39;"u8.ToArray(),
+        "&amp;"u8.ToArray(),
+        ]);
 
-    private readonly TextEncoder _encoder;
-    private readonly ImmutableDictionary<char, Func<ReadOnlySpan<byte>>> _dict;
-    private readonly SearchValues<char> _searchValues;
+    private readonly SearchValues<char> _chars;
+    private readonly SearchValues<byte> _bytes;
+    private readonly FrozenDictionary<char, byte[]> _charDict;
+    private readonly FrozenDictionary<byte, byte[]> _byteDict;
 
-    public TemplateEncoder(TextEncoder encoder, ImmutableDictionary<char, Func<ReadOnlySpan<byte>>> dict)
+    public TemplateEncoder(ReadOnlySpan<char> chars, ReadOnlySpan<byte> bytes, ReadOnlySpan<byte[]> escaped)
     {
-        _encoder = encoder;
-        _dict = dict;
-        _searchValues = SearchValues.Create(dict.Keys.ToArray());
+        _chars = SearchValues.Create(chars);
+        _bytes = SearchValues.Create(bytes);
+        _charDict = ToDict(chars, escaped).ToFrozenDictionary();
+        _byteDict = ToDict(bytes, escaped).ToFrozenDictionary();
+    }
+
+    static IEnumerable<KeyValuePair<A, B>> ToDict<A, B>(ReadOnlySpan<A> a, ReadOnlySpan<B> b)
+    {
+        var i = 0;
+        foreach (var item in a)
+        {
+            yield return new KeyValuePair<A, B>(item, b[i]);
+            i++;
+        }
     }
 
     public void WriteEncoded(IBufferWriter<byte> writer, ReadOnlySpan<char> input)
     {
-        foreach (var range in input.SplitAny(_searchValues))
+        foreach (var range in input.SplitAny(_chars))
         {
             var bytes = input[range];
             WriteUnescaped(writer, bytes);
             if (input.Length > range.End.Value)
             {
                 var toEncode = input[range.End.Value];
-                var getSpan = _dict[toEncode];
-                writer.Write(getSpan());
+                var encoded = _charDict[toEncode];
+                writer.Write(encoded);
             }
         }
     }
 
     public void WriteEncoded(IBufferWriter<byte> writer, ReadOnlySpan<byte> input)
     {
-        while (!input.IsEmpty)
+        foreach (var range in input.SplitAny(_bytes))
         {
-            var span = writer.GetSpan();
-            _encoder.EncodeUtf8(input, span, out var consumed, out var written, true);
-            writer.Advance(written);
-            input = input.Slice(consumed);
+            var bytes = input[range];
+            writer.Write(bytes);
+            if (input.Length > range.End.Value)
+            {
+                var toEncode = input[range.End.Value];
+                var encoded = _byteDict[toEncode];
+                writer.Write(encoded);
+            }
         }
     }
 
@@ -67,7 +93,7 @@ public class TemplateEncoder
 
         var formatted = span.Slice(0, bytesWritten);
 
-        var charIndex = _encoder.FindFirstCharacterToEncodeUtf8(formatted);
+        var charIndex = formatted.IndexOfAny(_bytes);
 
         if (charIndex == -1)
         {
@@ -92,24 +118,7 @@ public class TemplateEncoder
         try
         {
             formatted.CopyTo(source);
-            bytesWritten = 0;
-
-            do
-            {
-                var byteToEncode = source.Slice(charIndex, 1);
-                var before = source.Slice(0, charIndex);
-
-                Next(writer, before, ref span, ref bytesWritten);
-
-                _encoder.EncodeUtf8(byteToEncode, encodingBuffer, out _, out var bytesEncoded);
-
-                Next(writer, encodingBuffer.Slice(0, bytesEncoded), ref span, ref bytesWritten);
-
-                charIndex = _encoder.FindFirstCharacterToEncodeUtf8(source);
-            } while (charIndex > -1);
-
-            Next(writer, source, ref span, ref bytesWritten);
-            writer.Advance(bytesWritten);
+            WriteEncoded(writer, source);
         }
         finally
         {
@@ -131,21 +140,6 @@ public class TemplateEncoder
             span = writer.GetSpan();
         }
         writer.Advance(bytesWritten);
-    }
-
-    private static void Next(IBufferWriter<byte> writer, scoped ReadOnlySpan<byte> input, ref Span<byte> current, ref int bytesWritten)
-    {
-        while (!input.TryCopyTo(current))
-        {
-            var before = input.Slice(0, current.Length);
-            input = input.Slice(current.Length);
-            before.CopyTo(current);
-            writer.Advance(bytesWritten + current.Length);
-            bytesWritten = 0;
-            current = writer.GetSpan();
-        }
-        bytesWritten += input.Length;
-        current = current.Slice(0, input.Length);
     }
 
     private static void Increase(IBufferWriter<byte> writer, ref Span<byte> span)
