@@ -35,6 +35,8 @@ public class TemplateEncoder
 
     public TemplateEncoder(ReadOnlySpan<char> chars, ReadOnlySpan<byte> bytes, ReadOnlySpan<byte[]> escaped)
     {
+        if(chars.Length != bytes.Length || chars.Length != escaped.Length)
+            throw new ArgumentException("All input spans must have the same length.");
         _chars = SearchValues.Create(chars);
         _bytes = SearchValues.Create(bytes);
         _charDict = ToDict(chars, escaped).ToFrozenDictionary();
@@ -101,24 +103,23 @@ public class TemplateEncoder
             return;
         }
 
-        Span<byte> encodingBuffer = stackalloc byte[8];
         byte[]? rented = null;
-        scoped Span<byte> source = [];
+        scoped Span<byte> copy = [];
 
         if (bytesWritten <= MaxStackAlloc)
         {
-            source = stackalloc byte[bytesWritten];
+            copy = stackalloc byte[bytesWritten];
         }
         else
         {
             rented = ArrayPool<byte>.Shared.Rent(bytesWritten);
-            source = rented;
+            copy = rented;
         }
 
         try
         {
-            formatted.CopyTo(source);
-            WriteEncoded(writer, source);
+            formatted.CopyTo(copy);
+            WriteEncoded(writer, copy);
         }
         finally
         {
