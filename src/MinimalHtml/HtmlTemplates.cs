@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿global using Writer = (System.IO.Pipelines.PipeWriter Page, System.Threading.CancellationToken Token);
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 
@@ -7,7 +8,7 @@ namespace MinimalHtml;
 public static class HtmlTemplateExtensions
 {
     public static ValueTask<FlushResult> Html(
-        this (PipeWriter Page, CancellationToken Token) tuple,
+        this Writer tuple,
         [InterpolatedStringHandlerArgument(nameof(tuple))]
         [StringSyntax("Html")]
         ref HtmlTemplateHandler handler

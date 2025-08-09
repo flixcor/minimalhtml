@@ -43,14 +43,16 @@ public class TemplateEncoder
         _byteDict = ToDict(bytes, escaped).ToFrozenDictionary();
     }
 
-    static IEnumerable<KeyValuePair<A, B>> ToDict<A, B>(ReadOnlySpan<A> a, ReadOnlySpan<B> b)
+    static Dictionary<A, B> ToDict<A, B>(ReadOnlySpan<A> a, ReadOnlySpan<B> b) where A : notnull
     {
-        var i = 0;
-        foreach (var item in a)
+        if (a.Length != b.Length)
+            throw new ArgumentException("Input spans must have the same length.");
+        var dict = new Dictionary<A, B>(a.Length);
+        for (var i = 0; i < a.Length; i++)
         {
-            yield return new KeyValuePair<A, B>(item, b[i]);
-            i++;
+            dict[a[i]] = b[i];
         }
+        return dict;
     }
 
     public void WriteEncoded(IBufferWriter<byte> writer, ReadOnlySpan<char> input)
