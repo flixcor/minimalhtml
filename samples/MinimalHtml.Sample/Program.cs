@@ -27,6 +27,9 @@ if (!builder.Environment.IsDevelopment())
 
 
 var app = builder.Build();
+
+Assets.Initialize(app);
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseResponseCompression();
