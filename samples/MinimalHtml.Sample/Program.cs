@@ -1,5 +1,4 @@
-﻿global using static MinimalHtml.PropHelper;
-using MinimalHtml.AspNetCore;
+﻿using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample;
 using MinimalHtml.Sample.Components;
 using MinimalHtml.Sample.Pages;
