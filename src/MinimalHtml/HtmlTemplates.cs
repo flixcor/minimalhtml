@@ -16,7 +16,7 @@ public static class HtmlTemplateExtensions
         handler.Result;
 
     public static ValueTask<FlushResult> Html(
-        this (PipeWriter Page, CancellationToken Token) tuple,
+        this Writer tuple,
         IFormatProvider? provider,
         [InterpolatedStringHandlerArgument(nameof(tuple), nameof(provider))]
         [StringSyntax("Html")]
@@ -30,11 +30,11 @@ public readonly ref struct HtmlTemplateHandler : ITemplateHandler
 {
     private readonly TemplateHandler _inner;
 
-    public HtmlTemplateHandler(int literalLength, int formattedCount, (PipeWriter Page, CancellationToken Token) tuple) : this(literalLength, formattedCount, tuple, null)
+    public HtmlTemplateHandler(int literalLength, int formattedCount, Writer tuple) : this(literalLength, formattedCount, tuple, null)
     {
     }
 
-    public HtmlTemplateHandler(int literalLength, int formattedCount, (PipeWriter Page, CancellationToken Token) tuple, IFormatProvider? formatProvider)
+    public HtmlTemplateHandler(int literalLength, int formattedCount, Writer tuple, IFormatProvider? formatProvider)
     {
         _inner = new TemplateHandler(literalLength, formattedCount, tuple, TemplateEncoder.Html, formatProvider);
     }
@@ -43,7 +43,7 @@ public readonly ref struct HtmlTemplateHandler : ITemplateHandler
 
     public void AppendFormatted(Func<ReadOnlySpan<byte>> getBytes) => _inner.AppendFormatted(getBytes);
 
-    public void AppendFormatted(Memory<byte> bytes) => _inner.AppendFormatted(bytes);
+    public void AppendFormatted(ReadOnlyMemory<byte> bytes) => _inner.AppendFormatted(bytes);
 
     public void AppendFormatted(string? s) => _inner.AppendFormatted(s);
 

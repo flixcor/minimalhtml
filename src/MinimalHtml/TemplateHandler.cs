@@ -9,7 +9,7 @@ namespace MinimalHtml;
 public interface ITemplateHandler
 {
     void AppendFormatted(Func<ReadOnlySpan<byte>> getBytes);
-    void AppendFormatted(Memory<byte> bytes);
+    void AppendFormatted(ReadOnlyMemory<byte> bytes);
     void AppendFormatted(string? s);
     void AppendFormatted(Template? template);
     void AppendFormatted(Template<string> template, string format);
@@ -68,7 +68,7 @@ public ref struct TemplateHandler : ITemplateHandler
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AppendFormatted(Memory<byte> bytes)
+    public void AppendFormatted(ReadOnlyMemory<byte> bytes)
     {
         if (!bytes.IsEmpty && !_token.IsCancellationRequested)
         {
@@ -194,27 +194,18 @@ public ref struct TemplateHandler : ITemplateHandler
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
-        var next = new ValueTask<bool>(false);
-        var enumerator = enumerable.GetAsyncEnumerator(token);
-        try
+        await using var enumerator = enumerable.GetAsyncEnumerator(token);
+        while (true)
         {
-            while (true)
+            var next = enumerator.MoveNextAsync();
+            if (!next.IsCompleted)
             {
-                next = enumerator.MoveNextAsync();
-                if (!next.IsCompleted)
-                {
-                    flushResult = await page.FlushAsync(token);
-                    if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
-                }
-                if (!await next) return flushResult;
-                flushResult = await template((page, token), enumerator.Current);
+                flushResult = await page.FlushAsync(token);
                 if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
             }
-        }
-        finally
-        {
-            await next;
-            await enumerator.DisposeAsync();
+            if (!await next) return flushResult;
+            flushResult = await template((page, token), enumerator.Current);
+            if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         }
     }
 
