@@ -26,9 +26,9 @@ public static class HtmlTemplateExtensions
 }
 
 [InterpolatedStringHandler]
-public readonly ref struct HtmlTemplateHandler : ITemplateHandler
+public ref struct HtmlTemplateHandler : ITemplateHandler
 {
-    private readonly TemplateHandler _inner;
+    private TemplateHandler _inner;
 
     public HtmlTemplateHandler(int literalLength, int formattedCount, Writer tuple) : this(literalLength, formattedCount, tuple, null)
     {
