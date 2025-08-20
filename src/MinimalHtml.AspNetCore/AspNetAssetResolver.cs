@@ -1,7 +1,9 @@
 ﻿using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace MinimalHtml.AspNetCore
 {
@@ -19,9 +21,12 @@ namespace MinimalHtml.AspNetCore
                 : _ours;
         }
 
+        private static void RegisterGetAsset(IServiceCollection services) => services.TryAddSingleton<GetAsset>(s => s.GetRequiredService<AspNetAssetResolver>().GetAsset);
+
         public static void Register(IServiceCollection services)
         {
             services.AddSingleton(s => new AspNetAssetResolver(s.GetRequiredService<IWebHostEnvironment>(), s.GetService<IMemoryCache>(), null));
+            RegisterGetAsset(services);
         }
 
         public static void Register(IServiceCollection services, string pathFromWebRoot, Func<string, GetAssetDictionary> getBundler)
@@ -34,6 +39,7 @@ namespace MinimalHtml.AspNetCore
                 var bundler = getBundler(fileName);
                 return new AspNetAssetResolver(webHostEnvironment, memoryCache, bundler);
             });
+            RegisterGetAsset(services);
         }
 
         public ValueTask<ImmutableDictionary<string, Asset>> GetImportMap() => _ours;

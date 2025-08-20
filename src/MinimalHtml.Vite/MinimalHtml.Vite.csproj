@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MinimalHtml\MinimalHtml.csproj" />
+    <ProjectReference Include="..\MinimalHtml.AspNetCore\MinimalHtml.AspNetCore.csproj" />
   </ItemGroup>
 
 </Project>

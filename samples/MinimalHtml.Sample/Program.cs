@@ -1,5 +1,4 @@
-﻿global using static MinimalHtml.PropHelper;
-using MinimalHtml.AspNetCore;
+﻿using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample;
 using MinimalHtml.Sample.Components;
 using MinimalHtml.Sample.Pages;
@@ -27,6 +26,9 @@ if (!builder.Environment.IsDevelopment())
 
 
 var app = builder.Build();
+
+Assets.Initialize(app);
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseResponseCompression();
