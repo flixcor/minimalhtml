@@ -55,7 +55,8 @@ public static class DefaultLayout
         .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
         .InformationalVersion
         .Split('+')
-        ?.LastOrDefault();
+        ?.LastOrDefault()
+        ?.Substring(0, 7);
 
     public static IResult WithLayout<T>(this IResultExtensions _, Template<T> page, T context, Template? head = null, int statusCode = 200)
         => new LayoutResult<T>(page, context, head, statusCode);
