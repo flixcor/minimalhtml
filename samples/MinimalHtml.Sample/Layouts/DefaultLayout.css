@@ -25,7 +25,7 @@ main {
   }
 }
 
-footer {
+main + footer {
     grid-row: 2 / 2;
     grid-column: 2 / 2;
 }
@@ -97,11 +97,11 @@ nav ul {
 }
 
 @media screen and (width <=50rem) {
-  main, footer {
+  main, main + footer {
     padding-inline-start: 3.375em;
   }
 
-  footer {
+  main + footer {
     grid-column: 1 / 1;
   }
 
