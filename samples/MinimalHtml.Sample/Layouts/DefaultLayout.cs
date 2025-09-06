@@ -132,7 +132,7 @@ public static class DefaultLayout
                 </ul>
             </nav>
          </header>
-         <footer slot="footer">Copyright {{DateTime.Now.Year}}</footer>
+         <footer slot="footer" class="the-footer">Copyright {{DateTime.Now.Year}}</footer>
          <main role="main" slot="main">
            {{(context.Body,context.Context)}}
          </main>
