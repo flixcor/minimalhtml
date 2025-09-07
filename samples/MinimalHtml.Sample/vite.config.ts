@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import glob from 'fast-glob'
 import { readFile, stat } from "fs/promises";
 import { writeFileSync } from 'node:fs';
-import jit from "lightningcss-jit-props"
-import { resolve } from "node:path"
+//import jit from "lightningcss-jit-props"
+//import { resolve } from "node:path"
 
 const findSrc = /Assets\.[A-Za-z]+:~?\/?([^}]+)}/g;
 
@@ -34,14 +34,14 @@ export default defineConfig({
         writeFileSync(jsonFileName, JSON.stringify(json));
       }
     },
-    lightningcss: {
-      visitor: jit({
-        files: [
-          resolve(__dirname, 'node_modules/open-props/open-props.min.css'),
-        ]
-      }),
-      errorRecovery: true
-    }
+    // lightningcss: {
+    //   visitor: jit({
+    //     files: [
+    //       resolve(__dirname, 'node_modules/open-props/open-props.min.css'),
+    //     ]
+    //   }),
+    //   errorRecovery: true
+    // }
   },
   build: {
     // generate .vite/manifest.json in outDir
