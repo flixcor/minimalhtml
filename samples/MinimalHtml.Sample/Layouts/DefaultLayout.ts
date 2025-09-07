@@ -3,7 +3,7 @@ navigator?.serviceWorker?.addEventListener("message", e => {
     const toast = document.createElement("div")
     toast.innerText = "This page has changed. Refresh to see the new content."
     toast.setAttribute("popover", "manual")
-    document.body.append(toast)
+    document.getElementsByTagName("main")[0]?.append(toast)
     toast.showPopover()
     setTimeout(() => {
         toast.hidePopover()
