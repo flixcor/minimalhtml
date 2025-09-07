@@ -481,7 +481,7 @@ legend {
     font-weight: var(--font-weight-6);
 }
 
-footer:not(:has(> :not([hidden]))) {
+form footer:not(:has(> :not([hidden]))) {
     display: none;
 }
 
