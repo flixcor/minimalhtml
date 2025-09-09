@@ -1,4 +1,6 @@
-﻿using MinimalHtml.AspNetCore;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample;
 using MinimalHtml.Sample.Components;
 using MinimalHtml.Sample.Pages;
@@ -12,6 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 var builder = WebApplication.CreateSlimBuilder(args);
 builder.WebHost.UseStaticWebAssets();
 #endif
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+    {
+      options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+    });
+
 builder.Services.AddSingleton<FakeDatabase>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
@@ -47,5 +55,12 @@ ActiveSearchPage.Map(app);
 AnyOrder.Map(app);
 StaleWhileRevalidate.Map(app);
 CssModules.Map(app);
+MinimalHtml.Sample.Api.Version.Map(app);
 
 app.Run();
+
+
+[JsonSerializable(typeof(JsonObject))]
+internal partial class AppJsonSerializerContext : JsonSerializerContext
+{
+}

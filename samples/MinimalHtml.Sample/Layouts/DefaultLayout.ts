@@ -10,3 +10,12 @@ navigator?.serviceWorker?.addEventListener("message", e => {
         toast.remove()
     }, 10000);
 })
+
+customElements.define("version-number", class extends HTMLElement {
+    constructor() {
+        super();
+        fetch("/api/version-number")
+            .then(r => r.ok ? r.json() : null)
+            .then(r => this.innerText = r?.version ?? "")
+    }
+})

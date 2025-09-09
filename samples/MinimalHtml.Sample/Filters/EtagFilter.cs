@@ -27,13 +27,11 @@ namespace MinimalHtml.Sample.Filters
                 var feature = httpContext.Features.Get<IHttpResponseBodyFeature>();
                 if (feature != null)
                 {
-                    var logger = httpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("hoi");
                     var instance = new EtagFeature(feature);
                     httpContext.Features.Set<IHttpResponseBodyFeature>(instance);
                     await inner.ExecuteAsync(httpContext);
                     instance.XxHash3Writer.Complete();
                     httpContext.Response.Headers.ETag = instance.XxHash3Writer.Etag;
-                    logger.LogInformation(instance.XxHash3Writer.Etag);
                     httpContext.Response.Headers.CacheControl = "no-cache, private";
                     httpContext.Response.Headers.Append("x-swr-etag", instance.XxHash3Writer.Etag);
                     await feature.Writer.FlushAsync(httpContext.RequestAborted);
