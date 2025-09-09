@@ -18,11 +18,15 @@ public interface ITemplateHandler
     void AppendFormatted<T>((T T, Template<T> Template) tuple);
     void AppendFormatted<T>((Task<T> Task, Template<T> Template) tuple);
     void AppendFormatted<T>((Template<T> Template, Task<T> Task) tuple);
+    void AppendFormatted<T>((Func<Task<T>> Task, Template<T> Template) tuple);
+    void AppendFormatted<T>((Template<T> Template, Func<Task<T>> Task) tuple);
     void AppendFormatted<T>((Template<T>, IAsyncEnumerable<T>) tuple);
     void AppendFormatted<T>((Template<T>, IEnumerable<T>) tuple);
     void AppendFormatted<T>((Template<T>, T) tuple);
     void AppendFormatted<T>((Template<T>, ValueTask<T>) tuple);
     void AppendFormatted<T>((ValueTask<T> Task, Template<T> Template) tuple);
+    void AppendFormatted<T>((Template<T> Template, Func<ValueTask<T>> Task) tuple);
+    void AppendFormatted<T>((Func<ValueTask<T>> Task, Template<T> Template) tuple);
     void AppendFormatted<TFormattable>(TFormattable? t, string? format = null) where TFormattable : IUtf8SpanFormattable;
     void AppendLiteral(string? s);
     ValueTask<FlushResult> Result { get; }
@@ -221,4 +225,12 @@ public ref struct TemplateHandler : ITemplateHandler
         }
         return flushResult;
     }
+
+    public void AppendFormatted<T>((Func<Task<T>> Task, Template<T> Template) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
+
+    public void AppendFormatted<T>((Template<T> Template, Func<Task<T>> Task) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
+
+    public void AppendFormatted<T>((Template<T> Template, Func<ValueTask<T>> Task) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
+
+    public void AppendFormatted<T>((Func<ValueTask<T>> Task, Template<T> Template) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
 }

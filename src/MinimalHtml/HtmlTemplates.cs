@@ -39,7 +39,7 @@ public ref struct HtmlTemplateHandler : ITemplateHandler
         _inner = new TemplateHandler(literalLength, formattedCount, tuple, TemplateEncoder.Html, formatProvider);
     }
 
-    public ValueTask<FlushResult> Result => _inner.Result;
+    public readonly ValueTask<FlushResult> Result => _inner.Result;
 
     public void AppendFormatted(Func<ReadOnlySpan<byte>> getBytes) => _inner.AppendFormatted(getBytes);
 
@@ -72,6 +72,14 @@ public ref struct HtmlTemplateHandler : ITemplateHandler
     public void AppendFormatted<T>((ValueTask<T> Task, Template<T> Template) tuple) => _inner.AppendFormatted(tuple);
 
     public void AppendFormatted<TFormattable>(TFormattable? t, string? format = null) where TFormattable : IUtf8SpanFormattable => _inner.AppendFormatted(t, format);
+
+    public void AppendFormatted<T>((Func<Task<T>> Task, Template<T> Template) tuple) => _inner.AppendFormatted(tuple);
+
+    public void AppendFormatted<T>((Template<T> Template, Func<Task<T>> Task) tuple) => _inner.AppendFormatted(tuple);
+
+    public void AppendFormatted<T>((Template<T> Template, Func<ValueTask<T>> Task) tuple) => _inner.AppendFormatted(tuple);
+
+    public void AppendFormatted<T>((Func<ValueTask<T>> Task, Template<T> Template) tuple) => _inner.AppendFormatted(tuple);
 
     public void AppendLiteral(string? s) => _inner.AppendLiteral(s);
 }
