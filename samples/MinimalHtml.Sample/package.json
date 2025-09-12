@@ -25,5 +25,10 @@
     "open-props": "^1.7.12",
     "prettier": "^3.5.3",
     "xxhash-wasm": "^1.1.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

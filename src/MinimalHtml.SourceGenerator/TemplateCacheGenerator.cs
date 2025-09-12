@@ -70,7 +70,7 @@ namespace MinimalHtml.SourceGenerator
 
             var calls = parts
                 .Select((str, i) => $$"""
-                    TemplateHandler.Precompile("{{str}}", "{{str}}"u8.ToArray());  
+                    MinimalHtml.TemplateHandler.Precompile("{{str}}", "{{str}}"u8.ToArray());  
             """);
             var text = $$"""
             namespace {{source.Item1.Namespace}};
