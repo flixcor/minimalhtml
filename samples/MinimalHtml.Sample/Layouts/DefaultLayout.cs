@@ -69,7 +69,7 @@ public static class DefaultLayout
                  <!-- the props -->
              {{(ImportMap, context.ImportedAssets)}}
              {{Assets.SvgFavIcon:img/favicon.svg}}
-             {{Assets.Script:Layouts/DefaultLayout.ts}}
+             {{(Assets.Script, ("Layouts/DefaultLayout.ts", false))}}
              {{Assets.Style:Layouts/DefaultLayout.css}}
              {{Assets.ServiceWorker:serviceworker.js}}
              {{context.Head}}
