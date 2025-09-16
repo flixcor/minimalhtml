@@ -34,7 +34,7 @@ namespace MinimalHtml.Sample.Pages
             <remove-group-button hidden><button type=button title="Remove Group">Remove Group</button></remove-group-button>
             <label>
                 <span>Required text area within group</span>
-                <textarea placeholder="Lorem" name="{group.Question.Name}">{group.Question.Value}</textarea>
+                <textarea required placeholder="Lorem" name="{group.Question.Name}">{group.Question.Value}</textarea>
             </label>
         </fieldset>
         """);

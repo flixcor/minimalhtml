@@ -41,12 +41,12 @@ namespace Fluid.Benchmarks
             var ellipsis = "..."u8;
             if (props.Str.Length <= props.Length)
             {
-                tup.Writer.WriteHtmlEscaped(props.Str);
+               TemplateEncoder.Html.WriteEncoded(tup.Writer, props.Str);
             }
             else
             {
                 var length = Math.Max(0, props.Length - ellipsis.Length);
-                tup.Writer.WriteHtmlEscaped(props.Str.AsSpan(0, length));
+                TemplateEncoder.Html.WriteEncoded(tup.Writer, props.Str.AsSpan(0, length));
                 tup.Writer.Write(ellipsis);
             }
 

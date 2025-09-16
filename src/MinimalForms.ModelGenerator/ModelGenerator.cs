@@ -328,7 +328,7 @@ namespace ZodNet.ModelGenerator
                     {
                         if(Item._values.Count > 0) return HtmlEncoder.Default.EncodeUtf8(Item._values[0].Span, utf8Destination, out _, out bytesWritten) == OperationStatus.Done;
                         {{(p.Type == "String" 
-                            ? "if(Item._value != null) return MinimalHtml.Helpers.TryWriteHtmlEscaped(Item._value, utf8Destination, out bytesWritten);"
+                            ? "if(Item._value != null) return MinimalForms.Helpers.TryWriteHtmlEscaped(Item._value, utf8Destination, out bytesWritten);"
                             : "if(Item._value.HasValue) return Item._value.GetValueOrDefault().TryFormat(utf8Destination, out bytesWritten, format, provider);")}}
                         bytesWritten = 0;
                         return true;

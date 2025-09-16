@@ -30,7 +30,7 @@ namespace MinimalHtml.Sample.Pages
             </tr>
             """);
 
-        private static Flushed Page(HtmlWriter page, FakeDatabase db) => page.Html($"""
+        private static Flushed Page(HtmlWriter page, IAsyncEnumerable<SampleColumnRowData> rows) => page.Html($"""
              <h2>Streaming</h2>
              <table>
                  <caption>These rows are streamed incrementally, no javascript needed!</caption>
@@ -42,14 +42,14 @@ namespace MinimalHtml.Sample.Pages
                      </tr>
                  </thead>
                  <tbody>
-                     {(db.GetRows(), Row)}
+                     {(rows, Row)}
                  </tbody>
              </table>
              """);
         
         
         public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/streaming", static (FakeDatabase db) => 
-            Results.Extensions.WithLayout(Page, db))
+            Results.Extensions.WithLayout(Page, db.GetRows()))
             .WithSwr();
     }
 }

@@ -40,28 +40,7 @@ app.MapGet("/user/{id}", (int id, UserService users) =>
 });
 ```
 
-### Template System
-
-Templates use the `Template<T>` delegate type for type-safe rendering:
-
-```csharp
-// Method signature matching Template<T>
-public static ValueTask<FlushResult> ProductCard(
-    (PipeWriter Writer, CancellationToken Token) writer, 
-    Product product) => 
-    writer.Html($"""
-        <article class="product">
-            <h3>{product.Name}</h3>
-            <p class="price">${product.Price:F2}</p>
-            <p class="description">{product.Description}</p>
-        </article>
-        """);
-
-// Or as a static readonly property
-public static readonly Template<Product> ProductTemplate = ProductCard;
-```
-
-### Security
+## Security
 
 All template interpolations are automatically HTML-encoded to prevent XSS attacks:
 

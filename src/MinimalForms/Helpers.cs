@@ -2,7 +2,7 @@
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 
-namespace MinimalHtml
+namespace MinimalForms
 {
     public static class Helpers
     {
