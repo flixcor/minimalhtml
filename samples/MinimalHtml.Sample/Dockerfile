@@ -29,13 +29,13 @@ COPY ["samples/MinimalHtml.Sample/MinimalHtml.Sample.csproj", "MinimalHtml.Sampl
 COPY ["samples/MinimalHtml.Sample/package.json", "MinimalHtml.Sample/"]
 COPY ["samples/MinimalHtml.Sample/pnpm-lock.yaml", "MinimalHtml.Sample/"]
 WORKDIR /src
-COPY ["src/MinimalForms/MinimalForms.csproj", "MinimalForms/"]
+COPY ["experimental/MinimalForms/MinimalForms.csproj", "MinimalForms/"]
 COPY ["src/MinimalHtml.AspNetCore/MinimalHtml.AspNetCore.csproj", "MinimalHtml.AspNetCore/"]
-COPY ["src/MinimalHtml.Vite/MinimalHtml.Vite.csproj", "MinimalHtml.Vite/"]
+COPY ["experimental/MinimalHtml.Vite/MinimalHtml.Vite.csproj", "MinimalHtml.Vite/"]
 COPY ["src/MinimalHtml/MinimalHtml.csproj", "MinimalHtml/"]
 COPY ["src/MinimalHtml.SourceGenerator/MinimalHtml.SourceGenerator.csproj", "MinimalHtml.SourceGenerator/"]
-COPY ["src/MinimalForms.ModelGenerator/MinimalForms.ModelGenerator.csproj", "MinimalForms.ModelGenerator/"]
-COPY ["src/MinimalHtml.CssModules/MinimalHtml.CssModules.csproj", "MinimalHtml.CssModules/"]
+COPY ["experimental/MinimalForms.ModelGenerator/MinimalForms.ModelGenerator.csproj", "MinimalForms.ModelGenerator/"]
+COPY ["experimental/MinimalHtml.CssModules/MinimalHtml.CssModules.csproj", "MinimalHtml.CssModules/"]
 WORKDIR "/samples/MinimalHtml.Sample"
 RUN dotnet restore "./MinimalHtml.Sample.csproj" -r linux-$TARGETARCH
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
