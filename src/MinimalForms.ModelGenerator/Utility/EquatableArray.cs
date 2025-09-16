@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Collections.Immutable;
 
 // https://github.com/andrewlock/StronglyTypedId/blob/master/src/StronglyTypedIds/EquatableArray.cs
-namespace StronglyTypedIds;
+namespace MinimalForms.ModelGenerator.Utility;
 
 /// <summary>
 /// An immutable, equatable array. This is equivalent to <see cref="Array{T}"/> but with value equality support.

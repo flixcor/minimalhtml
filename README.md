@@ -36,7 +36,7 @@ public static readonly Template<User> UserTemplate =
 app.MapGet("/user/{id}", (int id, UserService users) =>
 {
     var user = users.GetById(id);
-    return Results.Html(UserTemplate, user);
+    return Results.Extensions.Html(UserTemplate, user);
 });
 ```
 

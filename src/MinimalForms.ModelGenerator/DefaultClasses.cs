@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace ZodNet.ModelGenerator
+namespace MinimalForms.ModelGenerator
 {
     public class DefaultClasses
     {

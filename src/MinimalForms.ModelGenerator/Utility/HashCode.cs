@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 // https://github.com/andrewlock/StronglyTypedId/blob/master/src/StronglyTypedIds/HashCode.cs
 
-namespace StronglyTypedIds;
+namespace MinimalForms.ModelGenerator.Utility;
 
 /// <summary>
 /// Polyfill for .NET 6 HashCode  

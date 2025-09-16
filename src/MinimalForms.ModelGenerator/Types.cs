@@ -1,7 +1,6 @@
-﻿using StronglyTypedIds;
-using ZodNet.ModelGenerator.Utility;
+﻿using MinimalForms.ModelGenerator.Utility;
 
-namespace ZodNet.ModelGenerator;
+namespace MinimalForms.ModelGenerator;
 
 internal readonly record struct ConfigDeclaration
 {

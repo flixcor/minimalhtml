@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ZodNet.ModelGenerator.Utility
+﻿namespace MinimalForms.ModelGenerator.Utility
 {
     public static class Casing
     {

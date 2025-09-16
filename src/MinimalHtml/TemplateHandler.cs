@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Text;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace MinimalHtml;
 
@@ -11,8 +12,8 @@ public interface ITemplateHandler
     void AppendFormatted(Func<ReadOnlySpan<byte>> getBytes);
     void AppendFormatted(ReadOnlyMemory<byte> bytes);
     void AppendFormatted(string? s);
-    void AppendFormatted(Template? template);
-    void AppendFormatted(Template<string> template, string format);
+    void AppendFormatted(Template? innerTemplate);
+    void AppendFormatted(Template<string> innerTemplate, string format);
     void AppendFormatted<T>((IAsyncEnumerable<T>, Template<T>) tuple);
     void AppendFormatted<T>((IEnumerable<T>, Template<T>) tuple);
     void AppendFormatted<T>((T T, Template<T> Template) tuple);
@@ -58,6 +59,7 @@ public ref struct TemplateHandler : ITemplateHandler
     {
         if (!string.IsNullOrWhiteSpace(s) && !_token.IsCancellationRequested)
         {
+#pragma warning disable CA2012
             Result = Handle(_writer, _encoder, Result, s, static (p, _, s) => p.Write(s_buffers.GetOrAdd(s, Encoding.UTF8.GetBytes)));
         }
     }
@@ -99,17 +101,17 @@ public ref struct TemplateHandler : ITemplateHandler
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AppendFormatted(Template? template)
+    public void AppendFormatted(Template? innerTemplate)
     {
-        if (template is not null && !_token.IsCancellationRequested)
+        if (innerTemplate is not null && !_token.IsCancellationRequested)
         {
-            Result = Handle(_writer, Result, template, _token);
+            Result = Handle(_writer, Result, innerTemplate, _token);
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AppendFormatted(Template<string> template, string format)
-        => AppendFormatted((format, template));
+    public void AppendFormatted(Template<string> innerTemplate, string format)
+        => AppendFormatted((format, innerTemplate));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendFormatted<T>((Template<T>, T) tuple)
@@ -171,14 +173,14 @@ public ref struct TemplateHandler : ITemplateHandler
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
-        return await handler((page, token));
+        return await handler((page, token)).ConfigureAwait(false);
     }
 
     private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, T state, Template<T> handler, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
-        return await handler((page, token), state);
+        return await handler((page, token), state).ConfigureAwait(false);
     }
 
     private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, ValueTask<T> task, Template<T> handler, CancellationToken token)
@@ -187,28 +189,29 @@ public ref struct TemplateHandler : ITemplateHandler
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         if (!task.IsCompleted)
         {
-            flushResult = await page.FlushAsync(token);
+            flushResult = await page.FlushAsync(token).ConfigureAwait(false);
         }
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
-        var prop = await task;
-        return await handler((page, token), prop);
+        var prop = await task.ConfigureAwait(false);
+        return await handler((page, token), prop).ConfigureAwait(false);
     }
 
     private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, IAsyncEnumerable<T> enumerable, Template<T> template, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
-        await using var enumerator = enumerable.GetAsyncEnumerator(token);
+        var enumerator = enumerable.GetAsyncEnumerator(token);
+        await using var _ = enumerator.ConfigureAwait(false);
         while (true)
         {
             var next = enumerator.MoveNextAsync();
             if (!next.IsCompleted)
             {
-                flushResult = await page.FlushAsync(token);
+                flushResult = await page.FlushAsync(token).ConfigureAwait(false);
                 if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
             }
-            if (!await next) return flushResult;
-            flushResult = await template((page, token), enumerator.Current);
+            if (!await next.ConfigureAwait(false)) return flushResult;
+            flushResult = await template((page, token), enumerator.Current).ConfigureAwait(false);
             if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         }
     }
@@ -220,7 +223,7 @@ public ref struct TemplateHandler : ITemplateHandler
         using var enumerator = enumerable.GetEnumerator();
         while (enumerator.MoveNext())
         {
-            flushResult = await template((page, token), enumerator.Current);
+            flushResult = await template((page, token), enumerator.Current).ConfigureAwait(false);
             if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         }
         return flushResult;
@@ -234,3 +237,4 @@ public ref struct TemplateHandler : ITemplateHandler
 
     public void AppendFormatted<T>((Func<ValueTask<T>> Task, Template<T> Template) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
 }
+#pragma warning restore CA2012

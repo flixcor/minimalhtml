@@ -24,6 +24,7 @@ public static class HtmlTemplateExtensions
         ) =>
         handler.Result;
 }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 [InterpolatedStringHandler]
 public ref struct HtmlTemplateHandler : ITemplateHandler
@@ -47,9 +48,9 @@ public ref struct HtmlTemplateHandler : ITemplateHandler
 
     public void AppendFormatted(string? s) => _inner.AppendFormatted(s);
 
-    public void AppendFormatted(Template? template) => _inner.AppendFormatted(template);
+    public void AppendFormatted(Template? innerTemplate) => _inner.AppendFormatted(innerTemplate);
 
-    public void AppendFormatted(Template<string> template, string format) => _inner.AppendFormatted(template, format);
+    public void AppendFormatted(Template<string> innerTemplate, string format) => _inner.AppendFormatted(innerTemplate, format);
 
     public void AppendFormatted<T>((IAsyncEnumerable<T>, Template<T>) tuple) => _inner.AppendFormatted(tuple);
 

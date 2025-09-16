@@ -1,7 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 
-namespace ZodNet.ModelGenerator
+namespace MinimalForms.ModelGenerator
 {
     [Generator]
     public class ModelGenerator : IIncrementalGenerator
