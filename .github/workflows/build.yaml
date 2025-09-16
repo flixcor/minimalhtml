@@ -1,0 +1,44 @@
+on:
+  pull_request:
+      branches: [main]
+      paths-ignore:
+        - "**/*.md"
+        - "**/*.gitignore"
+        - "**/*.gitattributes"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build & Test
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_NOLOGO: true
+      DOTNET_GENERATE_ASPNET_CERTIFICATE: false
+      DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: false
+      DOTNET_MULTILEVEL_LOOKUP: 0
+      DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: true
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        global-json-file: "./global.json"
+    
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore -p:SourceRevisionId=$GITHUB_SHA -p:ContinuousIntegrationBuild=true
+
+    - name: Test
+      run: dotnet test --configuration Release --no-restore --no-build
+
+    - name: Pack (ci)
+      run: dotnet pack --configuration Release --output ./artifacts/ci --verbosity normal -p:SourceRevisionId=$GITHUB_SHA -p:ContinuousIntegrationBuild=true  --no-restore --no-build

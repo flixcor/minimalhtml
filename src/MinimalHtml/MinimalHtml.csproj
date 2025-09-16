@@ -4,23 +4,6 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-      <PackageTags>ASP.NET Web AOT html MinimalApis IResult templating templates</PackageTags>
-      <PackageReadmeFile>README.md</PackageReadmeFile>
-    <IsAotCompatible>True</IsAotCompatible>
-      <AnalysisMode>Recommended</AnalysisMode>
-      <AnalysisModeReliability>All</AnalysisModeReliability>
-      <AnalysisModePerformance>All</AnalysisModePerformance>
-      <AnalysisModeSecurity>All</AnalysisModeSecurity>
-      <Authors>Felix Cornelissen</Authors>
-      <Copyright>Copyright © Felix Cornelissen</Copyright>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
-      <PackageProjectUrl>https://github.com/flixcor/minimalhtml</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/flixcor/minimalhtml</RepositoryUrl>
-      <RepositoryType>git</RepositoryType>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
-      <IsPackable>true</IsPackable>
-      <DebugType>embedded</DebugType>
-      <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,9 +24,4 @@
             <None Include="@(SourceGeneratorAssemblyPath -> '%(Identity)')" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
         </ItemGroup>
     </Target>
-    
-    <ItemGroup>
-        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-    </ItemGroup>
-    
 </Project>
