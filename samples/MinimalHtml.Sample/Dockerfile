@@ -25,7 +25,7 @@ ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
 ARG REVISION=latest
 WORKDIR /samples
-COPY ["samples/MinimalHtml.Sample/MinimalHtml.Sample.csproj", "samples/MinimalHtml.Sample/"]
+COPY ["samples/MinimalHtml.Sample/MinimalHtml.Sample.csproj", "MinimalHtml.Sample/"]
 COPY ["samples/MinimalHtml.Sample/package.json", "MinimalHtml.Sample/"]
 COPY ["samples/MinimalHtml.Sample/pnpm-lock.yaml", "MinimalHtml.Sample/"]
 WORKDIR /src
