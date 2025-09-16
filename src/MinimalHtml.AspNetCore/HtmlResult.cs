@@ -2,14 +2,14 @@
 
 namespace MinimalHtml;
 
-public class HtmlResult<T>(T context, Template<T> template, int statusCode = 200) : IResult
+public record HtmlResult<T>(T Context, Template<T> Template, int? StatusCode = 200, string? ContentType = "text/html") : IResult, IContentTypeHttpResult, IStatusCodeHttpResult
 {
     public async Task ExecuteAsync(HttpContext httpContext)
     {
-        httpContext.Response.StatusCode = statusCode;
+        httpContext.Response.StatusCode = StatusCode ?? 200;
         httpContext.Response.ContentType = "text/html";
         var page = (httpContext.Response.BodyWriter, httpContext.RequestAborted);
-        var flushResult = await template(page, context);
+        var flushResult = await Template(page, Context);
         if (!flushResult.IsCanceled && !page.RequestAborted.IsCancellationRequested)
         {
             await httpContext.Response.BodyWriter.FlushAsync(page.RequestAborted);
@@ -17,15 +17,15 @@ public class HtmlResult<T>(T context, Template<T> template, int statusCode = 200
     }
 }
 
-public class HtmlResult(Template template, int statusCode = 200) : IResult
+public record HtmlResult(Template Template, int? StatusCode = 200, string? ContentType = "text/html") : IResult, IContentTypeHttpResult, IStatusCodeHttpResult
 {
     public async Task ExecuteAsync(HttpContext httpContext)
     {
-        httpContext.Response.StatusCode = statusCode;
-        httpContext.Response.ContentType = "text/html";
+        httpContext.Response.StatusCode = StatusCode ?? 200;
+        httpContext.Response.ContentType = ContentType ?? "text/html";
         var page = (httpContext.Response.BodyWriter, httpContext.RequestAborted);
 
-        var flushResult = await template(page);
+        var flushResult = await Template(page);
         if (!flushResult.IsCanceled)
         {
             await httpContext.Response.BodyWriter.FlushAsync(page.RequestAborted);
