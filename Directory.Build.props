@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+  </PropertyGroup>
+
+</Project>

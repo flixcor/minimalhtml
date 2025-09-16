@@ -10,7 +10,7 @@
         <ImplicitUsings>true</ImplicitUsings>
         <LangVersion>latest</LangVersion>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-        <!-- Generates a package at build -->
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <!-- This ensures the library will be packaged as a source generator when we use `dotnet pack` -->

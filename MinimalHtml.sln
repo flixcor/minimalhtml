@@ -5,19 +5,19 @@ VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml", "src\MinimalHtml\MinimalHtml.csproj", "{AB9CE0B4-921E-56F6-BC00-73D3A2BB2D90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalForms", "src\MinimalForms\MinimalForms.csproj", "{57516551-1CE2-31F6-A0A9-F26CC6765588}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalForms", "experimental\MinimalForms\MinimalForms.csproj", "{57516551-1CE2-31F6-A0A9-F26CC6765588}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.AspNetCore", "src\MinimalHtml.AspNetCore\MinimalHtml.AspNetCore.csproj", "{5DD3CC29-4802-E68E-DB0C-3538C92E6766}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.SourceGenerator", "src\MinimalHtml.SourceGenerator\MinimalHtml.SourceGenerator.csproj", "{FB0D85B5-83F7-988C-E5EB-861233AF1058}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalForms.ModelGenerator", "src\MinimalForms.ModelGenerator\MinimalForms.ModelGenerator.csproj", "{E2F8483D-42CF-3716-F6CA-74CD86AB20C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalForms.ModelGenerator", "experimental\MinimalForms.ModelGenerator\MinimalForms.ModelGenerator.csproj", "{E2F8483D-42CF-3716-F6CA-74CD86AB20C1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalForms.Test", "test\MinimalForms.Test\MinimalForms.Test.csproj", "{D3142370-E3C9-C1E5-C7DF-EFA48F2AC751}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.Sample", "samples\MinimalHtml.Sample\MinimalHtml.Sample.csproj", "{71CA9903-27E7-2E3D-EAE5-A097089D12EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.Vite", "src\MinimalHtml.Vite\MinimalHtml.Vite.csproj", "{A05CBB40-54BC-4AB7-A62A-08785E162EB8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.Vite", "experimental\MinimalHtml.Vite\MinimalHtml.Vite.csproj", "{A05CBB40-54BC-4AB7-A62A-08785E162EB8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{70D09F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "forms", "forms", "{2BE17DD4-0A69-45F9-97B6-1831E73D41FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.CssModules", "src\MinimalHtml.CssModules\MinimalHtml.CssModules.csproj", "{5BABBE76-8169-08CD-8367-78D0E11A1F5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.CssModules", "experimental\MinimalHtml.CssModules\MinimalHtml.CssModules.csproj", "{5BABBE76-8169-08CD-8367-78D0E11A1F5C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalHtml.Test", "test\MinimalHtml.Test\MinimalHtml.Test.csproj", "{257C3B5C-948D-337C-7E23-0DBFC3505E63}"
 EndProject
