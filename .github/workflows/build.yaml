@@ -46,7 +46,8 @@ jobs:
       uses: jannemattila/get-version-from-tag@v4
 
     - name: Display version
-      run: echo "Version: ${{ steps.get_version.outputs.version }}"
+      run: |
+        echo "Version: ${{ steps.get_version.outputs.version }}"
 
     - name: Pack (ci)
       run: dotnet pack --configuration Release --output ./artifacts/ci --verbosity normal -p:SourceRevisionId=$GITHUB_SHA -p:Version=${{ steps.get_version.outputs.version }} -p:ContinuousIntegrationBuild=true  --no-restore --no-build
