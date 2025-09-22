@@ -43,13 +43,13 @@ jobs:
 
     - name: Get version from tag
       id: get_version
-      uses: jannemattila/get-version-from-tag@v4
+      uses: battila7/get-version-action@v2
 
     - name: Display version
-      run: echo "Version: ${{ steps.get_version.outputs.version }}"
+      run: echo "Version: ${{ steps.get_version.outputs.version-without-v }}"
 
     - name: Pack (ci)
-      run: dotnet pack --configuration Release --output ./artifacts/ci --verbosity normal -p:SourceRevisionId=$GITHUB_SHA -p:Version=${{ steps.get_version.outputs.version }} -p:ContinuousIntegrationBuild=true  --no-restore --no-build
+      run: dotnet pack --configuration Release --output ./artifacts/ci --verbosity normal -p:SourceRevisionId=$GITHUB_SHA -p:Version=${{ steps.get_version.outputs.version-without-v }} -p:ContinuousIntegrationBuild=true  --no-restore --no-build
 
 
     - name: Publish Package (ci)
