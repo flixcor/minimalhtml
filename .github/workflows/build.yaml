@@ -51,7 +51,7 @@ jobs:
 
     - name: Pack (ci)
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-      run: dotnet pack --configuration Release --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }} -p:ContinuousIntegrationBuild=true  --no-restore --no-build
+      run: dotnet pack --configuration Release --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }} -p:ContinuousIntegrationBuild=true
 
 
     - name: Publish Package (ci)
