@@ -24,6 +24,7 @@ RUN corepack enable
 ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
 ARG REVISION=latest
+COPY Directory.Packages.props ./
 WORKDIR /samples
 COPY ["samples/MinimalHtml.Sample/MinimalHtml.Sample.csproj", "MinimalHtml.Sample/"]
 COPY ["samples/MinimalHtml.Sample/package.json", "MinimalHtml.Sample/"]
