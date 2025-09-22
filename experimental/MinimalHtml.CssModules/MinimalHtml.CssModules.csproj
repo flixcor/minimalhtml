@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <!-- 👇 Source generators must target netstandard 2.0 -->
@@ -18,17 +18,17 @@
         <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.13.0" />
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.2" GeneratePathProperty="true" PrivateAssets="all" />
-        <PackageReference Include="System.Buffers" Version="4.6.0" GeneratePathProperty="true" PrivateAssets="all" />
-        <PackageReference Include="System.IO.Hashing" Version="9.0.2" GeneratePathProperty="true" PrivateAssets="all" />
-        <PackageReference Include="System.IO.Pipelines" Version="9.0.2" GeneratePathProperty="true" PrivateAssets="all" />
-        <PackageReference Include="System.Memory" Version="4.6.0" GeneratePathProperty="true" PrivateAssets="all" />
-        <PackageReference Include="System.Numerics.Vectors" Version="4.6.0" GeneratePathProperty="true" PrivateAssets="all" />
-        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" GeneratePathProperty="true" PrivateAssets="all" />
-        <PackageReference Include="System.Text.Encodings.Web" Version="9.0.2" GeneratePathProperty="true" PrivateAssets="all" />
-        <PackageReference Include="System.Text.Json" Version="9.0.2" GeneratePathProperty="true" PrivateAssets="all" />
-        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Buffers" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.IO.Hashing" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.IO.Pipelines" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Memory" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Numerics.Vectors" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Text.Encodings.Web" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Text.Json" GeneratePathProperty="true" PrivateAssets="all" />
+        <PackageReference Include="System.Threading.Tasks.Extensions" GeneratePathProperty="true" PrivateAssets="all" />
     </ItemGroup>
 
 
