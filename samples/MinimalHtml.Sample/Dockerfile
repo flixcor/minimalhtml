@@ -46,7 +46,7 @@ WORKDIR "/samples/MinimalHtml.Sample"
 
 # This stage is used to publish the service project to be copied to the final stage
 RUN pnpm run build
-RUN dotnet publish "./MinimalHtml.Sample.csproj" -o /app -r linux-$TARGETARCH --no-restore /p:SourceRevisionId=$REVISION
+RUN dotnet publish "./MinimalHtml.Sample.csproj" -o /app -r linux-$TARGETARCH --no-restore /p:SourceRevisionId=$REVISION --no-cache
 RUN rm -f /app/*.dbg /app/*.Development.json /app/package.json /app/tsconfig.json
 
 # This stage is used as the base for the final stage when launching from VS to support debugging in regular mode (Default when not using the Debug configuration)
