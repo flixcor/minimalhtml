@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - main
+    paths_ignore:
+      - "**/*.md"
+      - "**/*.gitignore"
+      - "**/*.gitattributes"
+      - "**/build.yaml"
 jobs:
   my-job:
     name: push
