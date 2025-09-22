@@ -59,7 +59,7 @@ jobs:
 
     - name: add custom package source
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-      run: dotnet nuget add source ./artifacts/ci --name LocalTemp
+      run: dotnet nuget add source ${{ github.workspace }}/artifacts/ci --name LocalTemp
 
     - name: Pack MinimalHtml.AspNetCore (ci)
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
