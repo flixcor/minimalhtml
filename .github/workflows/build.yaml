@@ -49,14 +49,25 @@ jobs:
       run: |
         echo "Version: ${{ steps.get_version.outputs.version }}"
 
-    - name: Pack (ci)
+    - name: Update dependencies
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-      run: dotnet pack --configuration Release --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }} -p:ContinuousIntegrationBuild=true
+      run: sed -i "s|\(<PackageVersion Include=\"MinimalHtml\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version }}\2|" Directory.Packages.props
 
+    - name: Pack MinimalHtml (ci)
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+      run: dotnet pack src/MinimalHtml --configuration Release --output /artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }} -p:ContinuousIntegrationBuild=true
+
+    - name: add custom package source
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+      run: dotnet nuget add source /artifacts/ci --name LocalTemp
+
+    - name: Pack MinimalHtml.AspNetCore (ci)
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+      run: dotnet pack src/MinimalHtml.AspNetCore --configuration Release --output /artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }} -p:ContinuousIntegrationBuild=true
 
     - name: Publish Package (ci)
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        for file in ./artifacts/ci/*.nupkg; do
+        for file in /artifacts/ci/*.nupkg; do
           dotnet nuget push "$file" -k ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
         done
