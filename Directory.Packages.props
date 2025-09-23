@@ -15,6 +15,7 @@
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageVersion Include="MinimalHtml" Version="0.0.1-alpha.0" />
+    <PackageVersion Include="MinimalHtml.AspNetCore" Version="0.0.1-alpha.1" />
     <PackageVersion Include="System.Buffers" Version="4.6.0" />
     <PackageVersion Include="System.IO.Hashing" Version="9.0.2" />
     <PackageVersion Include="System.IO.Pipelines" Version="9.0.2" />
