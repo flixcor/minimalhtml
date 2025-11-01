@@ -105,7 +105,7 @@ async function handleCaching(request, clientId, cached, fresh, usedFresh) {
             break;
     }
     if (!usedFresh &&
-        result === comparisonResult.changed &&
+        result.result === comparisonResult.changed &&
         'clients' in self &&
         self.clients instanceof Clients) {
         const client = await self.clients.get(clientId)
