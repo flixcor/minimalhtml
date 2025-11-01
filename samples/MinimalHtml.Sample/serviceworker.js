@@ -99,8 +99,13 @@ async function handleCaching(request, clientId, cached, fresh, usedFresh) {
             break;
         case comparisonResult.changed:
         case comparisonResult.created:
-            clone.headers.set('x-swr-etag', result.newHash)
-            await ourCache.put(request, clone)
+            const headers = new Headers(clone.headers)
+            headers.set('x-swr-etag', result.newHash)
+            await ourCache.put(request, new Response(clone.body, {
+                status: clone.status,
+                statusText: clone.statusText,
+                headers: headers
+            }))
             break;
         default:
             break;
