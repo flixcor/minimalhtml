@@ -1,5 +1,6 @@
 navigator?.serviceWorker?.addEventListener("message", e => {
     if (e.data?.url !== location.href) return
+    console.log("Service worker reported a change:", e.data)
     const toast = document.createElement("div")
     toast.innerText = "This page has changed. Refresh to see the new content."
     toast.setAttribute("popover", "manual")

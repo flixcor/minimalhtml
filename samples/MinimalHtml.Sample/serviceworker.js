@@ -93,7 +93,7 @@ async function handleCaching(request, clientId, cached, fresh, usedFresh) {
     if (!isHtml) return
     const result = await compare(cached, response)
     const ourCache = await ourCachePromise
-    switch (result) {
+    switch (result.result) {
         case comparisonResult.deleted:
             await ourCache.delete(request)
             break;
@@ -110,7 +110,8 @@ async function handleCaching(request, clientId, cached, fresh, usedFresh) {
         self.clients instanceof Clients) {
         const client = await self.clients.get(clientId)
         client?.postMessage({
-            url: request.url
+            url: request.url,
+            ...result,
         })
     }
 }
@@ -141,10 +142,10 @@ const getSwr = async (response) => {
  */
 async function compare(cached, fresh) {
     const [oldHash, newHash] = await Promise.all([cached && getSwr(cached), getSwr(fresh)])
-    if (newHash && !oldHash) return comparisonResult.created
-    if (oldHash && !newHash) return comparisonResult.deleted
-    if (newHash && oldHash && newHash !== oldHash) return comparisonResult.changed
-    return comparisonResult.unchanged
+    if (newHash && !oldHash) return { oldHash, newHash, result: comparisonResult.created }
+    if (oldHash && !newHash) return { oldHash, newHash, result: comparisonResult.deleted }
+    if (newHash && oldHash && newHash !== oldHash) return { oldHash, newHash, result: comparisonResult.changed }
+    return { oldHash, newHash, result: comparisonResult.unchanged }
 }
 
 const comparisonResult = Object.freeze({
