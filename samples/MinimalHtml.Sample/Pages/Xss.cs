@@ -12,7 +12,6 @@ namespace MinimalHtml.Sample.Pages
              <p>Strings are escaped by default, so this unsafe text is not interpreted as html:</p>
              <p><code>{UnsafeText}</code></p>
              """)))
-            .WithEtag()
             .WithSwr()
             .CacheOutput();
     }

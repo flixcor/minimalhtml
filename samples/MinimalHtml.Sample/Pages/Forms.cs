@@ -19,7 +19,6 @@ namespace MinimalHtml.Sample.Pages
 
             group.MapGet("/", static () => Results.Extensions
                 .WithLayout(static page => Render(page), p => p.Html($"{Assets.Style:/Pages/Forms.css}")))
-                .WithEtag()
                 .WithSwr()
                 .CacheOutput();
 

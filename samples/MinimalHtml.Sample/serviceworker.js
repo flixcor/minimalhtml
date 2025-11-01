@@ -99,6 +99,7 @@ async function handleCaching(request, clientId, cached, fresh, usedFresh) {
             break;
         case comparisonResult.changed:
         case comparisonResult.created:
+            clone.headers.set('x-swr-etag', result.newHash)
             await ourCache.put(request, clone)
             break;
         default:
@@ -116,23 +117,16 @@ async function handleCaching(request, clientId, cached, fresh, usedFresh) {
     }
 }
 
-/**
- * @param {Response} response 
- * @returns {string | null}
- */
-const getEtag = (response) => response.headers.get('ETag') || response.headers.get('x-swr-etag') || response.headers.get('x-swr-hash')
 
 /**
  * @param {Response} response 
  * @returns {Promise<string>}
  */
 const getSwr = async (response) => {
-    const etag = getEtag(response)
-    if (etag) return etag
+    const hash = response.headers.get('x-swr-hash')
+    if (hash) return hash
     const clone = response.clone()
-    const hash = await getHash(clone)
-    // response.headers.set('x-swr-hash', hash)
-    return hash
+    return await getHash(clone)
 }
 
 /**

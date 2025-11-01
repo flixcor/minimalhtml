@@ -11,7 +11,6 @@ namespace MinimalHtml.Sample.Pages
             If the fresh response has a different ETag header, the user is informed.</p>
             <p>Generated at: {DateTime.Now:yyyy-MM-dd HH:mm z}</p>
             """)))
-            .WithEtag()
             .WithSwr();
     }
 }

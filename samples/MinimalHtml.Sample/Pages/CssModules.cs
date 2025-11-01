@@ -13,7 +13,6 @@ namespace MinimalHtml.Sample.Pages
                  <p>Paragraphs are pink only on this page when the viewporter is narrower than 50rem, using css modules</p>
              </div>
              """), Head))
-            .WithEtag()
             .WithSwr()
             .CacheOutput();
     }

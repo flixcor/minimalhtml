@@ -16,7 +16,6 @@ namespace MinimalHtml.Sample.Pages
         
         public static void Map(IEndpointRouteBuilder builder) => builder
             .MapGet("/Lit", static () => Results.Extensions.WithLayout(s_body, s_head))
-            .WithEtag()
             .WithSwr();
     }
 }
