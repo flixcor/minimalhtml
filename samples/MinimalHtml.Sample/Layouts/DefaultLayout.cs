@@ -90,11 +90,14 @@ public static class DefaultLayout
              <slot name="main"></slot>
              <slot name="footer"></slot>
          </template>
-         <header slot="header">
-            <div class="backdrop"></div>
-            <nav>
-                <button>Menu</button>
+         <header slot="header" >
+            <button commandfor="navlist" command="toggle-popover">Menu</button>
+            <nav id="navlist" popover>
+                <div class="backdrop"></div>
                 <ul>
+                    <li>
+                        <a href="#main">Skip to Content</a>
+                    </li>
                     <li>
                         <a {{context.NavLink:/}}>Progressive enhancement</a>
                     </li>
@@ -126,7 +129,7 @@ public static class DefaultLayout
             </nav>
          </header>
          <footer slot="footer" class="the-footer">Version: <version-number></version-number></footer>
-         <main role="main" slot="main">
+         <main role="main" slot="main" id="main" tabindex="-1">
            {{(context.Body,context.Context)}}
          </main>
          </body>

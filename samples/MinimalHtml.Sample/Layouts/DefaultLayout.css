@@ -1,4 +1,4 @@
-﻿@import "open-props/normalize.min.css";      
+﻿@import "open-props/normalize.min.css";
 @import "open-props/buttons.min.css";
 @view-transition {
   navigation: auto;
@@ -12,7 +12,6 @@ body {
 }
 
 main {
-  
   --border: solid var(--surface-2) var(--border-size-2);
   display: grid;
   gap: var(--size-4);
@@ -27,8 +26,8 @@ main {
 }
 
 .the-footer {
-    grid-row: 2 / 2;
-    grid-column: 2 / 2;
+  grid-row: 2 / 2;
+  grid-column: 2 / 2;
 }
 
 [aria-current="page"] {
@@ -41,17 +40,10 @@ table {
 
 header {
   border-inline-end: 1px var(--surface-2) solid;
-  position: sticky;
-  top: 0;
-  bottom: 0;
-  height: max-content;
-  min-height: 100lvh;
   grid-row: 1 / -1;
 
-  flex-shrink: 0;
-
   button {
-    font-size: .625rem;
+    font-size: 0.625rem;
     visibility: hidden;
     opacity: 0;
     border: none;
@@ -62,13 +54,14 @@ header {
   }
 
   :not(.backdrop) {
-    z-index: 2;
+    /* z-index: 2; */
   }
 }
 
 nav {
   display: flex;
   flex-direction: row-reverse;
+  background: none;
 }
 
 nav a {
@@ -91,14 +84,13 @@ nav ul {
   inset: 0;
   height: 200%;
   backdrop-filter: blur(8px);
-  mask-image: linear-gradient(to bottom,
-      black 0% 50%,
-      transparent 50% 100%);
+  mask-image: linear-gradient(to bottom, black 0% 50%, transparent 50% 100%);
   pointer-events: none;
 }
 
 @media screen and (width <=50rem) {
-  main, .the-footer {
+  main,
+  .the-footer {
     padding-inline-start: 3.375em;
   }
 
@@ -116,35 +108,41 @@ nav ul {
     left: 0;
     top: 0;
     bottom: 0;
-    transition: translate ease 200ms;
-    translate: 0% 0%;
-    background: color-mix(in srgb, var(--surface-1), transparent 25%);
-    z-index: 1;
+
+    &:not(:has(:popover-open)) button {
+      opacity: 100%;
+      transition: opacity 200ms 200ms;
+    }
+
+    nav {
+      transition: 
+        translate ease 200ms,
+        display 200ms allow-discrete;
+      translate: 0% 0%;
+      background: color-mix(in srgb, var(--surface-1), transparent 25%);
+      overflow-y: clip;
+      border-inline-end: 1px var(--surface-2) solid;
+      @starting-style {
+        translate: -100% 0%;
+      }
+    }
 
     ul {
+      overflow-y: auto;
+      height: 100dvh;
+      z-index: 1;
       padding-inline-end: 3rem;
       gap: var(--size-5);
     }
 
     button {
       visibility: visible;
-
     }
+  }
 
-    &:focus-within button:not(:focus) {
-      visibility: hidden;
-    }
-
-
-    &:not(:focus-within) {
-      translate: calc(-100% + 2.75rem) 0%;
-
-      button {
-        opacity: 100%;
-        transition: opacity 200ms 200ms;
-
-
-      }
-    }
+  body:has(#navlist:not(:popover-open):not(:focus-within), main:focus-within)
+    #navlist {
+    translate: -100% 0%;
+    display: none;
   }
 }
