@@ -90,7 +90,7 @@ public static class DefaultLayout
                 <div class="backdrop"></div>
                 <ul>
                     <li>
-                        <a href="#main">Skip to Content</a>
+                        <a href="#main" id="skip-to-content">Skip to Content</a>
                     </li>
                     <li>
                         <a {{context.NavLink:/}}>Progressive enhancement</a>

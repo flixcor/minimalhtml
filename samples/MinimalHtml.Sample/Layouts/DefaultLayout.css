@@ -49,7 +49,7 @@ header {
     border: none;
     text-shadow: none;
     box-shadow: none;
-    background: none;
+    background: var(--surface-1);
     grid-column: -1 / -1;
   }
 
@@ -90,6 +90,9 @@ nav ul {
 }
 
 @media screen and (width <=50rem) {
+  #skip-to-content {
+    display: none;
+  }
   main,
   .the-footer {
     padding-inline-start: 3.375em;
@@ -110,14 +113,9 @@ nav ul {
     top: 0;
     bottom: 0;
 
-    &:not(:has(:popover-open)) button {
-      opacity: 100%;
-      transition: opacity 200ms 200ms;
-    }
-
     nav {
       position: fixed;
-      transition: 
+      transition:
         translate ease 200ms,
         display 200ms allow-discrete;
       translate: 0% 0%;
@@ -142,9 +140,14 @@ nav ul {
     }
   }
 
-  body:has(#navlist:not(:popover-open):not(:focus-within), main:focus-within)
+  body:has(#navlist:not(:popover-open):not(:focus-within), main:focus-within) {
     #navlist {
-    translate: -100% 0%;
-    display: none;
+      translate: -100% 0%;
+      display: none;
+    }
+    button[commandfor="navlist"] {
+      opacity: 100%;
+      transition: opacity 200ms 200ms;
+    }
   }
 }
