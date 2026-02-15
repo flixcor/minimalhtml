@@ -62,6 +62,7 @@ nav {
   display: flex;
   flex-direction: row-reverse;
   background: none;
+  position: relative;
 }
 
 nav a {
