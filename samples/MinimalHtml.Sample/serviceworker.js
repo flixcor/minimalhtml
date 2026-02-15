@@ -2,6 +2,8 @@
 "use strict";
 import hasher from "xxhash-wasm"
 
+let isLocalhost = false
+
 self.addEventListener("install", () => self.skipWaiting())
 
 const getHasher = () => hasher()
@@ -12,7 +14,7 @@ const getHasher = () => hasher()
  */
 const getHash = (response) => (hasherPromise ??= getHasher()).then(async hasher => {
     if (!response.body || !hasher) return ""
-    if (response.url.includes("localhost")) return response.text().then(t => t.replaceAll(/.*browserLink.*/g, "")).then(hasher.h32ToString)
+    if (isLocalhost) return response.text().then(t => t.replaceAll(/.*browserLink.*/g, "")).then(hasher.h32ToString)
     const x32 = hasher.create32()
     const reader = response.body.getReader()
     let done = false
@@ -87,6 +89,7 @@ async function prioritize(cached, fresh) {
  */
 async function handleCaching(request, clientId, cached, fresh, usedFresh) {
     const response = await fresh
+    isLocalhost = response.url.includes('localhost')
     const clone = response.clone()
     const contentType = response.headers.get('Content-Type');
     const isHtml = contentType?.includes("html");
