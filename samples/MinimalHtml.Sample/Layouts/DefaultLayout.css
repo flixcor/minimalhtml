@@ -5,7 +5,7 @@
 }
 body {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
   gap: var(--size-5);
   --body-padding-inline: clamp(var(--size-2), 5vw, var(--size-15));
@@ -44,8 +44,7 @@ header {
 
   button {
     font-size: 0.625rem;
-    visibility: hidden;
-    opacity: 0;
+    display: none;
     border: none;
     text-shadow: none;
     box-shadow: none;
@@ -53,9 +52,7 @@ header {
     grid-column: -1 / -1;
   }
 
-  :not(.backdrop) {
-    /* z-index: 2; */
-  }
+  
 }
 
 nav {
@@ -87,6 +84,12 @@ nav ul {
   backdrop-filter: blur(8px);
   mask-image: linear-gradient(to bottom, black 0% 50%, transparent 50% 100%);
   pointer-events: none;
+}
+
+@media screen and (width > 50rem) {
+  body:has(#navlist:popover-open) header {
+    min-inline-size: 20rem;
+  }
 }
 
 @media screen and (width <=50rem) {
@@ -135,9 +138,6 @@ nav ul {
       gap: var(--size-5);
     }
 
-    button {
-      visibility: visible;
-    }
   }
 
   body:has(#navlist:not(:popover-open):not(:focus-within), main:focus-within) {
@@ -146,8 +146,7 @@ nav ul {
       display: none;
     }
     button[commandfor="navlist"] {
-      opacity: 100%;
-      transition: opacity 200ms 200ms;
+      display: block;
     }
   }
 }
