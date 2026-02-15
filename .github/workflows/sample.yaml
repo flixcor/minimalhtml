@@ -36,7 +36,7 @@ jobs:
           tags: "flixcor/minimalhtml-sample:latest,flixcor/minimalhtml-sample:${{ github.sha }}"
           cache-from: type=registry,ref=flixcor/minimalhtml-sample:buildcache
           cache-to: type=registry,ref=flixcor/minimalhtml-sample:buildcache,mode=max
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           build-args: |
             REVISION=${{ github.sha }}
 
