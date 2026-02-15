@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Caching.Memory;
+using MinimalHtml;
 using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample;
 using MinimalHtml.Sample.Components;
@@ -17,15 +19,14 @@ builder.WebHost.UseStaticWebAssets();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
     {
-      options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+        options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
     });
 
 builder.Services.AddSingleton<FakeDatabase>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<NavLink>();
-AspNetAssetResolver.Register(builder.Services, ViteManifestResolver.DefaultRelativeManifestPath, (p) => new ViteManifestResolver(p).GetAssets);
-
+builder.Services.RegisterViteAssets(importmapPath: ".vite/importmap.json");
 if (!builder.Environment.IsDevelopment())
 {
     builder.Services.AddResponseCompression();
@@ -35,7 +36,7 @@ if (!builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
-Assets.Initialize(app);
+MinimalHtml.Sample.Assets.Initialize(app);
 
 if (!app.Environment.IsDevelopment())
 {
@@ -44,7 +45,18 @@ if (!app.Environment.IsDevelopment())
     TemplateCache.Cache();
 }
 
-app.MapStaticAssets();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = (ctx) =>
+    {
+        var request = ctx.Context.Request;
+        var response = ctx.Context.Response;
+        response.Headers.CacheControl = request.Path.StartsWithSegments("/assets")
+            ? "public, max-age=604800, immutable"
+            : "no-cache";
+    }
+});
+
 //app.UseAntiforgery();
 Home.Map(app);
 StreamingTable.Map(app);

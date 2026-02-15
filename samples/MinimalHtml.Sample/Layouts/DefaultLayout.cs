@@ -1,8 +1,7 @@
 ﻿
 using System.Collections.Immutable;
-using System.Reflection;
-using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample.Components;
+using MinimalHtml.Vite;
 
 namespace MinimalHtml.Sample.Layouts;
 
@@ -11,7 +10,7 @@ public readonly struct LayoutProps<T>
     public required T Context { get; init; }
     public required Template<T> Body { get; init; }
     public required Template<string> NavLink { get; init; }
-    public required ImmutableDictionary<string, Asset> ImportedAssets { get; init; }
+    public required Template ImportMap { get; init; }
     public Template? Head { get; init; }
 }
 
@@ -20,7 +19,7 @@ public readonly struct LayoutProps
     public required Template Body { get; init; }
     public required Template<string> NavLink { get; init; }
     public Template? Head { get; init; }
-    public required ImmutableDictionary<string, Asset> ImportedAssets { get; init; }
+    public required Template ImportMap { get; init; }
     
     public static implicit operator LayoutProps<Template>(LayoutProps value) => new()
     {
@@ -28,7 +27,7 @@ public readonly struct LayoutProps
         Body = static (page, template) => template(page),
         NavLink = value.NavLink,
         Head = value.Head,
-        ImportedAssets = value.ImportedAssets
+        ImportMap = value.ImportMap
     };
 }
 
@@ -39,13 +38,8 @@ public static class DefaultLayout
         public async Task ExecuteAsync(HttpContext httpContext)
         {
             var navLink = httpContext.RequestServices.GetRequiredService<NavLink>();
-            var importedAssets = ImmutableDictionary<string, Asset>.Empty;
-            var resolver = httpContext.RequestServices.GetService<AspNetAssetResolver>();
-            if (resolver != null)
-            {
-                importedAssets = await resolver.GetImportMap();
-            }
-            var props = new LayoutProps<T>{ Body = page, Context = context, NavLink = navLink.Render, Head = head, ImportedAssets = importedAssets };
+            var writeImportmap = httpContext.RequestServices.GetRequiredService<WriteImportMap>();
+            var props = new LayoutProps<T>{ Body = page, Context = context, NavLink = navLink.Render, Head = head, ImportMap = (tup) => writeImportmap(tup) };
             await new HtmlResult<LayoutProps<T>>(props, Render, statusCode).ExecuteAsync(httpContext);
         }
     }
@@ -67,7 +61,7 @@ public static class DefaultLayout
              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
              <meta name="view-transition" content="same-origin" />
                  <!-- the props -->
-             {{(ImportMap, context.ImportedAssets)}}
+             {{context.ImportMap}}
              {{Assets.SvgFavIcon:img/favicon.svg}}
              {{Assets.Script:Layouts/DefaultLayout.ts}}
              {{Assets.Style:Layouts/DefaultLayout.css}}

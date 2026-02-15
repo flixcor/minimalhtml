@@ -79,7 +79,7 @@ fieldset {
     }
 
     &>label:has(:placeholder-shown:required, :user-invalid) {
-        > {
+        > * {
             position: relative;
         }
 
@@ -692,7 +692,7 @@ input[type="range"] {
             }
         }
 
-        @nest .fieldset-item:focus-within & {
+        .fieldset-item:focus-within & {
             border-color: var(--surface-2);
         }
     }
@@ -714,7 +714,7 @@ input[type="range"] {
             }
         }
 
-        @nest .fieldset-item:focus-within & {
+        .fieldset-item:focus-within & {
             border-color: var(--surface-2);
         }
     }

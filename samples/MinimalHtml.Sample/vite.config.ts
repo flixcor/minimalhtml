@@ -25,14 +25,12 @@ async function getInputs() {
 
 export default defineConfig({
   appType: 'custom',
+
   css: {
     // transformer: 'lightningcss',
+    transformer: 'postcss',
     modules: {
-      getJSON(cssFileName, json, outputFileName) {
-        console.error(cssFileName, json, outputFileName)
-        var jsonFileName = cssFileName + '.json'
-        writeFileSync(jsonFileName, JSON.stringify(json));
-      }
+      getJSON: (cssFileName, json) => writeFileSync(cssFileName + '.json', JSON.stringify(json))
     },
     // lightningcss: {
     //   visitor: jit({
@@ -48,14 +46,17 @@ export default defineConfig({
     manifest: true,
     modulePreload: false,
     sourcemap: true,
-    rollupOptions: {
-      input: await getInputs(),
-      output: {
-        entryFileNames: "[name].js",
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name].[ext]",
+    rolldownOptions: {
+      experimental: {
+        chunkImportMap: {
+          baseUrl: '/',
+          fileName: '.vite/importmap.json'
+        }
       },
+      input: await getInputs(),
     },
-    outDir: 'wwwroot'
+    outDir: 'wwwroot',
+    // emptyOutDir: false,
+    assetsInlineLimit: -1,
   },
 })
