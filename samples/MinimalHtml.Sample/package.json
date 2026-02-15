@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "build:watch": "vite build --watch",
+    "build:watch": "vite build --watch --mode development",
     "build:only": "vite build"
   },
   "devDependencies": {

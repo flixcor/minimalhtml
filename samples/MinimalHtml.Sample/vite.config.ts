@@ -35,8 +35,7 @@ async function getInputs() {
 
 const input = await getInputs();
 
-console.warn(...input);
-export default defineConfig({
+export default defineConfig((ctx) => ({
   appType: "custom",
 
   css: {
@@ -59,6 +58,7 @@ export default defineConfig({
     // generate .vite/manifest.json in outDir
     manifest: true,
     modulePreload: false,
+    minify: ctx.mode !== 'development',
     sourcemap: true,
     rolldownOptions: {
       experimental: {
@@ -77,4 +77,4 @@ export default defineConfig({
     // emptyOutDir: false,
     assetsInlineLimit: -1,
   },
-});
+}));
