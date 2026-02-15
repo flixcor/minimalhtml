@@ -116,6 +116,7 @@ nav ul {
     }
 
     nav {
+      position: fixed;
       transition: 
         translate ease 200ms,
         display 200ms allow-discrete;
