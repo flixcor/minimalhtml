@@ -17,7 +17,7 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-noble-aot AS bu
 # Install clang/zlib1g-dev dependencies for publishing to native
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    clang zlib1g-dev curl
+    clang zlib1g-dev curl binutils-aarch64-linux-gnu
 RUN curl -sL https://deb.nodesource.com/setup_23.x | bash
 RUN apt-get -y install nodejs
 RUN corepack enable
