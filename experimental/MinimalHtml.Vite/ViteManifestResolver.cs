@@ -113,7 +113,7 @@ public class ViteManifestResolver(string manifestPath, string? importmapPath, IW
             var isEntry = first.Value.TryGetProperty("isEntry"u8, out var e) && e.GetBoolean();
             var src = first.Value.GetProperty("file"u8).GetString() ?? first.Key;
             Asset asset;
-            if (src.EndsWith(".module.js") && first.Value.GetProperty("src"u8).GetString()?.EndsWith(".module.css") == true)
+            if (first.Key.EndsWith(".module.css") == true)
             {
                 asset = HandleImports(first.Value)[0];
             }
