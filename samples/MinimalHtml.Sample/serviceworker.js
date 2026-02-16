@@ -2,7 +2,6 @@
 "use strict";
 import hasher from "xxhash-wasm"
 
-let isLocalhost = false
 
 self.addEventListener("install", () => self.skipWaiting())
 
@@ -14,7 +13,6 @@ const getHasher = () => hasher()
  */
 const getHash = (response) => (hasherPromise ??= getHasher()).then(async hasher => {
     if (!response.body || !hasher) return ""
-    if (isLocalhost) return response.text().then(t => t.replaceAll(/.*browserLink.*/g, "")).then(hasher.h32ToString)
     const x32 = hasher.create32()
     const reader = response.body.getReader()
     let done = false
@@ -35,6 +33,10 @@ let hasherPromise
 const ourCachePromise = caches.open("minimalhtml-sample")
 
 self.addEventListener("fetch", (e) => {
+    if(import.meta.env.MODE === 'development') {
+        console.log('development mode, skipping service worker')
+        return 
+    }
     if (e instanceof FetchEvent
         && e.request.method.toLowerCase() === "get"
 
