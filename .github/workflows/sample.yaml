@@ -80,6 +80,7 @@ jobs:
           if-no-files-found: error
           retention-days: 1
   my-job:
+    needs: build
     name: push
     runs-on: ubuntu-latest
     environment: Bunny
