@@ -125,7 +125,7 @@ jobs:
       - name: get manifest digest
         id: digest
         run: |
-          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }} --format '{{.Manifest.Digest}}')
+          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }} --raw | sha256sum | awk '{print "sha256:"$1}')
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
       
       - name: Attest manifest
@@ -134,7 +134,7 @@ jobs:
           subject-name: docker.io/${{ env.REGISTRY_IMAGE }}
           subject-digest: ${{ steps.digest.outputs.digest }}
           push-to-registry: true
-          
+
       - name: update container image on Magic Containers
         uses: BunnyWay/actions/container-update-image@main
         with:
