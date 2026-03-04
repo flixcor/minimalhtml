@@ -3,12 +3,81 @@ on:
   push:
     branches:
       - main
-    paths_ignore:
+    paths-ignore:
       - "**/*.md"
       - "**/*.gitignore"
       - "**/*.gitattributes"
       - "**/build.yaml"
+
+env:
+  REGISTRY_IMAGE: flixcor/minimalhtml-sample
+
 jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY_IMAGE }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./samples/MinimalHtml.Sample/Dockerfile
+          platforms: ${{ matrix.platform }}
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.REGISTRY_IMAGE }}
+          outputs: type=image,push-by-digest=true,name-canonical=true,push=true
+          build-args: |
+            REVISION=${{ github.sha }}
+          # cache-from: type=registry,ref=flixcor/minimalhtml-sample:buildcache
+          # cache-to: type=registry,ref=flixcor/minimalhtml-sample:buildcache,mode=max
+
+      - name: Export digest
+        run: |
+          mkdir -p ${{ runner.temp }}/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
   my-job:
     name: push
     runs-on: ubuntu-latest
@@ -16,8 +85,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
@@ -25,20 +92,26 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push Docker images
-        # You may pin to the exact commit or the version.
-        # uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0
-        uses: docker/build-push-action@v6
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
         with:
-          context: .
-          file: ./samples/MinimalHtml.Sample/Dockerfile
-          push: true
-          tags: "flixcor/minimalhtml-sample:latest,flixcor/minimalhtml-sample:${{ github.sha }}"
-          cache-from: type=registry,ref=flixcor/minimalhtml-sample:buildcache
-          cache-to: type=registry,ref=flixcor/minimalhtml-sample:buildcache,mode=max
-          platforms: linux/amd64
-          build-args: |
-            REVISION=${{ github.sha }}
+          images: ${{ env.REGISTRY_IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Create manifest list and push
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
+
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
 
       - name: update container image on Magic Containers
         uses: BunnyWay/actions/container-update-image@main
@@ -46,4 +119,4 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           api_key: ${{ secrets.BUNNYNET_API_KEY }}
           container: Sample
-          image_tag: "${{ github.sha }}"
+          image_tag: "${{ steps.meta.outputs.version }}"
