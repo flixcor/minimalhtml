@@ -118,23 +118,23 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
 
       - name: Create manifest list and push
-        id: manifest
         working-directory: ${{ runner.temp }}/digests
         run: |
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
             $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
-
+      - name: get manifest digest
+        id: digest
+        run: |
+          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }} --format '{{.Manifest.Digest}}')
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
+      
       - name: Attest manifest
         uses: actions/attest@v4
         with:
           subject-name: docker.io/${{ env.REGISTRY_IMAGE }}
-          subject-digest: ${{ steps.manifest.outputs.digest }}
+          subject-digest: ${{ steps.digest.outputs.digest }}
           push-to-registry: true
-
-      - name: Inspect image
-        run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
-
+          
       - name: update container image on Magic Containers
         uses: BunnyWay/actions/container-update-image@main
         with:
