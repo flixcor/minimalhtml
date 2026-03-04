@@ -63,6 +63,8 @@ jobs:
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
           provenance: mode=max
           sbom: true
+          cache-from: type=gha,scope=build-${{ matrix.runner }}
+          cache-to: type=gha,scope=build-${{ matrix.runner }},mode=max
           build-args: |
             REVISION=${{ github.sha }}
           # cache-from: type=registry,ref=flixcor/minimalhtml-sample:buildcache
@@ -121,7 +123,7 @@ jobs:
       - name: Attest manifest
         uses: actions/attest@v4
         with:
-          subject-name: ${{ env.REGISTRY_IMAGE }}
+          subject-name: docker.io/${{ env.REGISTRY_IMAGE }}
           subject-digest: ${{ steps.manifest.outputs.digest }}
           push-to-registry: true
 
