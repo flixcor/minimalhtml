@@ -161,7 +161,20 @@ public ref struct TemplateHandler : ITemplateHandler
         Result = Handle(_writer, Result, tuple.Item1, tuple.Item2, _token);
     }
 
-    private static async ValueTask<FlushResult> Handle<T>(IBufferWriter<byte> page, TemplateEncoder encoder, ValueTask<FlushResult> current, T state, Action<IBufferWriter<byte>, TemplateEncoder, T> handler)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ValueTask<FlushResult> Handle<T>(IBufferWriter<byte> page, TemplateEncoder encoder, ValueTask<FlushResult> current, T state, Action<IBufferWriter<byte>, TemplateEncoder, T> handler)
+    {
+        if (current.IsCompletedSuccessfully)
+        {
+            var result = current.Result;
+            if (result.IsCompleted || result.IsCanceled) return new(result);
+            handler(page, encoder, state);
+            return default;
+        }
+        return HandleAsync(page, encoder, current, state, handler);
+    }
+
+    private static async ValueTask<FlushResult> HandleAsync<T>(IBufferWriter<byte> page, TemplateEncoder encoder, ValueTask<FlushResult> current, T state, Action<IBufferWriter<byte>, TemplateEncoder, T> handler)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
@@ -169,21 +182,57 @@ public ref struct TemplateHandler : ITemplateHandler
         return new();
     }
 
-    private static async ValueTask<FlushResult> Handle(PipeWriter page, ValueTask<FlushResult> current, Template handler, CancellationToken token)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ValueTask<FlushResult> Handle(PipeWriter page, ValueTask<FlushResult> current, Template handler, CancellationToken token)
+    {
+        if (current.IsCompletedSuccessfully)
+        {
+            var result = current.Result;
+            if (result.IsCompleted || result.IsCanceled) return new(result);
+            return handler((page, token));
+        }
+        return HandleAsync(page, current, handler, token);
+    }
+
+    private static async ValueTask<FlushResult> HandleAsync(PipeWriter page, ValueTask<FlushResult> current, Template handler, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         return await handler((page, token)).ConfigureAwait(false);
     }
 
-    private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, T state, Template<T> handler, CancellationToken token)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, T state, Template<T> handler, CancellationToken token)
+    {
+        if (current.IsCompletedSuccessfully)
+        {
+            var result = current.Result;
+            if (result.IsCompleted || result.IsCanceled) return new(result);
+            return handler((page, token), state);
+        }
+        return HandleAsync(page, current, state, handler, token);
+    }
+
+    private static async ValueTask<FlushResult> HandleAsync<T>(PipeWriter page, ValueTask<FlushResult> current, T state, Template<T> handler, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         return await handler((page, token), state).ConfigureAwait(false);
     }
 
-    private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, ValueTask<T> task, Template<T> handler, CancellationToken token)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, ValueTask<T> task, Template<T> handler, CancellationToken token)
+    {
+        if (current.IsCompletedSuccessfully && task.IsCompletedSuccessfully)
+        {
+            var result = current.Result;
+            if (result.IsCompleted || result.IsCanceled) return new(result);
+            return handler((page, token), task.Result);
+        }
+        return HandleAsync(page, current, task, handler, token);
+    }
+
+    private static async ValueTask<FlushResult> HandleAsync<T>(PipeWriter page, ValueTask<FlushResult> current, ValueTask<T> task, Template<T> handler, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
@@ -196,7 +245,18 @@ public ref struct TemplateHandler : ITemplateHandler
         return await handler((page, token), prop).ConfigureAwait(false);
     }
 
-    private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, IAsyncEnumerable<T> enumerable, Template<T> template, CancellationToken token)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, IAsyncEnumerable<T> enumerable, Template<T> template, CancellationToken token)
+    {
+        if (current.IsCompletedSuccessfully)
+        {
+            var result = current.Result;
+            if (result.IsCompleted || result.IsCanceled) return new(result);
+        }
+        return HandleAsync(page, current, enumerable, template, token);
+    }
+
+    private static async ValueTask<FlushResult> HandleAsync<T>(PipeWriter page, ValueTask<FlushResult> current, IAsyncEnumerable<T> enumerable, Template<T> template, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
@@ -216,7 +276,18 @@ public ref struct TemplateHandler : ITemplateHandler
         }
     }
 
-    private static async ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, IEnumerable<T> enumerable, Template<T> template, CancellationToken token)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, IEnumerable<T> enumerable, Template<T> template, CancellationToken token)
+    {
+        if (current.IsCompletedSuccessfully)
+        {
+            var result = current.Result;
+            if (result.IsCompleted || result.IsCanceled) return new(result);
+        }
+        return HandleAsync(page, current, enumerable, template, token);
+    }
+
+    private static async ValueTask<FlushResult> HandleAsync<T>(PipeWriter page, ValueTask<FlushResult> current, IEnumerable<T> enumerable, Template<T> template, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
