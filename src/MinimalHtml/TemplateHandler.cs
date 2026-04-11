@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Collections.Concurrent;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
@@ -54,13 +54,18 @@ public ref struct TemplateHandler : ITemplateHandler
         _token = tuple.Token;
     }
 
+    // ── Sync operations: inline the write directly, no Handle/delegate ──
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendLiteral(string? s)
     {
         if (!string.IsNullOrWhiteSpace(s) && !_token.IsCancellationRequested)
         {
 #pragma warning disable CA2012
-            Result = Handle(_writer, _encoder, Result, s, static (p, _, s) => p.Write(s_buffers.GetOrAdd(s, Encoding.UTF8.GetBytes)));
+            if (Result.IsCompletedSuccessfully)
+                _writer.Write(s_buffers.GetOrAdd(s, Encoding.UTF8.GetBytes));
+            else
+                Result = AwaitThenWriteLiteral(Result, _writer, s);
         }
     }
 
@@ -69,7 +74,10 @@ public ref struct TemplateHandler : ITemplateHandler
     {
         if (!string.IsNullOrEmpty(s) && !_token.IsCancellationRequested)
         {
-            Result = Handle(_writer, _encoder, Result, s, static (p, e, s) => e.WriteEncoded(p, s));
+            if (Result.IsCompletedSuccessfully)
+                _encoder.WriteEncoded(_writer, s);
+            else
+                Result = AwaitThenWriteEncoded(Result, _writer, _encoder, s);
         }
     }
 
@@ -78,7 +86,10 @@ public ref struct TemplateHandler : ITemplateHandler
     {
         if (!bytes.IsEmpty && !_token.IsCancellationRequested)
         {
-            Result = Handle(_writer, _encoder, Result, bytes, static (p, e, b) => e.WriteEncoded(p, b.Span));
+            if (Result.IsCompletedSuccessfully)
+                _encoder.WriteEncoded(_writer, bytes.Span);
+            else
+                Result = AwaitThenWriteEncodedBytes(Result, _writer, _encoder, bytes);
         }
     }
 
@@ -87,7 +98,10 @@ public ref struct TemplateHandler : ITemplateHandler
     {
         if (!_token.IsCancellationRequested)
         {
-            Result = Handle(_writer, _encoder, Result, getBytes, static (p, e, b) => e.WriteEncoded(p, b()));
+            if (Result.IsCompletedSuccessfully)
+                _encoder.WriteEncoded(_writer, getBytes());
+            else
+                Result = AwaitThenWriteEncodedFunc(Result, _writer, _encoder, getBytes);
         }
     }
 
@@ -96,16 +110,24 @@ public ref struct TemplateHandler : ITemplateHandler
     {
         if (t != null && !_token.IsCancellationRequested)
         {
-            Result = Handle(_writer, _encoder, Result, (t, format, _formatProvider), static (p, e, tup) => e.WriteEncoded(p, tup.t, tup.format, tup._formatProvider));
+            if (Result.IsCompletedSuccessfully)
+                _encoder.WriteEncoded(_writer, t, format, _formatProvider);
+            else
+                Result = AwaitThenWriteFormatted(Result, _writer, _encoder, t, format, _formatProvider);
         }
     }
+
+    // ── Async operations: inline the IsCompletedSuccessfully check, call HandleAsync directly ──
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendFormatted(Template? innerTemplate)
     {
         if (innerTemplate is not null && !_token.IsCancellationRequested)
         {
-            Result = Handle(_writer, Result, innerTemplate, _token);
+            if (Result.IsCompletedSuccessfully)
+                Result = innerTemplate((_writer, _token));
+            else
+                Result = HandleAsync(_writer, Result, innerTemplate, _token);
         }
     }
 
@@ -120,7 +142,10 @@ public ref struct TemplateHandler : ITemplateHandler
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendFormatted<T>((T T, Template<T> Template) tuple)
     {
-        Result = Handle(_writer, Result, tuple.T, tuple.Template, _token);
+        if (Result.IsCompletedSuccessfully)
+            Result = tuple.Template((_writer, _token), tuple.T);
+        else
+            Result = HandleAsync(_writer, Result, tuple.T, tuple.Template, _token);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -138,7 +163,10 @@ public ref struct TemplateHandler : ITemplateHandler
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendFormatted<T>((ValueTask<T> Task, Template<T> Template) tuple)
     {
-        Result = Handle(_writer, Result, tuple.Item1, tuple.Item2, _token);
+        if (Result.IsCompletedSuccessfully && tuple.Task.IsCompletedSuccessfully)
+            Result = tuple.Template((_writer, _token), tuple.Task.Result);
+        else
+            Result = HandleAsync(_writer, Result, tuple.Task, tuple.Template, _token);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -148,7 +176,7 @@ public ref struct TemplateHandler : ITemplateHandler
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendFormatted<T>((IAsyncEnumerable<T>, Template<T>) tuple)
     {
-        Result = Handle(_writer, Result, tuple.Item1, tuple.Item2, _token);
+        Result = HandleAsync(_writer, Result, tuple.Item1, tuple.Item2, _token);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -158,41 +186,60 @@ public ref struct TemplateHandler : ITemplateHandler
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendFormatted<T>((IEnumerable<T>, Template<T>) tuple)
     {
-        Result = Handle(_writer, Result, tuple.Item1, tuple.Item2, _token);
+        Result = HandleAsync(_writer, Result, tuple.Item1, tuple.Item2, _token);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ValueTask<FlushResult> Handle<T>(IBufferWriter<byte> page, TemplateEncoder encoder, ValueTask<FlushResult> current, T state, Action<IBufferWriter<byte>, TemplateEncoder, T> handler)
-    {
-        if (current.IsCompletedSuccessfully)
-        {
-            var result = current.Result;
-            if (result.IsCompleted || result.IsCanceled) return new(result);
-            handler(page, encoder, state);
-            return default;
-        }
-        return HandleAsync(page, encoder, current, state, handler);
-    }
+    public void AppendFormatted<T>((Func<Task<T>> Task, Template<T> Template) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
 
-    private static async ValueTask<FlushResult> HandleAsync<T>(IBufferWriter<byte> page, TemplateEncoder encoder, ValueTask<FlushResult> current, T state, Action<IBufferWriter<byte>, TemplateEncoder, T> handler)
+    public void AppendFormatted<T>((Template<T> Template, Func<Task<T>> Task) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
+
+    public void AppendFormatted<T>((Template<T> Template, Func<ValueTask<T>> Task) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
+
+    public void AppendFormatted<T>((Func<ValueTask<T>> Task, Template<T> Template) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
+
+    // ── Static async helpers for sync-after-async transitions (no boxing, no closures) ──
+
+    private static async ValueTask<FlushResult> AwaitThenWriteLiteral(ValueTask<FlushResult> pending, PipeWriter writer, string s)
     {
-        var flushResult = await current.ConfigureAwait(false);
-        if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
-        handler(page, encoder, state);
+        var r = await pending.ConfigureAwait(false);
+        if (r.IsCompleted || r.IsCanceled) return r;
+        writer.Write(s_buffers.GetOrAdd(s, Encoding.UTF8.GetBytes));
         return new();
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ValueTask<FlushResult> Handle(PipeWriter page, ValueTask<FlushResult> current, Template handler, CancellationToken token)
+    private static async ValueTask<FlushResult> AwaitThenWriteEncoded(ValueTask<FlushResult> pending, PipeWriter writer, TemplateEncoder encoder, string s)
     {
-        if (current.IsCompletedSuccessfully)
-        {
-            var result = current.Result;
-            if (result.IsCompleted || result.IsCanceled) return new(result);
-            return handler((page, token));
-        }
-        return HandleAsync(page, current, handler, token);
+        var r = await pending.ConfigureAwait(false);
+        if (r.IsCompleted || r.IsCanceled) return r;
+        encoder.WriteEncoded(writer, s);
+        return new();
     }
+
+    private static async ValueTask<FlushResult> AwaitThenWriteEncodedBytes(ValueTask<FlushResult> pending, PipeWriter writer, TemplateEncoder encoder, ReadOnlyMemory<byte> bytes)
+    {
+        var r = await pending.ConfigureAwait(false);
+        if (r.IsCompleted || r.IsCanceled) return r;
+        encoder.WriteEncoded(writer, bytes.Span);
+        return new();
+    }
+
+    private static async ValueTask<FlushResult> AwaitThenWriteEncodedFunc(ValueTask<FlushResult> pending, PipeWriter writer, TemplateEncoder encoder, Func<ReadOnlySpan<byte>> getBytes)
+    {
+        var r = await pending.ConfigureAwait(false);
+        if (r.IsCompleted || r.IsCanceled) return r;
+        encoder.WriteEncoded(writer, getBytes());
+        return new();
+    }
+
+    private static async ValueTask<FlushResult> AwaitThenWriteFormatted<TFormattable>(ValueTask<FlushResult> pending, PipeWriter writer, TemplateEncoder encoder, TFormattable t, string? format, IFormatProvider? provider) where TFormattable : IUtf8SpanFormattable
+    {
+        var r = await pending.ConfigureAwait(false);
+        if (r.IsCompleted || r.IsCanceled) return r;
+        encoder.WriteEncoded(writer, t, format, provider);
+        return new();
+    }
+
+    // ── Async fallback methods ──
 
     private static async ValueTask<FlushResult> HandleAsync(PipeWriter page, ValueTask<FlushResult> current, Template handler, CancellationToken token)
     {
@@ -201,35 +248,11 @@ public ref struct TemplateHandler : ITemplateHandler
         return await handler((page, token)).ConfigureAwait(false);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, T state, Template<T> handler, CancellationToken token)
-    {
-        if (current.IsCompletedSuccessfully)
-        {
-            var result = current.Result;
-            if (result.IsCompleted || result.IsCanceled) return new(result);
-            return handler((page, token), state);
-        }
-        return HandleAsync(page, current, state, handler, token);
-    }
-
     private static async ValueTask<FlushResult> HandleAsync<T>(PipeWriter page, ValueTask<FlushResult> current, T state, Template<T> handler, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         return await handler((page, token), state).ConfigureAwait(false);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, ValueTask<T> task, Template<T> handler, CancellationToken token)
-    {
-        if (current.IsCompletedSuccessfully && task.IsCompletedSuccessfully)
-        {
-            var result = current.Result;
-            if (result.IsCompleted || result.IsCanceled) return new(result);
-            return handler((page, token), task.Result);
-        }
-        return HandleAsync(page, current, task, handler, token);
     }
 
     private static async ValueTask<FlushResult> HandleAsync<T>(PipeWriter page, ValueTask<FlushResult> current, ValueTask<T> task, Template<T> handler, CancellationToken token)
@@ -243,17 +266,6 @@ public ref struct TemplateHandler : ITemplateHandler
         if (flushResult.IsCompleted || flushResult.IsCanceled) return flushResult;
         var prop = await task.ConfigureAwait(false);
         return await handler((page, token), prop).ConfigureAwait(false);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, IAsyncEnumerable<T> enumerable, Template<T> template, CancellationToken token)
-    {
-        if (current.IsCompletedSuccessfully)
-        {
-            var result = current.Result;
-            if (result.IsCompleted || result.IsCanceled) return new(result);
-        }
-        return HandleAsync(page, current, enumerable, template, token);
     }
 
     private static async ValueTask<FlushResult> HandleAsync<T>(PipeWriter page, ValueTask<FlushResult> current, IAsyncEnumerable<T> enumerable, Template<T> template, CancellationToken token)
@@ -276,17 +288,6 @@ public ref struct TemplateHandler : ITemplateHandler
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ValueTask<FlushResult> Handle<T>(PipeWriter page, ValueTask<FlushResult> current, IEnumerable<T> enumerable, Template<T> template, CancellationToken token)
-    {
-        if (current.IsCompletedSuccessfully)
-        {
-            var result = current.Result;
-            if (result.IsCompleted || result.IsCanceled) return new(result);
-        }
-        return HandleAsync(page, current, enumerable, template, token);
-    }
-
     private static async ValueTask<FlushResult> HandleAsync<T>(PipeWriter page, ValueTask<FlushResult> current, IEnumerable<T> enumerable, Template<T> template, CancellationToken token)
     {
         var flushResult = await current.ConfigureAwait(false);
@@ -299,13 +300,5 @@ public ref struct TemplateHandler : ITemplateHandler
         }
         return flushResult;
     }
-
-    public void AppendFormatted<T>((Func<Task<T>> Task, Template<T> Template) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
-
-    public void AppendFormatted<T>((Template<T> Template, Func<Task<T>> Task) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
-
-    public void AppendFormatted<T>((Template<T> Template, Func<ValueTask<T>> Task) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
-
-    public void AppendFormatted<T>((Func<ValueTask<T>> Task, Template<T> Template) tuple) => AppendFormatted((tuple.Task(), tuple.Template));
 }
 #pragma warning restore CA2012
