@@ -11,7 +11,7 @@ public record HtmlResult<T>(T Context, Template<T> Template, int? StatusCode = 2
         var flushResult = await Template(httpContext.Response.BodyWriter, Context);
         if (!flushResult.IsCanceled)
         {
-            await httpContext.Response.BodyWriter.FlushAsync(page.RequestAborted);
+            await httpContext.Response.BodyWriter.FlushAsync(httpContext.RequestAborted);
         }
     }
 }
