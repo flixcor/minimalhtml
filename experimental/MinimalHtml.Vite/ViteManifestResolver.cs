@@ -20,7 +20,7 @@ public static class ViteManifestExtensions
         .AddSingleton<WriteImportMap>(s => s.GetRequiredService<ViteManifestResolver>().WriteImportMap);
 }
 
-public delegate ValueTask<FlushResult> WriteImportMap((PipeWriter, CancellationToken) tup);
+public delegate ValueTask<FlushResult> WriteImportMap(PipeWriter writer);
 
 public class ViteManifestResolver(string manifestPath, string? importmapPath, IWebHostEnvironment env, IMemoryCache cache)
 {
@@ -36,10 +36,9 @@ public class ViteManifestResolver(string manifestPath, string? importmapPath, IW
             : new Asset(trimmed, null, []);
     }
 
-    public async ValueTask<FlushResult> WriteImportMap((PipeWriter write, CancellationToken token) tup)
+    public async ValueTask<FlushResult> WriteImportMap(PipeWriter writer)
     {
-        var (writer, token) = tup;
-        var bytes = await GetImportmapBytesCached(token);
+        var bytes = await GetImportmapBytesCached(CancellationToken.None);
         if (bytes.Length <= 0) return new();
         writer.Write("""<script type="importmap">"""u8);
         writer.Write(bytes);
