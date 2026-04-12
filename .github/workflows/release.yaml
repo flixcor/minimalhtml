@@ -1,0 +1,52 @@
+on:
+  push:
+    tags: ["v*.*.*"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build & Test
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_NOLOGO: true
+      DOTNET_GENERATE_ASPNET_CERTIFICATE: false
+      DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: false
+      DOTNET_MULTILEVEL_LOOKUP: 0
+      DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: true
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.x.x
+    
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Get version from tag
+      id: get_version
+      uses: battila7/get-version-action@v2
+
+    - name: Display version
+      run: |
+        echo "Version: ${{ steps.get_version.outputs.version }}"
+
+    - name: Update dependencies
+      run: sed -i "s|\(<PackageVersion Include=\"MinimalHtml\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version-without-v }}\2|" Directory.Packages.props
+
+    - name: Pack MinimalHtml (ci)
+      run: dotnet pack src/MinimalHtml --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }}
+
+    - name: add custom package source
+      run: dotnet nuget add source ${{ github.workspace }}/artifacts/ci --name LocalTemp
+
+    - name: Pack MinimalHtml.AspNetCore (ci)
+      run: dotnet pack src/MinimalHtml.AspNetCore --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }}
+
+    - name: Publish Package (ci)
+      run: |
+        for file in ./artifacts/ci/*.nupkg; do
+          dotnet nuget push "$file" -k ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        done

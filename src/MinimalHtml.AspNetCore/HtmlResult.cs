@@ -8,9 +8,8 @@ public record HtmlResult<T>(T Context, Template<T> Template, int? StatusCode = 2
     {
         httpContext.Response.StatusCode = StatusCode ?? 200;
         httpContext.Response.ContentType = "text/html";
-        var page = (httpContext.Response.BodyWriter, httpContext.RequestAborted);
-        var flushResult = await Template(page, Context);
-        if (!flushResult.IsCanceled && !page.RequestAborted.IsCancellationRequested)
+        var flushResult = await Template(httpContext.Response.BodyWriter, Context);
+        if (!flushResult.IsCanceled)
         {
             await httpContext.Response.BodyWriter.FlushAsync(page.RequestAborted);
         }
@@ -23,12 +22,10 @@ public record HtmlResult(Template Template, int? StatusCode = 200, string? Conte
     {
         httpContext.Response.StatusCode = StatusCode ?? 200;
         httpContext.Response.ContentType = ContentType ?? "text/html";
-        var page = (httpContext.Response.BodyWriter, httpContext.RequestAborted);
-
-        var flushResult = await Template(page);
+        var flushResult = await Template(httpContext.Response.BodyWriter);
         if (!flushResult.IsCanceled)
         {
-            await httpContext.Response.BodyWriter.FlushAsync(page.RequestAborted);
+            await httpContext.Response.BodyWriter.FlushAsync();
         }
     }
 }
