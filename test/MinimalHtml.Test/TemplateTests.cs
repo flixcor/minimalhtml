@@ -5,7 +5,7 @@ namespace MinimalHtml.Test
 {
     public class TemplateTests
     {
-        private static readonly Template<string> s_helloTemplate = static (writer, str) => writer.Html($"Hello {str}");
+        private static readonly Template<string> s_helloTemplate = static (page, str) => page.Html($"Hello {str}");
 
         private static async Task<string> GetWorldAsync()
         {
@@ -16,7 +16,7 @@ namespace MinimalHtml.Test
         [Fact]
         public async Task TestWithAsyncProps()
         {
-            var result = await RenderToString(static writer => writer.Html($"There is an async template after this: {(GetWorldAsync, s_helloTemplate)}"));
+            var result = await RenderToString(static page => page.Html($"There is an async template after this: {(GetWorldAsync, s_helloTemplate)}"));
             Assert.Equal(["There is an async template after this: ", "Hello world"], result);
         }
 
@@ -38,7 +38,7 @@ namespace MinimalHtml.Test
             });
             var writeTask = Task.Run(async () =>
             {
-                await template((pipe.Writer, CancellationToken.None));
+                await template(pipe.Writer);
                 await pipe.Writer.FlushAsync();
                 await pipe.Writer.CompleteAsync();
             });

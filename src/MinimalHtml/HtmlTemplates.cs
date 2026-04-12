@@ -1,4 +1,3 @@
-﻿global using Writer = (System.IO.Pipelines.PipeWriter Page, System.Threading.CancellationToken Token);
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
@@ -8,79 +7,19 @@ namespace MinimalHtml;
 public static class HtmlTemplateExtensions
 {
     public static ValueTask<FlushResult> Html(
-        this Writer tuple,
-        [InterpolatedStringHandlerArgument(nameof(tuple))]
+        this PipeWriter writer,
+        [InterpolatedStringHandlerArgument(nameof(writer))]
         [StringSyntax("Html")]
-        ref HtmlTemplateHandler handler
+        ref TemplateHandler handler
         ) =>
         handler.Result;
 
     public static ValueTask<FlushResult> Html(
-        this Writer tuple,
+        this PipeWriter writer,
         IFormatProvider? provider,
-        [InterpolatedStringHandlerArgument(nameof(tuple), nameof(provider))]
+        [InterpolatedStringHandlerArgument(nameof(writer), nameof(provider))]
         [StringSyntax("Html")]
-        ref HtmlTemplateHandler handler
+        ref TemplateHandler handler
         ) =>
         handler.Result;
-}
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-[InterpolatedStringHandler]
-public ref struct HtmlTemplateHandler : ITemplateHandler
-{
-    private TemplateHandler _inner;
-
-    public HtmlTemplateHandler(int literalLength, int formattedCount, Writer tuple) : this(literalLength, formattedCount, tuple, null)
-    {
-    }
-
-    public HtmlTemplateHandler(int literalLength, int formattedCount, Writer tuple, IFormatProvider? formatProvider)
-    {
-        _inner = new TemplateHandler(literalLength, formattedCount, tuple, TemplateEncoder.Html, formatProvider);
-    }
-
-    public readonly ValueTask<FlushResult> Result => _inner.Result;
-
-    public void AppendFormatted(Func<ReadOnlySpan<byte>> getBytes) => _inner.AppendFormatted(getBytes);
-
-    public void AppendFormatted(ReadOnlyMemory<byte> bytes) => _inner.AppendFormatted(bytes);
-
-    public void AppendFormatted(string? s) => _inner.AppendFormatted(s);
-
-    public void AppendFormatted(Template? innerTemplate) => _inner.AppendFormatted(innerTemplate);
-
-    public void AppendFormatted(Template<string> innerTemplate, string format) => _inner.AppendFormatted(innerTemplate, format);
-
-    public void AppendFormatted<T>((IAsyncEnumerable<T>, Template<T>) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((IEnumerable<T>, Template<T>) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((T T, Template<T> Template) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((Task<T> Task, Template<T> Template) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((Template<T> Template, Task<T> Task) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((Template<T>, IAsyncEnumerable<T>) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((Template<T>, IEnumerable<T>) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((Template<T>, T) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((Template<T>, ValueTask<T>) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((ValueTask<T> Task, Template<T> Template) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<TFormattable>(TFormattable? t, string? format = null) where TFormattable : IUtf8SpanFormattable => _inner.AppendFormatted(t, format);
-
-    public void AppendFormatted<T>((Func<Task<T>> Task, Template<T> Template) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((Template<T> Template, Func<Task<T>> Task) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((Template<T> Template, Func<ValueTask<T>> Task) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendFormatted<T>((Func<ValueTask<T>> Task, Template<T> Template) tuple) => _inner.AppendFormatted(tuple);
-
-    public void AppendLiteral(string? s) => _inner.AppendLiteral(s);
 }

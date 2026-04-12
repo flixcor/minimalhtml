@@ -1,5 +1,5 @@
-﻿using System.Buffers;
-using System.Collections.Frozen;
+using System.Buffers;
+using System.Runtime.CompilerServices;
 using System.Text.Unicode;
 
 namespace MinimalHtml;
@@ -30,8 +30,8 @@ public class TemplateEncoder
 
     private readonly SearchValues<char> _chars;
     private readonly SearchValues<byte> _bytes;
-    private readonly FrozenDictionary<char, byte[]> _charDict;
-    private readonly FrozenDictionary<byte, byte[]> _byteDict;
+    private readonly byte[]?[] _charLookup;
+    private readonly byte[]?[] _byteLookup;
 
     public TemplateEncoder(ReadOnlySpan<char> chars, ReadOnlySpan<byte> bytes, ReadOnlySpan<byte[]> escaped)
     {
@@ -39,50 +39,71 @@ public class TemplateEncoder
             throw new ArgumentException("All input spans must have the same length.");
         _chars = SearchValues.Create(chars);
         _bytes = SearchValues.Create(bytes);
-        _charDict = ToDict(chars, escaped).ToFrozenDictionary();
-        _byteDict = ToDict(bytes, escaped).ToFrozenDictionary();
-    }
-
-    static Dictionary<A, B> ToDict<A, B>(ReadOnlySpan<A> a, ReadOnlySpan<B> b) where A : notnull
-    {
-        if (a.Length != b.Length)
-            throw new ArgumentException("Input spans must have the same length.");
-        var dict = new Dictionary<A, B>(a.Length);
-        for (var i = 0; i < a.Length; i++)
+        _charLookup = new byte[]?[128];
+        for (var i = 0; i < chars.Length; i++)
         {
-            dict[a[i]] = b[i];
+            if (chars[i] < 128)
+                _charLookup[chars[i]] = escaped[i];
         }
-        return dict;
+        _byteLookup = new byte[]?[256];
+        for (var i = 0; i < bytes.Length; i++)
+        {
+            _byteLookup[bytes[i]] = escaped[i];
+        }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteEncoded(IBufferWriter<byte> writer, ReadOnlySpan<char> input)
     {
-        foreach (var range in input.SplitAny(_chars))
+        var idx = input.IndexOfAny(_chars);
+        if (idx < 0)
         {
-            var bytes = input[range];
-            WriteUnescaped(writer, bytes);
-            if (input.Length > range.End.Value)
-            {
-                var toEncode = input[range.End.Value];
-                var encoded = _charDict[toEncode];
-                writer.Write(encoded);
-            }
+            WriteUnescaped(writer, input);
+            return;
         }
+        WriteEncodedSlow(writer, input, idx);
     }
 
+    private void WriteEncodedSlow(IBufferWriter<byte> writer, ReadOnlySpan<char> input, int idx)
+    {
+        do
+        {
+            if (idx > 0)
+                WriteUnescaped(writer, input.Slice(0, idx));
+            writer.Write(_charLookup[input[idx]]!);
+            input = input.Slice(idx + 1);
+            idx = input.IndexOfAny(_chars);
+        } while (idx >= 0);
+
+        if (!input.IsEmpty)
+            WriteUnescaped(writer, input);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteEncoded(IBufferWriter<byte> writer, ReadOnlySpan<byte> input)
     {
-        foreach (var range in input.SplitAny(_bytes))
+        var idx = input.IndexOfAny(_bytes);
+        if (idx < 0)
         {
-            var bytes = input[range];
-            writer.Write(bytes);
-            if (input.Length > range.End.Value)
-            {
-                var toEncode = input[range.End.Value];
-                var encoded = _byteDict[toEncode];
-                writer.Write(encoded);
-            }
+            writer.Write(input);
+            return;
         }
+        WriteEncodedSlow(writer, input, idx);
+    }
+
+    private void WriteEncodedSlow(IBufferWriter<byte> writer, ReadOnlySpan<byte> input, int idx)
+    {
+        do
+        {
+            if (idx > 0)
+                writer.Write(input.Slice(0, idx));
+            writer.Write(_byteLookup[input[idx]]!);
+            input = input.Slice(idx + 1);
+            idx = input.IndexOfAny(_bytes);
+        } while (idx >= 0);
+
+        if (!input.IsEmpty)
+            writer.Write(input);
     }
 
     public void WriteEncoded<T>(IBufferWriter<byte> writer, T t, ReadOnlySpan<char> format, IFormatProvider? provider) where T : IUtf8SpanFormattable
@@ -121,7 +142,7 @@ public class TemplateEncoder
         try
         {
             formatted.CopyTo(copy);
-            WriteEncoded(writer, copy);
+            WriteEncodedSlow(writer, copy.Slice(0, bytesWritten), charIndex);
         }
         finally
         {

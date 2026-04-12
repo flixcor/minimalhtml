@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.IO.Pipelines;
 using BenchmarkDotNet.Attributes;
 using MinimalHtml;
@@ -27,27 +27,27 @@ namespace Fluid.Benchmarks
             CheckBenchmark();
         }
 
-        
+
         public override async ValueTask Render(PipeWriter output)
         {
-            await s_htmlTemplate((output, CancellationToken.None), Products);
+            await s_htmlTemplate(output, Products);
         }
-        
+
         [Benchmark]
         public ValueTask Render() => Render(_pipe.Writer);
-        
-        private static ValueTask<FlushResult> Truncate((PipeWriter Writer, CancellationToken Token) tup, (string Str, int Length) props)
+
+        private static ValueTask<FlushResult> Truncate(PipeWriter writer, (string Str, int Length) props)
         {
             var ellipsis = "..."u8;
             if (props.Str.Length <= props.Length)
             {
-               TemplateEncoder.Html.WriteEncoded(tup.Writer, props.Str);
+               TemplateEncoder.Html.WriteEncoded(writer, props.Str);
             }
             else
             {
                 var length = Math.Max(0, props.Length - ellipsis.Length);
-                TemplateEncoder.Html.WriteEncoded(tup.Writer, props.Str.AsSpan(0, length));
-                tup.Writer.Write(ellipsis);
+                TemplateEncoder.Html.WriteEncoded(writer, props.Str.AsSpan(0, length));
+                writer.Write(ellipsis);
             }
 
             return new();
