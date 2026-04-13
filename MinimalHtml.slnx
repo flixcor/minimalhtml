@@ -1,0 +1,24 @@
+<Solution>
+  <Folder Name="/experimental/">
+    <Project Path="experimental/MinimalHtml.CssModules/MinimalHtml.CssModules.csproj" />
+    <Project Path="experimental/MinimalHtml.Vite/MinimalHtml.Vite.csproj" />
+  </Folder>
+  <Folder Name="/experimental/forms/">
+    <Project Path="experimental/MinimalForms.ModelGenerator/MinimalForms.ModelGenerator.csproj" />
+    <Project Path="experimental/MinimalForms/MinimalForms.csproj" />
+  </Folder>
+  <Folder Name="/sample/">
+    <Project Path="samples/MinimalHtml.Sample/MinimalHtml.Sample.csproj" />
+  </Folder>
+  <Folder Name="/Solution Files/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="benchmark/MinimalHtml.Benchmarks.csproj" />
+    <Project Path="test/MinimalForms.Test/MinimalForms.Test.csproj" />
+    <Project Path="test/MinimalHtml.Test/MinimalHtml.Test.csproj" />
+  </Folder>
+  <Project Path="src/MinimalHtml.AspNetCore/MinimalHtml.AspNetCore.csproj" />
+  <Project Path="src/MinimalHtml.SourceGenerator/MinimalHtml.SourceGenerator.csproj" />
+  <Project Path="src/MinimalHtml/MinimalHtml.csproj" />
+</Solution>
