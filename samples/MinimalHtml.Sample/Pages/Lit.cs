@@ -11,7 +11,7 @@ namespace MinimalHtml.Sample.Pages
                <p>
                    Client-side rendering libraries such as Lit can be easily integrated
                </p>
-               {page => page.Lit($"""<my-element count={5}></my-element>""")}
+               {page => page.Lit($"""<my-element count={5}>Hello from the slot</my-element>""")}
                """);
         private static readonly Template s_head = static page => page.Html($"{Assets.Script:lit-hydrate.ts}{Assets.Script:Pages/Lit.ts}");
         
