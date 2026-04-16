@@ -20,6 +20,15 @@ public class LitRenderer
         {
             engineOptions.EnableModules(serverPath);
         });
+
+        _engine.SetValue("btoa", new Func<string, string>(s =>
+        {
+            // Treat input as Latin1 bytes
+            var bytes = new byte[s.Length];
+            for (int i = 0; i < s.Length; i++) bytes[i] = (byte)(s[i] & 0xff);
+            return Convert.ToBase64String(bytes);
+        }));
+
         _engine.Modules.Add("buffer", """
         if (typeof TextEncoder === 'undefined') {
             globalThis.TextEncoder = function TextEncoder() { this.encoding = 'utf-8'; };
@@ -42,14 +51,58 @@ public class LitRenderer
             };
         }
 
-        export const Buffer = {
-            from(str, encoding) {
-                // You don't actually need real Buffer behavior,
-                // just enough to not crash if something references it
-                return new TextEncoder().encode(str);
-            },
-            isBuffer(obj) { return false; }
-        };
+        class ShimBuffer extends Uint8Array {
+            static from(input, encoding) {
+                if (typeof input === 'string') {
+                    if (encoding === 'binary' || encoding === 'latin1') {
+                        const bytes = new Uint8Array(input.length);
+                        for (let i = 0; i < input.length; i++) {
+                            bytes[i] = input.charCodeAt(i) & 0xff;
+                        }
+                        return new ShimBuffer(bytes.buffer);
+                    }
+                    // UTF-8 default
+                    const encoded = new TextEncoder().encode(input);
+                    return new ShimBuffer(encoded.buffer);
+                }
+                if (input instanceof Uint8Array) {
+                    return new ShimBuffer(input.buffer, input.byteOffset, input.byteLength);
+                }
+                return new ShimBuffer(input);
+            }
+
+            static alloc(size) {
+                return new ShimBuffer(size);
+            }
+
+            static isBuffer(obj) {
+                return obj instanceof ShimBuffer;
+            }
+
+            toString(encoding) {
+                if (encoding === 'base64') {
+                    // Build binary string then base64-encode
+                    let binary = '';
+                    for (let i = 0; i < this.length; i++) {
+                        binary += String.fromCharCode(this[i]);
+                    }
+                    return btoa(binary);
+                }
+                if (encoding === 'binary' || encoding === 'latin1') {
+                    let s = '';
+                    for (let i = 0; i < this.length; i++) {
+                        s += String.fromCharCode(this[i]);
+                    }
+                    return s;
+                }
+                if (encoding === 'utf8' || encoding === 'utf-8' || !encoding) {
+                    return new TextDecoder().decode(this);
+                }
+                return super.toString();
+            }
+        }
+
+        export const Buffer = ShimBuffer;
         """);
 
 

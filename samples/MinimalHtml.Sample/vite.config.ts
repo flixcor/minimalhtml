@@ -78,7 +78,6 @@ export default defineConfig(() => ({
           c.name.startsWith("serviceworker") ? "[name]-[hash].js" : "assets/[name]-[hash].js",
       },
     },
-    target: "esnext",
     outDir: "wwwroot",
     // emptyOutDir: false,
     assetsInlineLimit: -1,
