@@ -13,7 +13,7 @@ namespace MinimalHtml.Sample.Pages
                </p>
                {page => page.Lit($"""<my-element count={5}></my-element>""")}
                """);
-        private static readonly Template s_head = static page => page.Html($"{Assets.Script:Pages/Lit.ts}");
+        private static readonly Template s_head = static page => page.Html($"{Assets.Script:lit-hydrate.ts}{Assets.Script:Pages/Lit.ts}");
         
         public static void Map(IEndpointRouteBuilder builder) => builder
             .MapGet("/Lit", static () => Results.Extensions.WithLayout(s_body, s_head))
