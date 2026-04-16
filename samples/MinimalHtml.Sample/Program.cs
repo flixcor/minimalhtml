@@ -6,6 +6,7 @@ using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample;
 using MinimalHtml.Sample.Components;
 using MinimalHtml.Sample.Pages;
+using MinimalHtml.Lit;
 using MinimalHtml.Vite;
 
 #if DEBUG
@@ -27,6 +28,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<NavLink>();
 builder.Services.RegisterViteAssets(importmapPath: ".vite/importmap.json");
+builder.Services.UseLit(new LitOptions
+{
+    ServerPath = Path.Combine(AppContext.BaseDirectory, "dist", "server")
+});
 if (!builder.Environment.IsDevelopment())
 {
     builder.Services.AddResponseCompression();

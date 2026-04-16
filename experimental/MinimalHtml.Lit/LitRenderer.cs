@@ -7,14 +7,19 @@ namespace MinimalHtml.Lit;
 
 public class LitRenderer
 {
-    private readonly Engine _engine = new Engine(options =>
-    {
-        var path = "D:\\minimalhtml\\samples\\MinimalHtml.Sample\\dist\\server";
-        options.EnableModules(path);
-    });
+    public static LitRenderer? Default { get; internal set; }
 
-    public LitRenderer()
+    private readonly Engine _engine;
+
+    public LitRenderer(LitOptions options)
     {
+        var serverPath = options.ServerPath;
+        var modulePath = Path.Combine(serverPath, options.ServerModule);
+
+        _engine = new Engine(engineOptions =>
+        {
+            engineOptions.EnableModules(serverPath);
+        });
         _engine.Modules.Add("buffer", """
         if (typeof TextEncoder === 'undefined') {
             globalThis.TextEncoder = function TextEncoder() { this.encoding = 'utf-8'; };
@@ -62,7 +67,7 @@ public class LitRenderer
             }
         };
         """);
-        var serverModule = _engine.Modules.Import("D:\\minimalhtml\\samples\\MinimalHtml.Sample\\dist\\server\\server.js");
+        var serverModule = _engine.Modules.Import(modulePath);
         var renderFn = serverModule.Get("renderHtml");
         _engine.SetValue("renderHtml", renderFn);
     }

@@ -16,6 +16,10 @@
 
 
     <ItemGroup>
+      <Content Include="dist\server\**" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Content Include="wwwroot\.vite\**" />
     </ItemGroup>
     
