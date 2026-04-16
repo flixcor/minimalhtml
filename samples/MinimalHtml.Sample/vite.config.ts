@@ -54,12 +54,15 @@ export default defineConfig((ctx) => ({
     //   errorRecovery: true
     // }
   },
+  ssr: {
+    noExternal: true,
+  },
   build: {
     // generate .vite/manifest.json in outDir
     manifest: true,
     modulePreload: false,
-    minify: ctx.mode !== 'development',
-    sourcemap: true,
+    minify: false,
+    sourcemap: false,
     rolldownOptions: {
       experimental: {
         chunkImportMap: {
@@ -69,10 +72,13 @@ export default defineConfig((ctx) => ({
       },
       input,
       output: {
+        format: "esm",
         entryFileNames: (c) =>
+          c.name.startsWith("server") ? "[name].js" :
           c.name.startsWith("serviceworker") ? "[name]-[hash].js" : "assets/[name]-[hash].js",
       },
     },
+    target: "esnext",
     outDir: "wwwroot",
     // emptyOutDir: false,
     assetsInlineLimit: -1,

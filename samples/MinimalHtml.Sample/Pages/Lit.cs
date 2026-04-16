@@ -1,5 +1,6 @@
 ﻿using MinimalHtml.Sample.Filters;
 using MinimalHtml.Sample.Layouts;
+using MinimalHtml.Lit;
 
 namespace MinimalHtml.Sample.Pages
 {
@@ -10,7 +11,7 @@ namespace MinimalHtml.Sample.Pages
                <p>
                    Client-side rendering libraries such as Lit can be easily integrated
                </p>
-               <my-element></my-element>
+               {page => page.Lit($"""<my-element count={5}></my-element>""")}
                """);
         private static readonly Template s_head = static page => page.Html($"{Assets.Script:Pages/Lit.ts}");
         
