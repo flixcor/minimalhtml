@@ -35,7 +35,7 @@ async function getInputs() {
 
 const input = await getInputs();
 
-export default defineConfig((ctx) => ({
+export default defineConfig(() => ({
   appType: "custom",
 
   css: {
