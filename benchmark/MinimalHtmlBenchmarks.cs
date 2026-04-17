@@ -8,7 +8,7 @@ namespace Fluid.Benchmarks
     [MemoryDiagnoser]
     public class MinimalHtmlBenchmarks : BaseBenchmarks
     {
-        private readonly Pipe _pipe = new Pipe();
+        private Pipe _pipe = null!;
         private static readonly MinimalHtml.Template<Product> s_singleProductTemplate = (writer, product) => writer.Html($$"""
                   <li>
                     <h2>{{ product.Name }}</h2>
@@ -31,6 +31,16 @@ namespace Fluid.Benchmarks
         public override async ValueTask Render(PipeWriter output)
         {
             await s_htmlTemplate(output, Products);
+        }
+
+        [IterationSetup]
+        public void IterationSetup() => _pipe = new Pipe();
+
+        [IterationCleanup]
+        public void IterationCleanup()
+        {
+            _pipe.Writer.Complete();
+            _pipe.Reader.Complete();
         }
 
         [Benchmark]

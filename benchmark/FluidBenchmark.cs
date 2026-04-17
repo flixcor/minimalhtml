@@ -10,7 +10,7 @@ namespace Fluid.Benchmarks
         private readonly FluidParser _parser  = new FluidParser();
         private readonly IFluidTemplate _fluidTemplate;
         private readonly FluidParser _compiledParser = new FluidParser().Compile();
-        private readonly Pipe _pipe = new Pipe();
+        private Pipe _pipe = null!;
 
         public FluidBenchmarks()
         {
@@ -21,7 +21,7 @@ namespace Fluid.Benchmarks
             CheckBenchmark();
         }
 
-        
+
         public override async ValueTask Render(PipeWriter pipeWriter)
         {
             var context = new TemplateContext(_options).SetValue("products", Products);
@@ -29,8 +29,18 @@ namespace Fluid.Benchmarks
             await using var writer = new StreamWriter(stream);
             await _fluidTemplate.RenderAsync(writer, context);
         }
-        
+
+        [IterationSetup]
+        public void IterationSetup() => _pipe = new Pipe();
+
+        [IterationCleanup]
+        public void IterationCleanup()
+        {
+            _pipe.Writer.Complete();
+            _pipe.Reader.Complete();
+        }
+
         [Benchmark]
-        public ValueTask Render() => Render(new Pipe().Writer);
+        public ValueTask Render() => Render(_pipe.Writer);
     }
 }
