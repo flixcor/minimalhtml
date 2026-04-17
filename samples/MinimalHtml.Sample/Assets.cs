@@ -8,9 +8,9 @@ namespace MinimalHtml.Sample
 
         public static void Initialize(WebApplication app) => s_getAsset = app.Services.GetService<GetAsset>() ?? MinimalHtml.Assets.Noop;
 
-        public static Flushed Script(HtmlWriter page, string id) => Script(page, (id, true));
+        public static Flushed Script(HtmlWriter page, string id) => Script(page, (id, true, false));
 
-        public static async Flushed Script(HtmlWriter page, (string id, bool isModule) context)
+        public static async Flushed Script(HtmlWriter page, (string id, bool isModule, bool async) context)
         {
             var asset = await s_getAsset(context.id);
             return await page.Html($"""
@@ -19,6 +19,7 @@ namespace MinimalHtml.Sample
                  src="{asset.Src}"
                  {IfTrueish("integrity", asset.Integrity)}
                  {IfTrueish("type", context.isModule ? "module" : null)}
+                 {IfTrueish("async", context.async)}
              ></script>                                                                                             
              """);
         }
