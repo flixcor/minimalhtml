@@ -36,7 +36,8 @@ public interface ITemplateHandler
 [InterpolatedStringHandler]
 public ref struct TemplateHandler : ITemplateHandler
 {
-    private static readonly ConcurrentDictionary<string, byte[]> s_buffers = new();
+    private static readonly ConcurrentDictionary<string, byte[]> s_buffers = new(ReferenceEqualityComparer.Instance);
+    private static readonly Func<string, byte[]> s_encodeUtf8 = Encoding.UTF8.GetBytes;
     private readonly PipeWriter _writer;
     private readonly IFormatProvider? _formatProvider;
     private readonly TemplateEncoder _encoder;
@@ -67,7 +68,7 @@ public ref struct TemplateHandler : ITemplateHandler
         {
 #pragma warning disable CA2012
             if (Result.IsCompletedSuccessfully)
-                _writer.Write(s_buffers.GetOrAdd(s, Encoding.UTF8.GetBytes));
+                _writer.Write(s_buffers.GetOrAdd(s, s_encodeUtf8));
             else
                 Result = AwaitThenWriteLiteral(Result, _writer, s);
         }
@@ -204,7 +205,7 @@ public ref struct TemplateHandler : ITemplateHandler
     {
         var r = await pending.ConfigureAwait(false);
         if (r.IsCompleted || r.IsCanceled) return r;
-        writer.Write(s_buffers.GetOrAdd(s, Encoding.UTF8.GetBytes));
+        writer.Write(s_buffers.GetOrAdd(s, s_encodeUtf8));
         return new();
     }
 
