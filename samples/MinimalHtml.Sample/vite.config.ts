@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import glob from "fast-glob";
+import { glob } from "tinyglobby";
 import { readFile, stat } from "fs/promises";
 import { writeFileSync } from "node:fs";
 //import jit from "lightningcss-jit-props"
@@ -74,8 +74,11 @@ export default defineConfig(() => ({
       output: {
         format: "esm",
         entryFileNames: (c) =>
-          c.name.startsWith("server") ? "[name].js" :
-          c.name.startsWith("serviceworker") ? "[name]-[hash].js" : "assets/[name]-[hash].js",
+          c.name.startsWith("server")
+            ? "[name].js"
+            : c.name.startsWith("serviceworker")
+              ? "[name]-[hash].js"
+              : "assets/[name]-[hash].js",
       },
     },
     outDir: "wwwroot",
