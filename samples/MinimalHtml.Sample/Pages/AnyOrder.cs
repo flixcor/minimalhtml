@@ -5,7 +5,7 @@ namespace MinimalHtml.Sample.Pages
     public class AnyOrder
     {
         public static void Map(IEndpointRouteBuilder builder) => builder
-            .MapGet("/any-order", static () => Results.Extensions.WithLayout(Page, Head));
+            .MapGet("/any-order", static () => Results.WithLayout(Page, Head));
 
         private static Flushed Head(HtmlWriter page) => page.Html($"{Assets.Style:/Pages/AnyOrder.css}");
 

@@ -49,7 +49,7 @@ namespace MinimalHtml.Sample.Pages
         
         
         public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/streaming", static (FakeDatabase db) => 
-            Results.Extensions.WithLayout(Page, db.GetRows()))
+            Results.WithLayout(Page, db.GetRows()))
             .WithSwr();
     }
 }

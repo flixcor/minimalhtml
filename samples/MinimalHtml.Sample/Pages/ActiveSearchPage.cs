@@ -33,8 +33,8 @@ namespace MinimalHtml.Sample.Pages
             [FromHeader(Name = "Sec-Fetch-Dest")] string? fetchDest,
             [FromQuery] string? query) =>
             fetchDest == "document" || query == null
-                ? Results.Extensions.WithLayout(Page, query)
-                : Results.Extensions.Html(RenderResults, query));
+                ? Results.WithLayout(Page, query)
+                : Results.Html(RenderResults, query));
 
         private static Flushed RenderSearchResult(HtmlWriter page, SearchResult result) => page.Html($"""
              <tr>

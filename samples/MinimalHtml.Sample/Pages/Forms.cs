@@ -17,12 +17,12 @@ namespace MinimalHtml.Sample.Pages
         {
             var group = builder.MapGroup("/forms");
 
-            group.MapGet("/", static () => Results.Extensions
+            group.MapGet("/", static () => Results
                 .WithLayout(static page => Render(page), p => p.Html($"{Assets.Style:/Pages/Forms.css}")))
                 .WithSwr()
                 .CacheOutput();
 
-            group.MapPost("/", static (FormModel starship) => Results.Extensions.WithLayout(Render, starship, p => p.Html($"{Assets.Style:/Pages/Forms.css}")))
+            group.MapPost("/", static (FormModel starship) => Results.WithLayout(Render, starship, p => p.Html($"{Assets.Style:/Pages/Forms.css}")))
                 .DisableAntiforgery()
                 .WithMetadata(new RequestSizeLimitAttribute(300_000_000));
         }

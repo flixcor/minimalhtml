@@ -36,7 +36,7 @@ public static readonly Template<User> UserTemplate =
 app.MapGet("/user/{id}", (int id, UserService users) =>
 {
     var user = users.GetById(id);
-    return Results.Extensions.Html(UserTemplate, user);
+    return Results.Html(UserTemplate, user);
 });
 ```
 
@@ -101,18 +101,9 @@ dotnet run --project benchmark/MinimalHtml.Benchmarks.csproj -c Release
 
 ## Requirements
 
-- .NET 9.0 or later
-- C# 12.0 or later
+- .NET 10.0 or later
+- C# 14.0 or later
 
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
-
-## Related Projects
-
-- [ASP.NET Core](https://github.com/dotnet/aspnetcore) - Web framework integration
-- [System.IO.Pipelines](https://github.com/dotnet/corefx) - High-performance I/O
-
----
-
-**MinimalHtml** - High-performance HTML templating for modern .NET applications.

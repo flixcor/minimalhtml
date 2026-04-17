@@ -80,5 +80,5 @@ public partial class Home
 
     private static Flushed Head(HtmlWriter page) => page.Html($"{Assets.Script:Components/TabList.js}{Assets.Style:Components/TabList.css}");
 
-    public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/", static () => Results.Extensions.WithLayout(Page, Head));
+    public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/", static () => Results.WithLayout(Page, Head));
 }

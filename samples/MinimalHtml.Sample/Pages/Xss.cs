@@ -7,7 +7,7 @@ namespace MinimalHtml.Sample.Pages
     {
         private static ReadOnlySpan<byte> UnsafeText() => /*language=html*/ """<script>alert("oops, we've been hacked!")</script>"""u8;
 
-        public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/xss", static () => Results.Extensions.WithLayout(page => page.Html($"""
+        public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/xss", static () => Results.WithLayout(page => page.Html($"""
              <h2>Cross site scripting (XSS)</h2>
              <p>Strings are escaped by default, so this unsafe text is not interpreted as html:</p>
              <p><code>{UnsafeText}</code></p>

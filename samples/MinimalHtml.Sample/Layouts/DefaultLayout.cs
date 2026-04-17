@@ -44,13 +44,14 @@ public static class DefaultLayout
         }
     }
 
+    extension(Results)
+    {
+        public static IResult WithLayout<T>(Template<T> page, T context, Template? head = null, int statusCode = 200)
+            => new LayoutResult<T>(page, context, head, statusCode);
     
-
-    public static IResult WithLayout<T>(this IResultExtensions _, Template<T> page, T context, Template? head = null, int statusCode = 200)
-        => new LayoutResult<T>(page, context, head, statusCode);
-    
-    public static IResult WithLayout(this IResultExtensions _, Template page, Template? head = null, int statusCode = 200)
-        => new LayoutResult<Template>(static (p,t) => t(p), page, head, statusCode);
+        public static IResult WithLayout(Template page, Template? head = null, int statusCode = 200)
+            => new LayoutResult<Template>(static (p,t) => t(p), page, head, statusCode);
+    }
 
     public static Flushed Render(HtmlWriter page, LayoutProps props) => Render<Template>(page, props);
     public static Flushed Render<T>(HtmlWriter page, LayoutProps<T> context) => page.Html($$"""
@@ -63,7 +64,7 @@ public static class DefaultLayout
                  <!-- the props -->
              {{context.ImportMap}}
              {{Assets.SvgFavIcon:img/favicon.svg}}
-             {{Assets.Script:Layouts/DefaultLayout.ts}}
+             {{(Assets.Script, ("Layouts/DefaultLayout.ts", true, true))}}
              {{Assets.Style:Layouts/DefaultLayout.css}}
              {{Assets.ServiceWorker:serviceworker.js}}
              {{context.Head}}

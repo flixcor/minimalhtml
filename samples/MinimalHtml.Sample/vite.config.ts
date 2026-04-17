@@ -5,7 +5,7 @@ import { writeFileSync } from "node:fs";
 //import jit from "lightningcss-jit-props"
 //import { resolve } from "node:path"
 
-const findSrc = /Assets\.[A-Za-z]+:~?\/?([^}]+)}/g;
+const findSrc = /Assets\.[A-Za-z]+(?::~?\/?|,\s*\(")([^}"]+)(?:}|")/g;
 
 async function getInputs() {
   const files = await glob([
