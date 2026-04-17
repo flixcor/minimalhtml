@@ -18,7 +18,7 @@ namespace MinimalHtml.Sample
              <script 
                  src="{asset.Src}"
                  {IfTrueish("integrity", asset.Integrity)}
-                 {IfTrueish("module", context.isModule)}
+                 {IfTrueish("type", context.isModule ? "module" : null)}
              ></script>                                                                                             
              """);
         }

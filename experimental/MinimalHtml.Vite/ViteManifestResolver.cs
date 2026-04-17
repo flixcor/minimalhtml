@@ -165,7 +165,10 @@ public class ViteManifestResolver(string manifestPath, string? importmapPath, IW
 
             if (props.TryGetValue(importKey, out var import))
             {
-                importedAsset = new Asset(Assets.TrimUrl(importKey), null, HandleImports(import));
+                var file = import.TryGetProperty("file", out var fileProp) 
+                    ? fileProp.GetString() ?? importKey 
+                    : importKey;
+                importedAsset = new Asset(Assets.TrimUrl(file), null, HandleImports(import));
                 props.Remove(importKey);
                 var isEntry = import.TryGetProperty("isEntry"u8, out var e) && e.GetBoolean();
                 if (isEntry)

@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/experimental/">
     <Project Path="experimental/MinimalHtml.CssModules/MinimalHtml.CssModules.csproj" />
+    <Project Path="experimental/MinimalHtml.Lit/MinimalHtml.Lit.csproj" />
     <Project Path="experimental/MinimalHtml.Vite/MinimalHtml.Vite.csproj" />
   </Folder>
   <Folder Name="/experimental/forms/">
