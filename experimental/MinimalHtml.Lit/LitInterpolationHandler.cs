@@ -1,44 +1,52 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using Jint.Native;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace MinimalHtml.Lit;
+
+internal static class RendererPool
+{
+    internal static readonly ConcurrentBag<LitRenderer> Pool = new();
+}
 
 [InterpolatedStringHandler]
 public readonly ref struct LitInterpolationHandler
 {
-    private readonly LitRenderer _renderer;
-    private readonly JsArray _literals;
-    private readonly JsArray _values;
-    public LitInterpolationHandler(int literalCount, int valueCount, LitRenderer renderer)
+    internal readonly List<JsValue> _literals;
+    internal readonly List<JsValue> _values;
+    
+    public LitInterpolationHandler(int literalCount, int valueCount)
     {
-        _renderer = renderer;
-        _literals = _renderer.GetJsArray(literalCount);
-        _values = _renderer.GetJsArray(valueCount);
+        _literals = new (literalCount);
+        _values =  new (valueCount);
     }
 
-    public LitInterpolationHandler(int literalCount, int valueCount): this(literalCount, valueCount, LitRenderer.Default ?? throw new InvalidOperationException("LitRenderer.Default must be set before using LitInterpolationHandler. Call UseLit() in your Startup/Program class."))
-    {
-    }
+    public void AppendLiteral(string literal) => _literals.Add(literal);
 
-    public void AppendLiteral(string literal) => _literals.Push(literal);
-
-    public void AppendFormatted(JsValue value) => _values.Push(value);
-
-    internal ValueTask<FlushResult> Render(PipeWriter writer) => _renderer.Render(writer, _literals, _values);
+    public void AppendFormatted(JsValue value) => _values.Add(value);
 }
 
 public static class LitExtensions
 {
-    public static ValueTask<FlushResult> Lit([StringSyntax("Html")] this PipeWriter writer, LitRenderer renderer, [InterpolatedStringHandlerArgument(nameof(renderer))] LitInterpolationHandler handler) => handler.Render(writer);
+    public static ValueTask<FlushResult> Lit(this PipeWriter writer,
+        [StringSyntax("Html")] LitInterpolationHandler handler) =>
+            Render(writer, handler._literals, handler._values);
 
-    public static ValueTask<FlushResult> Lit([StringSyntax("Html")] this PipeWriter writer, [InterpolatedStringHandlerArgument()] LitInterpolationHandler handler) => handler.Render(writer);
-
-    public static void UseLit(this IServiceCollection services, LitOptions options)
+    private static async ValueTask<FlushResult> Render(PipeWriter writer, List<JsValue> literals, List<JsValue> values)
     {
-        LitRenderer.Default = new LitRenderer(options);
+        var renderer = RendererPool.Pool.TryTake(out var r) 
+            ? r 
+            : new LitRenderer(LitRenderer.Default ?? throw new InvalidOperationException("LitRenderer.Default must be set before using LitInterpolationHandler. Call UseLit() in your Startup/Program class."));
+        try
+        {
+            return await renderer.Render(writer, literals, values);
+        }
+        finally
+        {
+            RendererPool.Pool.Add(renderer);
+        }
     }
 }
 

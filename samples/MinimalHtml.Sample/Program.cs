@@ -28,7 +28,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<NavLink>();
 builder.Services.RegisterViteAssets(importmapPath: ".vite/importmap.json");
-builder.Services.UseLit(new LitOptions
+LitRenderer.Setup(new LitOptions
 {
     ServerPath = Path.Combine(AppContext.BaseDirectory, "dist", "server")
 });

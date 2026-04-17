@@ -7,7 +7,11 @@ namespace MinimalHtml.Lit;
 
 public class LitRenderer
 {
-    public static LitRenderer? Default { get; internal set; }
+    public static void Setup(LitOptions options)
+    {
+        Default = options;
+    }
+    public static LitOptions? Default { get; internal set; }
 
     private readonly Engine _engine;
 
@@ -125,9 +129,7 @@ public class LitRenderer
         _engine.SetValue("renderHtml", renderFn);
     }
 
-    public JsArray GetJsArray(int capacity = 0, int initialLength = 0) => new(_engine, (uint)capacity, (uint)initialLength);
-
-    public async ValueTask<FlushResult> Render(PipeWriter writer, JsArray literals, JsArray values)
+    public async ValueTask<FlushResult> Render(PipeWriter writer, List<JsValue> literals, List<JsValue> values)
     {
         var write = JsValue.FromObject(_engine, new Action<string>(chunk =>
         {

@@ -8,8 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Jint" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-    <PackageReference Include="MinimalHtml" />
+<!--    <PackageReference Include="MinimalHtml" />-->
   </ItemGroup>
 
 </Project>
