@@ -63,7 +63,7 @@ public ref struct TemplateHandler : ITemplateHandler
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendLiteral(string? s)
     {
-        if (!string.IsNullOrWhiteSpace(s))
+        if (!string.IsNullOrEmpty(s))
         {
 #pragma warning disable CA2012
             if (Result.IsCompletedSuccessfully)
