@@ -1,0 +1,78 @@
+{
+  "name": "minimalhtml-extension",
+  "displayName": "minimalhtml",
+  "description": "HTML tokenization inside lang=html-annotated C# string literals.",
+  "publisher": "felixcornelissen",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:csharp"
+  ],
+  "repository": "github:flixcor/minimalhtml",
+  "contributes": {
+    "configuration": {
+      "title": "MinimalHTML",
+      "properties": {
+        "minimalhtml.diagnostics.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show structural HTML errors (unclosed and mismatched tags) as diagnostics in detected HTML string regions."
+        }
+      }
+    },
+    "grammars": [
+      {
+        "scopeName": "html-in-csharp.injection",
+        "injectTo": [
+          "source.cs"
+        ],
+        "path": "./syntaxes/html-in-csharp.injection.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.html.cs": "html"
+        }
+      },
+      {
+        "scopeName": "html-interp-holes.injection",
+        "injectTo": [
+          "source.cs"
+        ],
+        "path": "./syntaxes/html-interp-holes.injection.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
+    "compile:tests": "tsc -p tsconfig.tests.json",
+    "test:tmgrammar": "vscode-tmgrammar-test -g tests/tmgrammar/vendor/csharp.tmLanguage.json -g tests/tmgrammar/vendor/html.tmLanguage.json -g syntaxes/html-in-csharp.injection.tmLanguage.json -g syntaxes/html-interp-holes.injection.tmLanguage.json \"tests/tmgrammar/**/*.test.cs\"",
+    "test:unit": "pnpm run compile:tests && mocha \"out-tests/tests/unit/**/*.test.js\"",
+    "test:e2e": "pnpm run build && pnpm run compile:tests && node out-tests/tests/e2e/runTests.js",
+    "test:perf": "pnpm run compile:tests && node out-tests/tests/perf/benchmark.js",
+    "check:bundle": "pnpx vsce package --out dist/bundle-check.vsix && node -e \"const fs=require('fs');const s=fs.statSync('dist/bundle-check.vsix').size;const max=500*1024;console.log('vsix size:',s,'bytes (limit',max,')');if(s>max){process.exit(1);}\"",
+    "test": "pnpm run test:tmgrammar && pnpm run test:unit",
+    "package": "vsce package"
+  },
+  "overrides": {
+    "serialize-javascript": "^7.0.5"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.3.9",
+    "@vscode/vsce": "^3.9.1",
+    "esbuild": "^0.28.0",
+    "mocha": "^10.3.0",
+    "typescript": "^5.4.0",
+    "vscode-html-languageservice": "^5.6.2",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.3.2",
+    "vscode-tmgrammar-test": "^0.1.3"
+  }
+}

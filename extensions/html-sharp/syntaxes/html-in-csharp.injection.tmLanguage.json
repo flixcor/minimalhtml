@@ -1,0 +1,443 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "scopeName": "html-in-csharp.injection",
+  "injectionSelector": "L:source.cs - string - comment - meta.interpolation.cs",
+  "patterns": [
+    { "include": "#html-method-interp-raw-n3" },
+    { "include": "#html-method-interp-raw-n2" },
+    { "include": "#html-method-interp-raw-n1" },
+    { "include": "#html-method-raw3" },
+    { "include": "#html-method-interp-verbatim" },
+    { "include": "#html-method-verbatim" },
+    { "include": "#html-method-interp-regular" },
+    { "include": "#html-method-regular" },
+    { "include": "#html-method-multiline" },
+    { "include": "#marker-interp-raw-n3" },
+    { "include": "#marker-interp-raw-n2" },
+    { "include": "#marker-interp-raw-n1" },
+    { "include": "#marker-raw3" },
+    { "include": "#marker-interp-verbatim" },
+    { "include": "#marker-verbatim" },
+    { "include": "#marker-interp-regular" },
+    { "include": "#marker-regular" },
+    { "include": "#marker-multiline" }
+  ],
+  "repository": {
+    "html-method-interp-regular": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "((?:[\\w.>()]+\\.)?(?<!\\w)Html\\s*\\()\\s*((?<!\\$)\\$(?!\\$)\")",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.html-method-trigger.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "(?<!\\\\)\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n1" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "html-method-interp-verbatim": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "((?:[\\w.>()]+\\.)?(?<!\\w)Html\\s*\\()\\s*((?:(?<!\\$)\\$@|(?<!@)@\\$)\")",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.html-method-trigger.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"(?!\")",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n1" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "html-method-interp-raw-n1": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "((?:[\\w.>()]+\\.)?(?<!\\w)Html\\s*\\()\\s*((?<!\\$)\\$\"{3})(?!\")",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.html-method-trigger.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"{3}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n1" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "html-method-interp-raw-n2": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "((?:[\\w.>()]+\\.)?(?<!\\w)Html\\s*\\()\\s*((?<!\\$)\\${2}\"{3})(?!\")",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.html-method-trigger.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"{3}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n2" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "html-method-interp-raw-n3": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "((?:[\\w.>()]+\\.)?(?<!\\w)Html\\s*\\()\\s*((?<!\\$)\\${3}\"{3})(?!\")",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.html-method-trigger.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"{3}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n3" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "html-method-regular": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "((?:[\\w.>()]+\\.)?(?<!\\w)Html\\s*\\()\\s*((?<!\\$)(?<!@)\"(?!\"))",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.html-method-trigger.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "(?<!\\\\)\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "text.html.basic" }
+      ]
+    },
+    "html-method-verbatim": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "((?:[\\w.>()]+\\.)?(?<!\\w)Html\\s*\\()\\s*((?<!\\$)@\")",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.html-method-trigger.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"(?!\")",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "text.html.basic" }
+      ]
+    },
+    "html-method-raw3": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "((?:[\\w.>()]+\\.)?(?<!\\w)Html\\s*\\()\\s*((?<!\\$)\"{3})(?!\")",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.html-method-trigger.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"{3}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "text.html.basic" }
+      ]
+    },
+    "html-method-multiline": {
+      "begin": "((?:[\\w.>()]+\\.)?(?<!\\w)Html\\s*\\()\\s*$",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.html-method-trigger.cs" }
+      },
+      "end": "(?=[^\\s@\"])",
+      "patterns": [
+        {
+          "name": "meta.embedded.block.html.cs",
+          "contentName": "text.html.basic",
+          "begin": "((?<!\\$)@\")",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.string.begin.cs" }
+          },
+          "end": "\"(?!\")",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.cs" }
+          },
+          "patterns": [
+            { "include": "text.html.basic" }
+          ]
+        },
+        {
+          "name": "meta.embedded.block.html.cs",
+          "contentName": "text.html.basic",
+          "begin": "((?<!\\$)\"{3})(?!\")",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.string.begin.cs" }
+          },
+          "end": "\"{3}",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.cs" }
+          },
+          "patterns": [
+            { "include": "text.html.basic" }
+          ]
+        },
+        {
+          "name": "meta.embedded.block.html.cs",
+          "contentName": "text.html.basic",
+          "begin": "((?<!\\$)(?<!@)(?<!\")\"(?!\"))",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.string.begin.cs" }
+          },
+          "end": "(?<!\\\\)\"",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.cs" }
+          },
+          "patterns": [
+            { "include": "text.html.basic" }
+          ]
+        }
+      ]
+    },
+    "marker-interp-regular": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\$(?!\\$)\")",
+      "beginCaptures": {
+        "1": { "name": "comment.block.html-marker.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "(?<!\\\\)\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n1" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "hole-n1": {
+      "name": "meta.interpolation.cs",
+      "begin": "(?<!\\{)\\{(?!\\{)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.interpolation.begin.cs" }
+      },
+      "end": "(?<!\\})\\}(?!\\})",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.interpolation.end.cs" }
+      },
+      "patterns": [
+        { "include": "source.cs" }
+      ]
+    },
+    "hole-n2": {
+      "name": "meta.interpolation.cs",
+      "begin": "(?<!\\{)\\{{2}(?!\\{)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.interpolation.begin.cs" }
+      },
+      "end": "(?<!\\})\\}{2}(?!\\})",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.interpolation.end.cs" }
+      },
+      "patterns": [
+        { "include": "source.cs" }
+      ]
+    },
+    "hole-n3": {
+      "name": "meta.interpolation.cs",
+      "begin": "(?<!\\{)\\{{3}(?!\\{)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.interpolation.begin.cs" }
+      },
+      "end": "(?<!\\})\\}{3}(?!\\})",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.interpolation.end.cs" }
+      },
+      "patterns": [
+        { "include": "source.cs" }
+      ]
+    },
+    "marker-interp-verbatim": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?:(?<!\\$)\\$@|(?<!@)@\\$)\")",
+      "beginCaptures": {
+        "1": { "name": "comment.block.html-marker.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"(?!\")",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n1" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "marker-interp-raw-n1": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\$\"{3})(?!\")",
+      "beginCaptures": {
+        "1": { "name": "comment.block.html-marker.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"{3}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n1" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "marker-interp-raw-n2": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\${2}\"{3})(?!\")",
+      "beginCaptures": {
+        "1": { "name": "comment.block.html-marker.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"{3}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n2" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "marker-interp-raw-n3": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\${3}\"{3})(?!\")",
+      "beginCaptures": {
+        "1": { "name": "comment.block.html-marker.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"{3}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "#hole-n3" },
+        { "include": "text.html.basic" }
+      ]
+    },
+    "marker-regular": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)(?<!@)\"(?!\"))",
+      "beginCaptures": {
+        "1": { "name": "comment.block.html-marker.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "(?<!\\\\)\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "text.html.basic" }
+      ]
+    },
+    "marker-verbatim": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)@\")",
+      "beginCaptures": {
+        "1": { "name": "comment.block.html-marker.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"(?!\")",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "text.html.basic" }
+      ]
+    },
+    "marker-raw3": {
+      "name": "meta.embedded.block.html.cs",
+      "contentName": "text.html.basic",
+      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\"{3})(?!\")",
+      "beginCaptures": {
+        "1": { "name": "comment.block.html-marker.cs" },
+        "2": { "name": "punctuation.definition.string.begin.cs" }
+      },
+      "end": "\"{3}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.cs" }
+      },
+      "patterns": [
+        { "include": "text.html.basic" }
+      ]
+    },
+    "marker-multiline": {
+      "begin": "(?i)((?://(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b.*|/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/))\\s*$",
+      "beginCaptures": {
+        "1": { "name": "comment.block.html-marker.cs" }
+      },
+      "end": "(?=[^\\s@\"])",
+      "patterns": [
+        {
+          "name": "meta.embedded.block.html.cs",
+          "contentName": "text.html.basic",
+          "begin": "((?<!\\$)@\")",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.string.begin.cs" }
+          },
+          "end": "\"(?!\")",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.cs" }
+          },
+          "patterns": [
+            { "include": "text.html.basic" }
+          ]
+        },
+        {
+          "name": "meta.embedded.block.html.cs",
+          "contentName": "text.html.basic",
+          "begin": "((?<!\\$)\"{3})(?!\")",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.string.begin.cs" }
+          },
+          "end": "\"{3}",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.cs" }
+          },
+          "patterns": [
+            { "include": "text.html.basic" }
+          ]
+        },
+        {
+          "name": "meta.embedded.block.html.cs",
+          "contentName": "text.html.basic",
+          "begin": "((?<!\\$)(?<!@)(?<!\")\"(?!\"))",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.string.begin.cs" }
+          },
+          "end": "(?<!\\\\)\"",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.cs" }
+          },
+          "patterns": [
+            { "include": "text.html.basic" }
+          ]
+        }
+      ]
+    }
+  }
+}

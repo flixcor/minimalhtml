@@ -1,0 +1,24 @@
+# Local-only Claude Code settings (per-machine permissions, etc.)
+.claude/settings.local.json
+
+# Node / build artifacts
+node_modules/
+dist/
+out/
+out-tests/
+*.vsix
+*.log
+
+# @vscode/test-electron downloads a VS Code build here
+.vscode-test/
+
+# VS Code writes per-workspace settings here when fixtures/ is opened as
+# the F5 dev-host workspace; we don't want fixture-side settings tracked.
+tests/fixtures/.vscode/
+
+# Test coverage output
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
