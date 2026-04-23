@@ -1,8 +1,8 @@
 {
-  "name": "minimalhtml-extension",
-  "displayName": "minimalhtml",
-  "description": "HTML tokenization inside lang=html-annotated C# string literals.",
-  "publisher": "felixcornelissen",
+  "name": "html-sharp",
+  "displayName": "HTML#",
+  "description": "HTML tokenization inside C# string literals.",
+  "publisher": "flixcor",
   "version": "0.1.0",
   "engines": {
     "vscode": "^1.85.0"
