@@ -10,7 +10,8 @@ namespace Fluid.Benchmarks
         private readonly FluidParser _parser  = new FluidParser();
         private readonly IFluidTemplate _fluidTemplate;
         private readonly FluidParser _compiledParser = new FluidParser().Compile();
-        private Pipe _pipe = null!;
+        private MemoryStream _buffer = null!;
+        private StreamWriter _writer = null!;
 
         public FluidBenchmarks()
         {
@@ -31,16 +32,24 @@ namespace Fluid.Benchmarks
         }
 
         [IterationSetup]
-        public void IterationSetup() => _pipe = new Pipe();
+        public void IterationSetup()
+        {
+            _buffer = new MemoryStream(capacity: 65536);
+            _writer = new StreamWriter(_buffer);
+        }
 
         [IterationCleanup]
         public void IterationCleanup()
         {
-            _pipe.Writer.Complete();
-            _pipe.Reader.Complete();
+            _writer.Dispose();
+            _buffer.Dispose();
         }
 
         [Benchmark]
-        public ValueTask Render() => Render(_pipe.Writer);
+        public async ValueTask Render()
+        {
+            var context = new TemplateContext(_options).SetValue("products", Products);
+            await _fluidTemplate.RenderAsync(_writer, context);
+        }
     }
 }

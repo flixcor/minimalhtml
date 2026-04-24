@@ -97,10 +97,10 @@ Rendering a list of 100 products (based on the [Fluid benchmark suite](https://g
 
 | Template engine | Mean     | Allocated |
 |-----------------|---------:|----------:|
-| Fluid           | 476.9 μs |   40.3 KB |
-| MinimalHtml     | 130.2 μs |  10.59 KB |
+| Fluid           | 346.4 μs |  32.77 KB |
+| MinimalHtml     | 117.8 μs |   6.57 KB |
 
-MinimalHtml renders ~3.7× faster and allocates ~3.8× less memory.
+MinimalHtml renders ~2.9× faster and allocates ~5× less memory.
 
 <sub>BenchmarkDotNet v0.15.2, .NET 10.0.6, Windows 11, X64 RyuJIT AVX2. `InvocationCount=1, UnrollFactor=1`.</sub>
 
