@@ -14,6 +14,7 @@
   "activationEvents": [
     "onLanguage:csharp"
   ],
+  "repository": "github:flixcor/minimalhtml",
   "contributes": {
     "configuration": {
       "title": "MinimalHTML",
