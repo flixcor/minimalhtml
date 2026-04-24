@@ -7,7 +7,7 @@ A high-performance, AOT-compatible HTML template library for .NET 9 that leverag
 - **🚀 High Performance**: Direct `PipeWriter` streaming with minimal allocations
 - **🔒 AOT Compatible**: Full support for Native AOT compilation
 - **🛡️ XSS Protection**: Automatic HTML encoding for all interpolated values
-- **🎨 IDE Support**: Full HTML syntax highlighting in JetBrains Rider, plus HTML tokenization, hover docs, and autocomplete in VS Code via the [HTML# extension](extensions/html-sharp/)
+- **🎨 IDE Support**: Full HTML syntax highlighting in JetBrains Rider, plus HTML tokenization, hover docs, and autocomplete in VS Code via the [HTML# extension](https://marketplace.visualstudio.com/items?itemName=flixcor.html-sharp)
 
 ## Quick Start
 
