@@ -27,4 +27,12 @@ class AttrHoles
     string f = /*lang=html*/$"""<div {SomeMethod("data-attr")}></div>""";
 //                                   ^ meta.interpolation.cs
 //                                                 ^ source.cs
+
+    // N=1: hole as attribute name (followed by = and a value).
+    string g = /*lang=html*/$"""<div {name}="x"></div>""";
+//                                   ^ meta.interpolation.cs
+
+    // N=1: hole as unquoted attribute value (<tag attr={hole}>).
+    string h = /*lang=html*/$"""<div foo={bar}></div>""";
+//                                       ^ meta.interpolation.cs
 }
