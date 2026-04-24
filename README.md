@@ -93,7 +93,18 @@ The source generator will automatically populate this class with cached UTF-8 by
 
 ## Benchmarks
 
-Run the included benchmarks:
+Rendering a list of 100 products (based on the [Fluid benchmark suite](https://github.com/sebastienros/fluid/tree/main/Fluid.Benchmarks)):
+
+| Template engine | Mean     | Allocated |
+|-----------------|---------:|----------:|
+| Fluid           | 476.9 μs |   40.3 KB |
+| MinimalHtml     | 130.2 μs |  10.59 KB |
+
+MinimalHtml renders ~3.7× faster and allocates ~3.8× less memory.
+
+<sub>BenchmarkDotNet v0.15.2, .NET 10.0.6, Windows 11, X64 RyuJIT AVX2. `InvocationCount=1, UnrollFactor=1`.</sub>
+
+Run the included benchmarks yourself:
 
 ```bash
 dotnet run --project benchmark/MinimalHtml.Benchmarks.csproj -c Release
