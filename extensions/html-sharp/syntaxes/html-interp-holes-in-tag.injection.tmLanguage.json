@@ -1,0 +1,54 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "scopeName": "html-interp-holes-in-tag.injection",
+  "injectionSelector": "L:meta.embedded.block.html.cs meta.tag - string.quoted.double.html - string.quoted.single.html - meta.interpolation.cs",
+  "patterns": [
+    { "include": "#hole-n3" },
+    { "include": "#hole-n2" },
+    { "include": "#hole-n1" }
+  ],
+  "repository": {
+    "hole-n1": {
+      "name": "meta.interpolation.cs",
+      "begin": "(?<!\\{)\\{(?!\\{)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.interpolation.begin.cs" }
+      },
+      "end": "(?<!\\})\\}(?!\\})",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.interpolation.end.cs" }
+      },
+      "patterns": [
+        { "include": "source.cs" }
+      ]
+    },
+    "hole-n2": {
+      "name": "meta.interpolation.cs",
+      "begin": "(?<!\\{)\\{{2}(?!\\{)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.interpolation.begin.cs" }
+      },
+      "end": "(?<!\\})\\}{2}(?!\\})",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.interpolation.end.cs" }
+      },
+      "patterns": [
+        { "include": "source.cs" }
+      ]
+    },
+    "hole-n3": {
+      "name": "meta.interpolation.cs",
+      "begin": "(?<!\\{)\\{{3}(?!\\{)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.interpolation.begin.cs" }
+      },
+      "end": "(?<!\\})\\}{3}(?!\\})",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.interpolation.end.cs" }
+      },
+      "patterns": [
+        { "include": "source.cs" }
+      ]
+    }
+  }
+}

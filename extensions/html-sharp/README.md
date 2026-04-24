@@ -1,4 +1,4 @@
-# minimalhtml-extension
+# HTML#
 
 A tiny VS Code extension that colors HTML embedded in C# string literals.
 

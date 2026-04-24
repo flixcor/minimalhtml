@@ -14,7 +14,6 @@
   "activationEvents": [
     "onLanguage:csharp"
   ],
-  "repository": "github:flixcor/minimalhtml",
   "contributes": {
     "configuration": {
       "title": "MinimalHTML",
@@ -43,6 +42,13 @@
           "source.cs"
         ],
         "path": "./syntaxes/html-interp-holes.injection.tmLanguage.json"
+      },
+      {
+        "scopeName": "html-interp-holes-in-tag.injection",
+        "injectTo": [
+          "source.cs"
+        ],
+        "path": "./syntaxes/html-interp-holes-in-tag.injection.tmLanguage.json"
       }
     ]
   },
@@ -50,7 +56,7 @@
     "build": "node esbuild.config.mjs",
     "watch": "node esbuild.config.mjs --watch",
     "compile:tests": "tsc -p tsconfig.tests.json",
-    "test:tmgrammar": "vscode-tmgrammar-test -g tests/tmgrammar/vendor/csharp.tmLanguage.json -g tests/tmgrammar/vendor/html.tmLanguage.json -g syntaxes/html-in-csharp.injection.tmLanguage.json -g syntaxes/html-interp-holes.injection.tmLanguage.json \"tests/tmgrammar/**/*.test.cs\"",
+    "test:tmgrammar": "vscode-tmgrammar-test -g tests/tmgrammar/vendor/csharp.tmLanguage.json -g tests/tmgrammar/vendor/html.tmLanguage.json -g syntaxes/html-in-csharp.injection.tmLanguage.json -g syntaxes/html-interp-holes.injection.tmLanguage.json -g syntaxes/html-interp-holes-in-tag.injection.tmLanguage.json \"tests/tmgrammar/**/*.test.cs\"",
     "test:unit": "pnpm run compile:tests && mocha \"out-tests/tests/unit/**/*.test.js\"",
     "test:e2e": "pnpm run build && pnpm run compile:tests && node out-tests/tests/e2e/runTests.js",
     "test:perf": "pnpm run compile:tests && node out-tests/tests/perf/benchmark.js",
