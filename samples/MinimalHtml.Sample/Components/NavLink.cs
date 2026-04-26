@@ -1,9 +1,8 @@
-﻿namespace MinimalHtml.Sample.Components
+﻿namespace MinimalHtml.Sample.Components;
+
+public class NavLink(IHttpContextAccessor acc)
 {
-    public class NavLink(IHttpContextAccessor acc)
-    {
-        public Flushed Render(HtmlWriter page, string href) => page.Html($"""
-            href="{href}" {IfTrueish("aria-current", acc.HttpContext?.Request.Path.StartsWithSegments(href) == true ? "page" : null)}
-            """);
-    }
+    public readonly Template<string> Render = (page, href) => page.Html($"""
+        href="{href}" {IfTrueish("aria-current", acc.HttpContext?.Request.Path.StartsWithSegments(href) == true ? "page" : null)}
+        """);
 }

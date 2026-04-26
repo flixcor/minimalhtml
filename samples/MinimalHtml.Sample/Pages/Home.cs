@@ -1,4 +1,5 @@
-﻿using MinimalHtml.Sample.Components;
+﻿using System.IO.Pipelines;
+using MinimalHtml.Sample.Components;
 using MinimalHtml.Sample.Filters;
 using MinimalHtml.Sample.Layouts;
 
@@ -64,9 +65,9 @@ public partial class Home
             """)
     };
 
-    private static Flushed Paragraphs(HtmlWriter page, int _) => page.Html($"""<p>{s_lorem.Paragraphs(4)}</p>""");
+    private static readonly Template<int> Paragraphs = (page, _) => page.Html($"""<p>{s_lorem.Paragraphs(4)}</p>""");
 
-    private static Flushed Page(HtmlWriter page) => page.Html($"""
+    private static readonly Template Page = (page) => page.Html($"""
       <h2>Progressive enhancement</h2>
       <p>
           Whithout javascript, these tabs are just links to specific anchors on the page. 
@@ -78,7 +79,7 @@ public partial class Home
       {TabList.Render(s_fourthTab, s_fifthTab)}
       """);
 
-    private static Flushed Head(HtmlWriter page) => page.Html($"{Assets.Script:Components/TabList.js}{Assets.Style:Components/TabList.css}");
+    private static readonly Template Head = (page) => page.Html($"{Assets.Script:Components/TabList.js}{Assets.Style:Components/TabList.css}");
 
     public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/", static () => Results.WithLayout(Page, Head));
 }

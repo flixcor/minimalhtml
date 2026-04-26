@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Immutable;
+using System.IO.Pipelines;
 using MinimalHtml.Sample.Components;
 using MinimalHtml.Vite;
 
@@ -20,7 +21,7 @@ public readonly struct LayoutProps
     public required Template<string> NavLink { get; init; }
     public Template? Head { get; init; }
     public required Template ImportMap { get; init; }
-    
+
     public static implicit operator LayoutProps<Template>(LayoutProps value) => new()
     {
         Context = value.Body,
@@ -39,7 +40,7 @@ public static class DefaultLayout
         {
             var navLink = httpContext.RequestServices.GetRequiredService<NavLink>();
             var writeImportmap = httpContext.RequestServices.GetRequiredService<WriteImportMap>();
-            var props = new LayoutProps<T>{ Body = page, Context = context, NavLink = navLink.Render, Head = head, ImportMap = (tup) => writeImportmap(tup) };
+            var props = new LayoutProps<T> { Body = page, Context = context, NavLink = navLink.Render, Head = head, ImportMap = w => writeImportmap(w) };
             await new HtmlResult<LayoutProps<T>>(props, Render, statusCode).ExecuteAsync(httpContext);
         }
     }
@@ -48,13 +49,12 @@ public static class DefaultLayout
     {
         public static IResult WithLayout<T>(Template<T> page, T context, Template? head = null, int statusCode = 200)
             => new LayoutResult<T>(page, context, head, statusCode);
-    
+
         public static IResult WithLayout(Template page, Template? head = null, int statusCode = 200)
-            => new LayoutResult<Template>(static (p,t) => t(p), page, head, statusCode);
+            => new LayoutResult<Template>(static (p, t) => t(p), page, head, statusCode);
     }
 
-    public static Flushed Render(HtmlWriter page, LayoutProps props) => Render<Template>(page, props);
-    public static Flushed Render<T>(HtmlWriter page, LayoutProps<T> context) => page.Html($$"""
+    public static ValueTask<FlushResult> Render<T>(PipeWriter page, LayoutProps<T> context) => page.Html($$"""
          <!DOCTYPE html>
          <html lang="en">
          <head>
@@ -125,13 +125,13 @@ public static class DefaultLayout
          </header>
          <footer slot="footer" class="the-footer">Version: <version-number></version-number></footer>
          <main role="main" slot="main" id="main" tabindex="-1">
-           {{(context.Body,context.Context)}}
+           {{(context.Body, context.Context)}}
          </main>
          </body>
          </html>
          """);
 
-    private static Flushed ImportMap(HtmlWriter page, ImmutableDictionary<string, Asset> importedAssets) => page.Html($$"""
+    private static readonly Template<ImmutableDictionary<string, Asset>> ImportMap = (page, importedAssets) => page.Html($$"""
         <script type="importmap">
         {
             "imports": {
@@ -141,5 +141,5 @@ public static class DefaultLayout
         </script>
         """);
 
-    private static Flushed ImportMapAsset(HtmlWriter page, (string key, string value, bool last) tup) => page.Html($""" "{tup.key}": "{tup.value}"{(tup.last ? "" : ",")} """);
+    private static readonly Template<(string key, string value, bool last)> ImportMapAsset = (page, tup) => page.Html($""" "{tup.key}": "{tup.value}"{(tup.last ? "" : ",")} """);
 }

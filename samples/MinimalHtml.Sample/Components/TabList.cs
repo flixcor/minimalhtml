@@ -1,4 +1,6 @@
-﻿namespace MinimalHtml.Sample.Components;
+﻿using System.IO.Pipelines;
+
+namespace MinimalHtml.Sample.Components;
 
 public partial class TabList
 {
@@ -6,7 +8,7 @@ public partial class TabList
         params IReadOnlyList<TabListItem> items) =>
         (items, Render);
 
-    public static Flushed Render(HtmlWriter page, params IReadOnlyList<TabListItem> items) => page.Html($$"""
+    public static ValueTask<FlushResult> Render(PipeWriter page, params IReadOnlyList<TabListItem> items) => page.Html($$"""
           <tab-list>
             <style>
             @scope {
@@ -21,15 +23,15 @@ public partial class TabList
           </tab-list>
           """);
 
-    private static Flushed Tab(HtmlWriter page, TabListItem x) => page.Html($"""
+    private static readonly Template<TabListItem> Tab = (page, x) => page.Html($"""
         <a href="#panel_{x.Id}" id="{x.Id}">{x.Tab}</a>
         """);
 
-    private static Flushed Panel(HtmlWriter page, TabListItem x) => page.Html($"""
+    private static readonly Template<TabListItem> Panel = (page, x) => page.Html($"""
         <section id="panel_{x.Id}" aria-labelledby="{x.Id}">{x.Panel}</section>
         """);
 
-    private static Flushed ScopedStyles(HtmlWriter page, (int Index, TabListItem) x) => page.Html( /*language=css*/$$"""
+    private static readonly Template<(int Index, TabListItem)> ScopedStyles = (page, x) => page.Html( /*language=css*/$$"""
           section:nth-of-type({{x.Index + 1}}) {
               view-timeline-name: --panel-{{x.Index + 1}};
           }
