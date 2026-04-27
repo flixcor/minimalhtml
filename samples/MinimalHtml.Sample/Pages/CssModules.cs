@@ -5,7 +5,7 @@ namespace MinimalHtml.Sample.Pages;
 
 public partial class CssModules
 {
-    private static readonly Template Head = (page) => page.Html($"{Assets.Style:/Pages/CssModules.module.css}");
+    private static readonly Template Head = Assets.Style(/*vite*/"/Pages/CssModules.module.css");
 
     public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/css-modules", static () => Results.WithLayout(page => page.Html($"""
          <h2>Css modules</h2>

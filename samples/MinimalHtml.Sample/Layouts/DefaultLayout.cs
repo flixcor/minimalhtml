@@ -63,10 +63,10 @@ public static class DefaultLayout
              <meta name="view-transition" content="same-origin" />
                  <!-- the props -->
              {{context.ImportMap}}
-             {{Assets.SvgFavIcon:img/favicon.svg}}
-             {{(Assets.Script, ("Layouts/DefaultLayout.ts", true, true))}}
-             {{Assets.Style:Layouts/DefaultLayout.css}}
-             {{Assets.ServiceWorker:serviceworker.js}}
+             {{Assets.SvgFavIcon(/*vite*/"img/favicon.svg")}}
+             {{Assets.Script((/*vite*/"Layouts/DefaultLayout.ts", true, true))}}
+             {{Assets.Style(/*vite*/"Layouts/DefaultLayout.css")}}
+             {{Assets.ServiceWorker(/*vite*/"serviceworker.js")}}
              {{context.Head}}
              <script type="speculationrules">
                 {

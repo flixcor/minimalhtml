@@ -79,7 +79,7 @@ public partial class Home
       {TabList.Render(s_fourthTab, s_fifthTab)}
       """);
 
-    private static readonly Template Head = (page) => page.Html($"{Assets.Script:Components/TabList.js}{Assets.Style:Components/TabList.css}");
+    private static readonly Template Head = (page) => page.Html($$"""{{Assets.Script(/*vite*/"Components/TabList.js")}}{{Assets.Style(/*vite*/"Components/TabList.css")}}""");
 
     public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/", static () => Results.WithLayout(Page, Head));
 }

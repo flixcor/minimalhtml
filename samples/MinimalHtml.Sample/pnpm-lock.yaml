@@ -24,6 +24,9 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
     devDependencies:
+      '@minimalhtml/vite':
+        specifier: file:../../npm/vite
+        version: file:../../npm/vite(vite@8.0.8(@types/node@25.6.0))
       '@types/node':
         specifier: ^25.6.0
         version: 25.6.0
@@ -39,9 +42,6 @@ importers:
       prettier:
         specifier: ^3.8.3
         version: 3.8.3
-      tinyglobby:
-        specifier: ^0.2.16
-        version: 0.2.16
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -107,6 +107,11 @@ packages:
 
   '@lit/reactive-element@2.1.2':
     resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==}
+
+  '@minimalhtml/vite@file:../../npm/vite':
+    resolution: {directory: ../../npm/vite, type: directory}
+    peerDependencies:
+      vite: '>=8.0.0-beta.0'
 
   '@napi-rs/wasm-runtime@1.1.4':
     resolution: {integrity: sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==}
@@ -554,6 +559,11 @@ snapshots:
   '@lit/reactive-element@2.1.2':
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.5.1
+
+  '@minimalhtml/vite@file:../../npm/vite(vite@8.0.8(@types/node@25.6.0))':
+    dependencies:
+      tinyglobby: 0.2.16
+      vite: 8.0.8(@types/node@25.6.0)
 
   '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)':
     dependencies:

@@ -8,7 +8,7 @@ public class AnyOrder
     public static void Map(IEndpointRouteBuilder builder) => builder
         .MapGet("/any-order", static () => Results.WithLayout(Page, Head));
 
-    private static Template Head = (page) => page.Html($"{Assets.Style:/Pages/AnyOrder.css}");
+    private static Template Head = Assets.Style(/*vite*/"/Pages/AnyOrder.css");
 
     private static Template Page = (page) => page.Html($$"""
     <h2>Unordered streaming</h2>

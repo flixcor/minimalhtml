@@ -15,11 +15,11 @@ public class Forms
         var group = builder.MapGroup("/forms");
 
         group.MapGet("/", static () => Results
-            .WithLayout(static page => Render(page, null), p => p.Html($"{Assets.Style:/Pages/Forms.css}")))
+            .WithLayout(static page => Render(page, null), Assets.Style(/*vite*/"/Pages/Forms.css")))
             .WithSwr()
             .CacheOutput();
 
-        group.MapPost("/", static (FormModel starship) => Results.WithLayout(Render, starship, p => p.Html($"{Assets.Style:/Pages/Forms.css}")))
+        group.MapPost("/", static (FormModel starship) => Results.WithLayout(Render, starship, Assets.Style(/*vite*/"/Pages/Forms.css")))
             .DisableAntiforgery()
             .WithMetadata(new RequestSizeLimitAttribute(300_000_000));
     }
@@ -67,7 +67,7 @@ public class Forms
                     <span>Multiple files</span>
                     <input type="file" multiple name="{model.MyFiles.Name}">
                 </label>
-                {Assets.Script:/Components/recurring-group.ts}
+                {Assets.Script(/*vite*/"/Components/recurring-group.ts")}
                 <recurring-groups minlength="1" maxlength="3">
                     {(model.SubGroups.DefaultIfEmpty(), RenderGroup)}
                     <template>
