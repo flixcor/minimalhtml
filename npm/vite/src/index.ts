@@ -14,8 +14,6 @@ export interface MinimalHtmlOptions {
   ignore?: string[];
   /** Extra entry inputs to merge with discovered ones. */
   inputs?: string[];
-  /** Override entryFileNames. Default: 'assets/[name]-[hash].js'. */
-  entryFileNames?: string | ((info: { name: string }) => string);
   /** Disable rolldown experimental chunkImportMap. Default: false. */
   disableImportMap?: boolean;
   /** baseUrl for chunkImportMap. Default: '/'. */
@@ -35,13 +33,13 @@ const DEFAULT_MARKER = "vite";
 const DEFAULT_IGNORE = ["**/bin/**", "**/obj/**", "**/node_modules/**"];
 const DEFAULT_SRI_MANIFEST_PATHS = [".vite/manifest.json"];
 
-export default function minimalHtml(options: MinimalHtmlOptions = {}): Plugin[] {
+export default function minimalHtml(
+  options: MinimalHtmlOptions = {},
+): Plugin[] {
   const scan = options.scan ?? DEFAULT_SCAN;
   const marker = options.marker ?? DEFAULT_MARKER;
   const ignore = options.ignore ?? DEFAULT_IGNORE;
   const explicit = options.inputs ?? [];
-  const entryFileNames =
-    options.entryFileNames ?? "assets/[name]-[hash].js";
   const pattern = new RegExp(
     `\\/\\*\\s*${escapeRegex(marker)}\\s*\\*\\/\\s*"([^"]+)"`,
     "g",
@@ -73,10 +71,6 @@ export default function minimalHtml(options: MinimalHtmlOptions = {}): Plugin[] 
           rolldownOptions: {
             experimental,
             input: inputs,
-            output: {
-              format: "esm" as const,
-              entryFileNames,
-            },
           },
         },
       };

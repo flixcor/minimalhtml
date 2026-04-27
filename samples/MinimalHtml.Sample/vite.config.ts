@@ -14,18 +14,20 @@ export default defineConfig(() => ({
   ssr: {
     noExternal: true,
   },
-  plugins: [
-    minimalHtml({
-      entryFileNames: (c) =>
-        c.name.startsWith("server")
-          ? "[name].js"
-          : c.name.startsWith("serviceworker")
-            ? "[name]-[hash].js"
-            : "assets/[name]-[hash].js",
-    }),
-  ],
+  plugins: [minimalHtml()],
   build: {
     outDir: "wwwroot",
     assetsInlineLimit: -1,
+    rolldownOptions: {
+      output: {
+        format: "esm" as const,
+        entryFileNames: (c) =>
+          c.name.startsWith("server")
+            ? "[name].js"
+            : c.name.startsWith("serviceworker")
+              ? "[name]-[hash].js"
+              : "assets/[name]-[hash].js",
+      },
+    },
   },
 }));
