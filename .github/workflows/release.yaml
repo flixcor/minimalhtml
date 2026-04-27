@@ -34,7 +34,10 @@ jobs:
         echo "Version: ${{ steps.get_version.outputs.version }}"
 
     - name: Update dependencies
-      run: sed -i "s|\(<PackageVersion Include=\"MinimalHtml\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version-without-v }}\2|" Directory.Packages.props
+      run: |
+        sed -i "s|\(<PackageVersion Include=\"MinimalHtml\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version-without-v }}\2|" Directory.Packages.props
+        sed -i "s|\(<PackageVersion Include=\"MinimalHtml.AspNetCore\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version-without-v }}\2|" Directory.Packages.props
+        sed -i "s|\(<PackageVersion Include=\"MinimalHtml.Vite\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version-without-v }}\2|" Directory.Packages.props
 
     - name: Pack MinimalHtml (ci)
       run: dotnet pack src/MinimalHtml --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }}
@@ -44,6 +47,9 @@ jobs:
 
     - name: Pack MinimalHtml.AspNetCore (ci)
       run: dotnet pack src/MinimalHtml.AspNetCore --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }}
+
+    - name: Pack MinimalHtml.Vite (ci)
+      run: dotnet pack src/MinimalHtml.Vite --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }}
 
     - name: Publish Package (ci)
       run: |
