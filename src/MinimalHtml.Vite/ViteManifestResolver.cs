@@ -53,10 +53,10 @@ public class ViteManifestResolver(string manifestPath, string? importmapPath, IW
         await s_semaphore.WaitAsync(token);
         try
         {
-            if (cache.TryGetValue(manifestPath, out value) && value is { }) return value;
-            value = await GetImortmapBytes(token);
-            var expirationToken = env.WebRootFileProvider.Watch(manifestPath);
-            cache.Set(manifestPath, value, expirationToken);
+            if (cache.TryGetValue(importmapPath, out value) && value is { }) return value;
+            value = await GetImportmapBytesUncached(token);
+            var expirationToken = env.WebRootFileProvider.Watch(importmapPath);
+            cache.Set(importmapPath, value, expirationToken);
             return value;
         }
         finally
@@ -65,7 +65,7 @@ public class ViteManifestResolver(string manifestPath, string? importmapPath, IW
         }
     }
 
-    private async Task<byte[]> GetImortmapBytes(CancellationToken token)
+    private async Task<byte[]> GetImportmapBytesUncached(CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(importmapPath)) return [];
         var path = env.WebRootFileProvider.GetFileInfo(importmapPath);
