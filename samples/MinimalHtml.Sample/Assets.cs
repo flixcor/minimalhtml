@@ -1,12 +1,13 @@
 ﻿using System.IO.Pipelines;
+using MinimalHtml.Vite;
 
 namespace MinimalHtml.Sample;
 
 public static class Assets
 {
-    private static GetAsset s_getAsset = MinimalHtml.Assets.Noop;
+    private static GetAsset s_getAsset = MinimalHtml.Vite.Assets.Noop;
 
-    public static void Initialize(WebApplication app) => s_getAsset = app.Services.GetService<GetAsset>() ?? MinimalHtml.Assets.Noop;
+    public static void Initialize(WebApplication app) => s_getAsset = app.Services.GetService<GetAsset>() ?? MinimalHtml.Vite.Assets.Noop;
 
     public static ValueTask<FlushResult> Script(PipeWriter page, string id) => Script(page, (id, true, false));
 

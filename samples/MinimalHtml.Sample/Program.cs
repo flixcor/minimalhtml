@@ -2,7 +2,6 @@
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Memory;
 using MinimalHtml;
-using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample;
 using MinimalHtml.Sample.Components;
 using MinimalHtml.Sample.Pages;
