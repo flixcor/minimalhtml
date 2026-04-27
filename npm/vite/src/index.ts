@@ -1,6 +1,9 @@
 import type { Plugin } from "vite";
 import { glob } from "tinyglobby";
 import { readFile, stat } from "node:fs/promises";
+import manifestSRI from "vite-plugin-manifest-sri";
+
+type SriAlgorithm = "sha256" | "sha384" | "sha512";
 
 export interface MinimalHtmlOptions {
   /** Globs to scan for marker comments. Default: ['./**\/*.cs']. */
@@ -19,13 +22,20 @@ export interface MinimalHtmlOptions {
   importMapBaseUrl?: string;
   /** Output filename for chunkImportMap. Default: '.vite/importmap.json'. */
   importMapFileName?: string;
+  /** Disable Subresource Integrity hash emission. Default: false. */
+  disableIntegrity?: boolean;
+  /** SRI hash algorithms. Default: ['sha384']. */
+  integrityAlgorithms?: SriAlgorithm[];
+  /** Manifest paths the SRI plugin patches. Default: ['.vite/manifest.json']. */
+  integrityManifestPaths?: string[];
 }
 
 const DEFAULT_SCAN = ["./**/*.cs"];
 const DEFAULT_MARKER = "vite";
 const DEFAULT_IGNORE = ["**/bin/**", "**/obj/**", "**/node_modules/**"];
+const DEFAULT_SRI_MANIFEST_PATHS = [".vite/manifest.json"];
 
-export default function minimalHtml(options: MinimalHtmlOptions = {}): Plugin {
+export default function minimalHtml(options: MinimalHtmlOptions = {}): Plugin[] {
   const scan = options.scan ?? DEFAULT_SCAN;
   const marker = options.marker ?? DEFAULT_MARKER;
   const ignore = options.ignore ?? DEFAULT_IGNORE;
@@ -37,7 +47,7 @@ export default function minimalHtml(options: MinimalHtmlOptions = {}): Plugin {
     "g",
   );
 
-  return {
+  const corePlugin: Plugin = {
     name: "minimal-html-vite",
     async config() {
       const inputs = await discoverInputs({
@@ -72,6 +82,20 @@ export default function minimalHtml(options: MinimalHtmlOptions = {}): Plugin {
       };
     },
   };
+
+  const plugins: Plugin[] = [corePlugin];
+
+  if (!options.disableIntegrity) {
+    plugins.push(
+      manifestSRI({
+        algorithms: options.integrityAlgorithms ?? ["sha384"],
+        manifestPaths:
+          options.integrityManifestPaths ?? DEFAULT_SRI_MANIFEST_PATHS,
+      }),
+    );
+  }
+
+  return plugins;
 }
 
 interface DiscoverArgs {

@@ -19,6 +19,7 @@ public static class Assets
          <script
              src="{asset.Src}"
              {IfTrueish("integrity", asset.Integrity)}
+             {IfTrueish("crossorigin", asset.Integrity is null ? null : "anonymous")}
              {IfTrueish("type", context.isModule ? "module" : null)}
              {IfTrueish("async", context.async)}
          ></script>
@@ -34,6 +35,7 @@ public static class Assets
              href="{asset.Src}"
              rel="stylesheet"
              {IfTrueish("integrity", asset.Integrity)}
+             {IfTrueish("crossorigin", asset.Integrity is null ? null : "anonymous")}
          />
          """);
     };
@@ -49,6 +51,7 @@ public static class Assets
              sizes="any"
              type="image/svg+xml"
              {IfTrueish("integrity", asset.Integrity)}
+             {IfTrueish("crossorigin", asset.Integrity is null ? null : "anonymous")}
          />
          """);
     };
@@ -79,9 +82,10 @@ public static class Assets
             "css" => ("preload", "style", ""),
             _ => ("preload", "image", "")
         };
+        var crossorigin = asset.Integrity is null ? cors : "anonymous";
         return page.Html($"""
             {(asset.Imports, Preload)}
-            <link href="{asset.Src}" rel="{rel}" {IfTrueish("as", loadAs)} {IfTrueish("crossorigin", cors)} />
+            <link href="{asset.Src}" rel="{rel}" {IfTrueish("as", loadAs)} {IfTrueish("integrity", asset.Integrity)} {IfTrueish("crossorigin", crossorigin)} />
             """);
     };
 }

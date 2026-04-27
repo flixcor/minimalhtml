@@ -1,6 +1,6 @@
 # MinimalHtml
 
-A high-performance, AOT-compatible HTML template library for .NET 9 that leverages C# `StringInterpolationHandler` and `System.IO.Pipelines` for efficient streaming HTML generation.
+A high-performance, AOT-compatible HTML template library for .NET 10 that leverages C# `StringInterpolationHandler` and `System.IO.Pipelines` for efficient streaming HTML generation.
 
 ## Features
 
@@ -90,6 +90,52 @@ app.Run();
 ```
 
 The source generator will automatically populate this class with cached UTF-8 byte arrays for all string literals found in your templates, significantly improving performance by eliminating encoding overhead.
+
+## Vite integration
+
+`MinimalHtml.Vite` (NuGet) + `@minimalhtml/vite` (npm) pair the .NET runtime with a Vite-built frontend. The NuGet package reads Vite's `manifest.json` to resolve hashed asset URLs, integrity hashes, and import maps. The npm plugin discovers entry points from your `.cs` files via marker comments and emits the manifest with SHA-384 SRI hashes.
+
+### Install
+
+```bash
+dotnet add package MinimalHtml.Vite
+pnpm add -D @minimalhtml/vite vite
+```
+
+### Vite config
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import minimalHtml from "@minimalhtml/vite";
+
+export default defineConfig({
+  plugins: [minimalHtml()],
+});
+```
+
+### Program.cs
+
+```csharp
+using MinimalHtml.Vite;
+
+builder.Services.RegisterViteAssets(importmapPath: ".vite/importmap.json");
+```
+
+`RegisterViteAssets` registers a `GetAsset` delegate (resolves `id → Asset { Src, Integrity, Imports }`) and a `WriteImportMap` delegate (emits the `<script type="importmap">` tag).
+
+### Marker convention
+
+Tag any string literal that names an asset with `/*vite*/`. The plugin scans `.cs` files for the marker and feeds matching literals to Vite's input list.
+
+```csharp
+public static Template Head = Assets.Style(/*vite*/"styles/main.css");
+public static Template Init = Assets.Script(/*vite*/"scripts/main.ts");
+```
+
+`Assets.Script` / `Assets.Style` here are application-level helpers around `GetAsset` — see the sample app for examples that emit `<script integrity="..." crossorigin="anonymous">` and preload `<link>` tags from imports.
+
+See [`@minimalhtml/vite` README](npm/vite/README.md) for plugin options (custom marker, scan globs, import-map and integrity tuning) and the [sample app](samples/MinimalHtml.Sample) for a working setup.
 
 ## Benchmarks
 

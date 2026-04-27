@@ -111,6 +111,7 @@ public class ViteManifestResolver(string manifestPath, string? importmapPath, IW
             props.Remove(first.Key);
             var isEntry = first.Value.TryGetProperty("isEntry"u8, out var e) && e.GetBoolean();
             var src = first.Value.GetProperty("file"u8).GetString() ?? first.Key;
+            var integrity = first.Value.TryGetProperty("integrity"u8, out var integrityProp) ? integrityProp.GetString() : null;
             Asset asset;
             if (first.Key.EndsWith(".module.css") == true)
             {
@@ -118,7 +119,7 @@ public class ViteManifestResolver(string manifestPath, string? importmapPath, IW
             }
             else
             {
-                asset = new Asset(Assets.TrimUrl(src), null, HandleImports(first.Value));
+                asset = new Asset(Assets.TrimUrl(src), integrity, HandleImports(first.Value));
             }
             importDict[first.Key] = asset;
             if (isEntry || (!src.EndsWith(".js") && !src.EndsWith(".css")))
@@ -165,10 +166,11 @@ public class ViteManifestResolver(string manifestPath, string? importmapPath, IW
 
             if (props.TryGetValue(importKey, out var import))
             {
-                var file = import.TryGetProperty("file", out var fileProp) 
-                    ? fileProp.GetString() ?? importKey 
+                var file = import.TryGetProperty("file", out var fileProp)
+                    ? fileProp.GetString() ?? importKey
                     : importKey;
-                importedAsset = new Asset(Assets.TrimUrl(file), null, HandleImports(import));
+                var integrity = import.TryGetProperty("integrity"u8, out var integrityProp) ? integrityProp.GetString() : null;
+                importedAsset = new Asset(Assets.TrimUrl(file), integrity, HandleImports(import));
                 props.Remove(importKey);
                 var isEntry = import.TryGetProperty("isEntry"u8, out var e) && e.GetBoolean();
                 if (isEntry)

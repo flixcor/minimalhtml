@@ -9,6 +9,7 @@ Vite plugin for [MinimalHtml](https://github.com/flixcor/minimalhtml). Pairs wit
 - Disables `modulePreload` (server emits preload `<link>` tags from manifest imports)
 - Enables Rolldown `chunkImportMap` to emit `.vite/importmap.json`
 - Sets a sensible default `entryFileNames` (`assets/[name]-[hash].js`)
+- Emits Subresource Integrity hashes (SHA-384) into the manifest via [`vite-plugin-manifest-sri`](https://github.com/ElMassimo/vite-plugin-manifest-sri)
 
 ## Install
 
@@ -35,8 +36,8 @@ export default defineConfig({
 Prepend `/*vite*/` to any string literal that names an asset. The plugin scans `.cs` files for the pattern and feeds the literal to Vite's input list.
 
 ```csharp
-return Assets.Script(page, /*vite*/"src/main.ts");
-return Assets.Style(page, /*vite*/"src/styles/main.css");
+return Assets.Script(/*vite*/"src/main.ts");
+return Assets.Style(/*vite*/"src/styles/main.css");
 ```
 
 Default scan glob: `./**/*.cs`. Default ignored: `bin/`, `obj/`, `node_modules/`.
@@ -53,8 +54,24 @@ minimalHtml({
   disableImportMap: false,        // skip chunkImportMap emission
   importMapBaseUrl: "/",
   importMapFileName: ".vite/importmap.json",
+  disableIntegrity: false,        // skip SRI hash emission
+  integrityAlgorithms: ["sha384"], // hash algorithms
+  integrityManifestPaths: [".vite/manifest.json"],
 });
 ```
+
+## Subresource Integrity
+
+Each manifest entry receives an `integrity` field (`sha384-<base64>` by default). The .NET side reads it into `Asset.Integrity`; rendering helpers should emit it as `<script integrity="...">` / `<link integrity="...">`.
+
+When `integrity` is set, the browser requires `crossorigin` on the tag. Same-origin assets are fine without it; for assets served from a different origin (CDN, separate static host), emit `crossorigin="anonymous"` together with `integrity`. Example helper logic:
+
+```csharp
+{IfTrueish("integrity", asset.Integrity)}
+{IfTrueish("crossorigin", asset.Integrity is null ? null : "anonymous")}
+```
+
+Disable SRI emission entirely with `disableIntegrity: true` if your deploy target doesn't need it.
 
 ## Pairing with the .NET side
 
