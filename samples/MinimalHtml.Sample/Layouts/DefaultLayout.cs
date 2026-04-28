@@ -1,5 +1,4 @@
 ﻿
-using System.Collections.Immutable;
 using System.IO.Pipelines;
 using MinimalHtml.Sample.Components;
 using MinimalHtml.Vite;
@@ -113,16 +112,4 @@ public static class DefaultLayout
          </body>
          </html>
          """);
-
-    private static readonly Template<ImmutableDictionary<string, Asset>> ImportMap = (page, importedAssets) => page.Html($$"""
-        <script type="importmap">
-        {
-            "imports": {
-            {{(importedAssets.Select((k, i) => (k.Key, k.Value.Src, i == importedAssets.Count - 1)), ImportMapAsset)}}
-            }
-        }
-        </script>
-        """);
-
-    private static readonly Template<(string key, string value, bool last)> ImportMapAsset = (page, tup) => page.Html($""" "{tup.key}": "{tup.value}"{(tup.last ? "" : ",")} """);
 }
