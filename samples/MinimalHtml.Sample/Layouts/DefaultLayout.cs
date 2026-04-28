@@ -15,23 +15,6 @@ public readonly struct LayoutProps<T>
     public Template? Head { get; init; }
 }
 
-public readonly struct LayoutProps
-{
-    public required Template Body { get; init; }
-    public required Template<string> NavLink { get; init; }
-    public Template? Head { get; init; }
-    public required Template ImportMap { get; init; }
-
-    public static implicit operator LayoutProps<Template>(LayoutProps value) => new()
-    {
-        Context = value.Body,
-        Body = static (page, template) => template(page),
-        NavLink = value.NavLink,
-        Head = value.Head,
-        ImportMap = value.ImportMap
-    };
-}
-
 public static class DefaultLayout
 {
     private class LayoutResult<T>(Template<T> page, T context, Template? head = null, int statusCode = 200) : IResult
