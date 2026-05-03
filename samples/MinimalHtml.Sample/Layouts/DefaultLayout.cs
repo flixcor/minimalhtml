@@ -91,6 +91,9 @@ public static class DefaultLayout
                         <a {{context.NavLink:/lit}}>Lit</a>
                     </li>
                     <li>
+                        <a {{context.NavLink:/StaticTag}}>SSR-only Lit</a>
+                    </li>
+                    <li>
                         <a {{context.NavLink:/active-search}}>Active search</a>
                     </li>
                     <li>

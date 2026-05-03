@@ -82,6 +82,73 @@ builder.Services.RegisterViteAssets(importmapPath: ".vite/importmap.json");
 
 See the [main repo README](https://github.com/flixcor/minimalhtml) for the full picture.
 
+## Lit SSR (subpath)
+
+Optional integration with [Lit](https://lit.dev) for server-side rendering custom elements via [@lit-labs/ssr](https://www.npmjs.com/package/@lit-labs/ssr). The `MinimalHtml.Lit` NuGet package renders the bundle in [Jint](https://github.com/sebastienros/jint) on the .NET side.
+
+### Install
+
+```bash
+pnpm add lit @lit-labs/ssr @lit-labs/ssr-client
+```
+
+### Plugin
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import minimalHtml from "@minimalhtml/vite";
+import minimalHtmlLit from "@minimalhtml/vite/lit/plugin";
+
+export default defineConfig({
+  plugins: [minimalHtml(), minimalHtmlLit()],
+});
+```
+
+`vite build --app` produces both the client bundle (`wwwroot/`) and the SSR bundle (`dist/server/server.js`).
+
+### Discovery
+
+The plugin scans `**/*.{ts,tsx,mts,cts}` for files that both import from `lit` (or `@lit-labs/*`) and define a custom element (`@customElement`, `customElements.define`, or `extends LitElement`). Each match is side-effect-imported by the SSR entry. No marker comment required.
+
+### Subpaths
+
+| Subpath | Use |
+|---|---|
+| `@minimalhtml/vite/lit/plugin` | Vite plugin (above) |
+| `@minimalhtml/vite/lit/server-runtime` | `renderHtml(strings, values, write, flush)` + Jint shims (`window`, `customElements`, `btoa`). The plugin's virtual entry re-exports this — you only import it directly if writing your own SSR entry. |
+| `@minimalhtml/vite/lit/hydrate` | Client-side hydration support. Reference via `Assets.Script(/*vite*/"@minimalhtml/vite/lit/hydrate")` to hydrate SSR'd components. |
+
+### SSR-only components
+
+A component file that imports `lit` but is **not** referenced from any `/*vite*/` client marker is bundled into the SSR runtime only — zero JavaScript ships to the browser. The element renders via Declarative Shadow DOM. No hydration happens, so event bindings (`@click=`) are inert. Suitable for static badges, layouts, formatted output, etc.
+
+### .NET side
+
+```csharp
+// Program.cs
+using MinimalHtml.Lit;
+
+builder.Services.AddLitRenderer();
+```
+
+Defaults to `{AppContext.BaseDirectory}/dist/server/server.js`. Override with `AddLitRenderer(serverPath: ..., serverModule: ...)`.
+
+```csharp
+// Pages/Lit.cs
+private static readonly Template s_body = static page => page.Html($"""
+    {static w => w.Lit(/*lang=html*/$"<my-element count={5}>Hello</my-element>")}
+""");
+```
+
+Make sure `dist/server/**` is copied to the publish output:
+
+```xml
+<ItemGroup>
+  <Content Include="dist\server\**" CopyToOutputDirectory="PreserveNewest" />
+</ItemGroup>
+```
+
 ## License
 
 MIT

@@ -27,10 +27,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<NavLink>();
 builder.Services.RegisterViteAssets(importmapPath: ".vite/importmap.json");
-LitRenderer.Setup(new LitOptions
-{
-    ServerPath = Path.Combine(AppContext.BaseDirectory, "dist", "server")
-});
+builder.Services.AddLitRenderer();
 if (!builder.Environment.IsDevelopment())
 {
     builder.Services.AddResponseCompression();
@@ -66,6 +63,7 @@ Home.Map(app);
 StreamingTable.Map(app);
 Xss.Map(app);
 Lit.Map(app);
+StaticTag.Map(app);
 Forms.Map(app);
 ActiveSearchPage.Map(app);
 AnyOrder.Map(app);

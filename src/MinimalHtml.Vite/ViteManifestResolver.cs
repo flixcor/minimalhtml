@@ -125,6 +125,13 @@ public class ViteManifestResolver(string manifestPath, string? importmapPath, IW
             if (isEntry || (!src.EndsWith(".js") && !src.EndsWith(".css")))
             {
                 result[first.Key] = asset;
+                if (first.Value.TryGetProperty("name"u8, out var nameProp)
+                    && nameProp.GetString() is { } chunkName
+                    && !string.Equals(chunkName, first.Key, StringComparison.Ordinal)
+                    && !result.ContainsKey(chunkName))
+                {
+                    result[chunkName] = asset;
+                }
             }
         }
 

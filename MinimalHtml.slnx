@@ -1,7 +1,6 @@
 <Solution>
   <Folder Name="/experimental/">
     <Project Path="experimental/MinimalHtml.CssModules/MinimalHtml.CssModules.csproj" />
-    <Project Path="experimental/MinimalHtml.Lit/MinimalHtml.Lit.csproj" />
   </Folder>
   <Folder Name="/experimental/forms/">
     <Project Path="experimental/MinimalForms.ModelGenerator/MinimalForms.ModelGenerator.csproj" />
@@ -19,6 +18,7 @@
     <Project Path="test/MinimalHtml.Test/MinimalHtml.Test.csproj" />
   </Folder>
   <Project Path="src/MinimalHtml.AspNetCore/MinimalHtml.AspNetCore.csproj" />
+  <Project Path="src/MinimalHtml.Lit/MinimalHtml.Lit.csproj" />
   <Project Path="src/MinimalHtml.SourceGenerator/MinimalHtml.SourceGenerator.csproj" />
   <Project Path="src/MinimalHtml.Vite/MinimalHtml.Vite.csproj" />
   <Project Path="src/MinimalHtml/MinimalHtml.csproj" />

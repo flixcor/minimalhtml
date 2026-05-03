@@ -26,7 +26,7 @@ importers:
     devDependencies:
       '@minimalhtml/vite':
         specifier: file:../../npm/vite
-        version: file:../../npm/vite(vite@8.0.8(@types/node@25.6.0))
+        version: file:../../npm/vite(@lit-labs/ssr-client@1.1.8)(@lit-labs/ssr@4.0.0(@types/node@25.6.0))(lit@3.3.2)(vite@8.0.8(@types/node@25.6.0))
       '@types/node':
         specifier: ^25.6.0
         version: 25.6.0
@@ -111,7 +111,17 @@ packages:
   '@minimalhtml/vite@file:../../npm/vite':
     resolution: {directory: ../../npm/vite, type: directory}
     peerDependencies:
+      '@lit-labs/ssr': ^4.0.0
+      '@lit-labs/ssr-client': ^1.1.8
+      lit: ^3.3.2
       vite: '>=8.0.0-beta.0'
+    peerDependenciesMeta:
+      '@lit-labs/ssr':
+        optional: true
+      '@lit-labs/ssr-client':
+        optional: true
+      lit:
+        optional: true
 
   '@napi-rs/wasm-runtime@1.1.4':
     resolution: {integrity: sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==}
@@ -563,11 +573,15 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.5.1
 
-  '@minimalhtml/vite@file:../../npm/vite(vite@8.0.8(@types/node@25.6.0))':
+  '@minimalhtml/vite@file:../../npm/vite(@lit-labs/ssr-client@1.1.8)(@lit-labs/ssr@4.0.0(@types/node@25.6.0))(lit@3.3.2)(vite@8.0.8(@types/node@25.6.0))':
     dependencies:
       tinyglobby: 0.2.16
       vite: 8.0.8(@types/node@25.6.0)
       vite-plugin-manifest-sri: 0.2.0
+    optionalDependencies:
+      '@lit-labs/ssr': 4.0.0(@types/node@25.6.0)
+      '@lit-labs/ssr-client': 1.1.8
+      lit: 3.3.2
 
   '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)':
     dependencies:

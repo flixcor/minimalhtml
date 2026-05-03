@@ -6,12 +6,10 @@
   "packageManager": "pnpm@10.4.1",
   "scripts": {
     "dev": "vite",
-    "build:client": "tsc && vite build",
-    "build": "pnpm run build:client && pnpm run build:server",
-    "build:server": "vite build --ssr server.ts --outDir dist/server",
+    "typecheck": "tsc",
+    "build": "tsc && vite build --app",
     "preview": "vite preview",
-    "build:watch": "vite build --watch --mode development",
-    "build:only": "vite build"
+    "build:watch": "vite build --app --watch --mode development"
   },
   "devDependencies": {
     "@minimalhtml/vite": "file:../../npm/vite",

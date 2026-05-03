@@ -47,13 +47,17 @@ export default function minimalHtml(
 
   const corePlugin: Plugin = {
     name: "minimal-html-vite",
-    async config() {
+    async configEnvironment(name) {
+      if (name !== "client") return;
       const inputs = await discoverInputs({
         scan,
         ignore,
         pattern,
         explicit,
       });
+
+      const inputMap: Record<string, string> = {};
+      for (const p of inputs) inputMap[p] = p;
 
       const experimental = options.disableImportMap
         ? undefined
@@ -70,7 +74,7 @@ export default function minimalHtml(
           modulePreload: false,
           rolldownOptions: {
             experimental,
-            input: inputs,
+            input: inputMap,
           },
         },
       };
@@ -113,14 +117,26 @@ async function discoverInputs({
     }),
   );
   const distinct = [...new Set([...matches.flat(), ...explicit])];
-  const exists = await Promise.all(
-    distinct.map((p) =>
-      stat(p)
-        .then(() => p)
-        .catch(() => null),
-    ),
+  const resolved = await Promise.all(
+    distinct.map(async (p) => {
+      if (isBareSpecifier(p)) return p;
+      try {
+        await stat(p);
+        return p;
+      } catch {
+        return null;
+      }
+    }),
   );
-  return exists.filter((p): p is string => p !== null);
+  return resolved.filter((p): p is string => p !== null);
+}
+
+function isBareSpecifier(p: string): boolean {
+  if (!p) return false;
+  if (p.startsWith("./") || p.startsWith("../")) return false;
+  if (p.startsWith("/") || p.startsWith("\\")) return false;
+  if (/^[a-zA-Z]:[\\/]/.test(p)) return false;
+  return true;
 }
 
 function escapeRegex(s: string): string {

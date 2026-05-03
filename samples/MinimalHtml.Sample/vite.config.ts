@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import { writeFileSync } from "node:fs";
 import minimalHtml from "@minimalhtml/vite";
+import minimalHtmlLit from "@minimalhtml/vite/lit/plugin";
 
 export default defineConfig(() => ({
   appType: "custom",
@@ -11,22 +12,22 @@ export default defineConfig(() => ({
         writeFileSync(cssFileName + ".json", JSON.stringify(json)),
     },
   },
-  ssr: {
-    noExternal: true,
-  },
-  plugins: [minimalHtml()],
+  plugins: [minimalHtml(), minimalHtmlLit()],
   build: {
     outDir: "wwwroot",
     assetsInlineLimit: -1,
     rolldownOptions: {
       output: {
         format: "esm" as const,
-        entryFileNames: (c) =>
-          c.name.startsWith("server")
-            ? "[name].js"
-            : c.name.startsWith("serviceworker")
-              ? "[name]-[hash].js"
-              : "assets/[name]-[hash].js",
+        entryFileNames: (c) => {
+          const base = (c.name.split("/").pop() ?? c.name).replace(
+            /\.(?:tsx?|jsx?|mjs|cjs)$/,
+            "",
+          );
+          return base.startsWith("serviceworker")
+            ? `${base}-[hash].js`
+            : `assets/${base}-[hash].js`;
+        },
       },
     },
   },

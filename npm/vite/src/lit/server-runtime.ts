@@ -1,6 +1,6 @@
+import "./internal/jint-shims.js";
 import { render, type RenderResult } from "@lit-labs/ssr";
 import { html } from "lit";
-import "./Pages/Lit.ts";
 
 type Write = (chunk: string) => void;
 type Flush = () => Promise<void>;
@@ -15,8 +15,8 @@ async function renderIterator(
       write(chunk);
     } else {
       await flush();
-      const thing = await chunk;
-      await renderIterator(thing, write, flush);
+      const inner = await chunk;
+      await renderIterator(inner, write, flush);
     }
   }
 }
@@ -27,7 +27,6 @@ export async function renderHtml(
   write: Write,
   flush: Flush,
 ) {
-  // Make it look like a real tagged template strings array
   const templateStrings = Object.freeze(
     Object.defineProperty([...strings], "raw", {
       value: Object.freeze([...strings]),
