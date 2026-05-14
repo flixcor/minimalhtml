@@ -9,6 +9,8 @@ public partial class Home
 {
     private static readonly Bogus.DataSets.Lorem s_lorem = new();
 
+    private static readonly Template<int> Paragraphs = (page, _) => page.Html($"""<p>{s_lorem.Paragraphs(4)}</p>""");
+
     private static readonly TabListItem s_firstTab = new()
     {
         Id = "im-the-first-tab",
@@ -65,8 +67,7 @@ public partial class Home
             """)
     };
 
-    private static readonly Template<int> Paragraphs = (page, _) => page.Html($"""<p>{s_lorem.Paragraphs(4)}</p>""");
-
+    
     private static readonly Template Page = (page) => page.Html($"""
       <h2>Progressive enhancement</h2>
       <p>

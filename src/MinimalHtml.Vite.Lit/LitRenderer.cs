@@ -5,7 +5,7 @@ using Jint.Native;
 
 namespace MinimalHtml.Vite.Lit;
 
-public class LitRenderer
+public class LitRenderer : IDisposable
 {
     private readonly Engine _engine;
 
@@ -144,4 +144,7 @@ public class LitRenderer
         await _engine.InvokeAsync("renderHtml", literals, values, write, flush);
         return new();
     }
+
+    /// <inheritdoc />
+    public void Dispose() => _engine.Dispose();
 }

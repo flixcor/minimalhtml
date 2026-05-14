@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
@@ -12,7 +12,7 @@ namespace MinimalHtml.Vite.SourceGenerator
         {
             var additionalTexts = context.AdditionalTextsProvider
                 .Where(static f => f.Path.EndsWith(".module.css.json", StringComparison.OrdinalIgnoreCase))
-                .Select(static (f, t) => (f.Path, Text: f.GetText(t).ToString()))
+                .Select(static (f, t) => (f.Path, Text: f.GetText(t)?.ToString() ?? ""))
                 .Collect();
 
             var rootDirectory = context.AnalyzerConfigOptionsProvider

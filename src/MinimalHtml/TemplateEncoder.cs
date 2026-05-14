@@ -4,10 +4,16 @@ using System.Text.Unicode;
 
 namespace MinimalHtml;
 
+/// <summary>
+/// A class for encoding HTML content.
+/// </summary>
 public class TemplateEncoder
 {
     private const int MaxStackAlloc = 256;
 
+    /// <summary>
+    /// A static instance of the <see cref="TemplateEncoder"/> class that encodes html
+    /// </summary>
     public static readonly TemplateEncoder Html = new([
         '<',
         '>',
@@ -33,6 +39,13 @@ public class TemplateEncoder
     private readonly byte[]?[] _charLookup;
     private readonly byte[]?[] _byteLookup;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TemplateEncoder"/> class with the specified characters, their corresponding byte representations, and their escaped byte representations. The constructor creates lookup tables for efficient encoding of characters and bytes when writing HTML content. The input spans must have the same length, as they correspond to each other in terms of characters, bytes, and their escaped forms.
+    /// </summary>
+    /// <param name="chars"></param>
+    /// <param name="bytes"></param>
+    /// <param name="escaped"></param>
+    /// <exception cref="ArgumentException"></exception>
     public TemplateEncoder(ReadOnlySpan<char> chars, ReadOnlySpan<byte> bytes, ReadOnlySpan<byte[]> escaped)
     {
         if(chars.Length != bytes.Length || chars.Length != escaped.Length)
@@ -52,6 +65,11 @@ public class TemplateEncoder
         }
     }
 
+    /// <summary>
+    /// Writes the specified input to the provided bufferwriter, encoding any characters that require escaping according to the lookup tables initialized in the constructor. The method first checks for the presence of any characters that need to be escaped using the _chars search values. If no such characters are found, it writes the input directly to the buffer. If characters that require escaping are found, it calls a helper method to write the encoded output, ensuring that all necessary characters are properly escaped in the resulting HTML content.
+    /// </summary>
+    /// <param name="writer"></param>
+    /// <param name="input"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteEncoded(IBufferWriter<byte> writer, ReadOnlySpan<char> input)
     {
@@ -79,6 +97,11 @@ public class TemplateEncoder
             WriteUnescaped(writer, input);
     }
 
+    /// <summary>
+    /// Writes the specified input to the provided bufferwriter, encoding any bytes that require escaping according to the lookup tables initialized in the constructor. The method first checks for the presence of any bytes that need to be escaped using the _bytes search values. If no such bytes are found, it writes the input directly to the buffer. If bytes that require escaping are found, it calls a helper method to write the encoded output, ensuring that all necessary bytes are properly escaped in the resulting HTML content.
+    /// </summary>
+    /// <param name="writer"></param>
+    /// <param name="input"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteEncoded(IBufferWriter<byte> writer, ReadOnlySpan<byte> input)
     {
@@ -106,6 +129,14 @@ public class TemplateEncoder
             writer.Write(input);
     }
 
+    /// <summary>
+    /// Writes the specified value of type T to the provided bufferwriter, encoding any characters that require escaping according to the lookup tables initialized in the constructor. The method formats the value of type T into a byte span, checks for any characters that need to be escaped, and writes the encoded output to the buffer. This allows for efficient encoding of formatted values while ensuring that all necessary characters are properly escaped in the resulting HTML content.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="writer"></param>
+    /// <param name="t"></param>
+    /// <param name="format"></param>
+    /// <param name="provider"></param>
     public void WriteEncoded<T>(IBufferWriter<byte> writer, T t, ReadOnlySpan<char> format, IFormatProvider? provider) where T : IUtf8SpanFormattable
     {
         var span = writer.GetSpan();

@@ -84,7 +84,7 @@ public static class Assets
         };
         var crossorigin = asset.Integrity is null ? cors : "anonymous";
         return page.Html($"""
-            {(asset.Imports, Preload)}
+            {(asset.Imports, Preload!)}
             <link href="{asset.Src}" rel="{rel}" {IfTrueish("as", loadAs)} {IfTrueish("integrity", asset.Integrity)} {IfTrueish("crossorigin", crossorigin)} />
             """);
     };
