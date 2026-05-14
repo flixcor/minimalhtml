@@ -23,15 +23,21 @@ namespace MinimalHtml.SourceGenerator
                 ));
 
             var interpolationProvider = context.SyntaxProvider.CreateSyntaxProvider(IsSyntaxTargetForGeneration, GetSemanticTargetForGeneration).Collect();
-            
+
             var methodDeclarationProvider = context.SyntaxProvider.ForAttributeWithMetadataName(
                 "MinimalHtml.FillTemplateCacheAttribute",
                 static (node, _) => true,
                 static (ctx, _) => GetMethodDeclaration(ctx)
                 );
 
-            var combined = methodDeclarationProvider.Combine(interpolationProvider);
-            
+            // Emit the cache body only in Release. In Debug the body churns on every template-literal edit,
+            // which the EnC runtime rejects ("The assembly update failed") and kills the Hot Reload session.
+            // Consumers gate the runtime call on IsDevelopment, so an empty Debug body is correct anyway.
+            var isReleaseProvider = context.CompilationProvider
+                .Select(static (c, _) => c.Options.OptimizationLevel == OptimizationLevel.Release);
+
+            var combined = methodDeclarationProvider.Combine(interpolationProvider).Combine(isReleaseProvider);
+
             context.RegisterSourceOutput(combined, RegisterThing);
             
 
@@ -64,21 +70,22 @@ namespace MinimalHtml.SourceGenerator
 
         
 
-        private void RegisterThing(SourceProductionContext context, (CacheMethod, ImmutableArray<Interpolation>) source)
+        private void RegisterThing(SourceProductionContext context, ((CacheMethod Method, ImmutableArray<Interpolation> Interpolations) Inner, bool IsRelease) source)
         {
-            var parts = source.Item2.SelectMany(GetParts);
+            var body = source.IsRelease
+                ? string.Join("\n", source.Inner.Interpolations.SelectMany(GetParts)
+                    .Select(str => $$"""
+                            MinimalHtml.TemplateHandler.Precompile("{{str}}", "{{str}}"u8.ToArray());
+                    """))
+                : "";
 
-            var calls = parts
-                .Select((str, i) => $$"""
-                    MinimalHtml.TemplateHandler.Precompile("{{str}}", "{{str}}"u8.ToArray());  
-            """);
             var text = $$"""
-            namespace {{source.Item1.Namespace}};
-            public partial class {{source.Item1.ClassName}}
+            namespace {{source.Inner.Method.Namespace}};
+            public partial class {{source.Inner.Method.ClassName}}
             {
-                public static partial void {{source.Item1.MethodName}}()
+                public static partial void {{source.Inner.Method.MethodName}}()
                 {
-            {{string.Join("\n", calls)}}
+            {{body}}
                 }
             }
             """;

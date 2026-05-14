@@ -10,6 +10,8 @@
         <PublishAot>true</PublishAot>
         <!-- Startup hooks are disabled when publishing aot/trimmed but are required for Hot Reload to work so enabling it here -->
         <StartupHookSupport Condition="'$(Configuration)' == 'Debug'">true</StartupHookSupport>
+        <!-- RDG is enabled by PublishAot=true and is notoriously incompatible with Hot Reload; switch it off for Debug. -->
+        <EnableRequestDelegateGenerator Condition="'$(Configuration)' == 'Debug'">false</EnableRequestDelegateGenerator>
         <!--<LangVersion>preview</LangVersion>-->
     </PropertyGroup>
     
