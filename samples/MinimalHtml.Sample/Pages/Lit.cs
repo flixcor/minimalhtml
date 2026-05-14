@@ -1,6 +1,6 @@
 ﻿using MinimalHtml.Sample.Filters;
 using MinimalHtml.Sample.Layouts;
-using MinimalHtml.Lit;
+using MinimalHtml.Vite.Lit;
 
 namespace MinimalHtml.Sample.Pages;
 
@@ -18,7 +18,7 @@ public static class Lit
     {s_myElement}
     """);
     
-    private static readonly Template s_head = static page => page.Html($$"""{{Assets.Script(/*vite*/"lit-hydrate.ts")}}{{Assets.Script(/*vite*/"Pages/Lit.ts")}}""");
+    private static readonly Template s_head = static page => page.Html($$"""{{Assets.Script(/*vite*/"virtual:minimal-html/lit-hydrate")}}{{Assets.Script(/*vite*/"Pages/Lit.ts")}}""");
         
     public static void Map(IEndpointRouteBuilder builder) => builder
         .MapGet("/Lit", static () => Results.WithLayout(s_body, s_head))

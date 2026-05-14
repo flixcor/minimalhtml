@@ -57,8 +57,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\experimental\MinimalForms\MinimalForms.csproj" />
-      <ProjectReference Include="..\..\experimental\MinimalHtml.Lit\MinimalHtml.Lit.csproj" />
       <ProjectReference Include="..\..\src\MinimalHtml.Vite\MinimalHtml.Vite.csproj" />
+      <ProjectReference Include="..\..\src\MinimalHtml.Vite.Lit\MinimalHtml.Vite.Lit.csproj" />
       <ProjectReference Include="..\..\experimental\MinimalHtml.CssModules\MinimalHtml.CssModules.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\..\experimental\MinimalForms.ModelGenerator\MinimalForms.ModelGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>

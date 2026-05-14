@@ -11,10 +11,7 @@ export default defineConfig(() => ({
         writeFileSync(cssFileName + ".json", JSON.stringify(json)),
     },
   },
-  ssr: {
-    noExternal: true,
-  },
-  plugins: [minimalHtml()],
+  plugins: [minimalHtml({ lit: {} })],
   build: {
     outDir: "wwwroot",
     assetsInlineLimit: -1,
@@ -22,11 +19,9 @@ export default defineConfig(() => ({
       output: {
         format: "esm" as const,
         entryFileNames: (c) =>
-          c.name.startsWith("server")
-            ? "[name].js"
-            : c.name.startsWith("serviceworker")
-              ? "[name]-[hash].js"
-              : "assets/[name]-[hash].js",
+          c.name.startsWith("serviceworker")
+            ? "[name]-[hash].js"
+            : "assets/[name]-[hash].js",
       },
     },
   },

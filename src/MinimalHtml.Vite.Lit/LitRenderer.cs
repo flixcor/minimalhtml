@@ -1,18 +1,12 @@
-﻿using System.IO.Pipelines;
+using System.IO.Pipelines;
 using System.Text.Unicode;
 using Jint;
 using Jint.Native;
 
-namespace MinimalHtml.Lit;
+namespace MinimalHtml.Vite.Lit;
 
 public class LitRenderer
 {
-    public static void Setup(LitOptions options)
-    {
-        Default = options;
-    }
-    public static LitOptions? Default { get; internal set; }
-
     private readonly Engine _engine;
 
     public LitRenderer(LitOptions options)
