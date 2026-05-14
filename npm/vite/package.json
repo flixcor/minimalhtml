@@ -1,6 +1,6 @@
 {
   "name": "@minimalhtml/vite",
-  "version": "0.0.1-alpha.9",
+  "version": "0.0.1-alpha.10",
   "description": "Vite plugin for MinimalHtml: marker-based asset discovery, manifest + importmap emission",
   "type": "module",
   "main": "./dist/index.js",

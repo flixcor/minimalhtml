@@ -1,9 +1,9 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace MinimalHtml.CssModules
+namespace MinimalHtml.Vite.SourceGenerator
 {
     [Generator]
     public class CssGenerator : IIncrementalGenerator
@@ -51,9 +51,9 @@ namespace MinimalHtml.CssModules
             public partial class {{classOnly}}
             {
                 {{(classes.Count == 0 ? "" : $$"""
-            
 
-                public static class Classes 
+
+                public static class Classes
                 {
                     {{string.Join("\n        ", classes.Select(kv => $"""public static ReadOnlySpan<byte> {kv.Key}() => "{kv.Value}"u8;"""))}}
                 }

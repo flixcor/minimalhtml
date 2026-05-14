@@ -9,5 +9,18 @@
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
-    
+
+    <ItemGroup>
+        <!-- Reference the source generator as an Analyzer so it applies to MinimalHtml.Vite
+             itself AND propagates to consumers via ProjectReference (dev) -->
+        <ProjectReference Include="..\MinimalHtml.Vite.SourceGenerator\MinimalHtml.Vite.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" Private="true" />
+    </ItemGroup>
+
+    <!-- Pack the analyzer assembly into analyzers/dotnet/cs/ for NuGet consumers -->
+    <Target Name="IncludeSourceGeneratorInPackage" AfterTargets="ResolveProjectReferences">
+        <ItemGroup>
+            <None Include="@(Analyzer)" Condition="$([System.String]::Copy('%(Analyzer.Identity)').Contains('MinimalHtml.Vite.SourceGenerator'))" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+        </ItemGroup>
+    </Target>
+
 </Project>

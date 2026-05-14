@@ -1,17 +1,12 @@
 import { defineConfig } from "vite";
-import { writeFileSync } from "node:fs";
 import minimalHtml from "@minimalhtml/vite";
 
 export default defineConfig(() => ({
   appType: "custom",
   css: {
     transformer: "postcss",
-    modules: {
-      getJSON: (cssFileName, json) =>
-        writeFileSync(cssFileName + ".json", JSON.stringify(json)),
-    },
   },
-  plugins: [minimalHtml({ lit: {} })],
+  plugins: [minimalHtml({ lit: {}, cssModules: true })],
   build: {
     outDir: "wwwroot",
     assetsInlineLimit: -1,

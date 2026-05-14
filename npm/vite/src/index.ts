@@ -1,6 +1,6 @@
 import type { Plugin } from "vite";
 import { glob } from "tinyglobby";
-import { readFile, stat } from "node:fs/promises";
+import { readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import manifestSRI from "vite-plugin-manifest-sri";
 
@@ -46,6 +46,13 @@ export interface MinimalHtmlOptions {
   integrityManifestPaths?: string[];
   /** Enable Lit SSR + hydration support. Pass `{}` to enable with defaults. */
   lit?: LitPluginOptions;
+  /** Enable CSS Modules support: writes `<file>.module.css.json` next to each `.module.css` so the MinimalHtml.Vite source generator can emit a `Classes` helper. Pass `true` or `{}` to enable. */
+  cssModules?: boolean | CssModulesPluginOptions;
+}
+
+export interface CssModulesPluginOptions {
+  /** Disable CSS modules sidecar even when this object is supplied. Default: true. */
+  enabled?: boolean;
 }
 
 const DEFAULT_SCAN = ["./**/*.cs"];
@@ -74,6 +81,12 @@ export default function minimalHtml(
     `\\/\\*\\s*${escapeRegex(marker)}\\s*\\*\\/\\s*"([^"]+)"`,
     "g",
   );
+
+  const cssModulesEnabled =
+    options.cssModules === true ||
+    (!!options.cssModules &&
+      typeof options.cssModules === "object" &&
+      options.cssModules.enabled !== false);
 
   const litEnabled = !!options.lit && options.lit.enabled !== false;
   const litCfg = {
@@ -128,12 +141,24 @@ export default function minimalHtml(
         },
       };
 
+      const cssConfig = cssModulesEnabled
+        ? {
+            css: {
+              modules: {
+                getJSON: (cssFileName: string, json: Record<string, string>) =>
+                  writeFile(cssFileName + ".json", JSON.stringify(json)),
+              },
+            },
+          }
+        : {};
+
       if (!litEnabled) {
-        return { build: clientBuild };
+        return { build: clientBuild, ...cssConfig };
       }
 
       const serverEntryName = litCfg.serverFile.replace(/\.[^./\\]+$/, "");
       return {
+        ...cssConfig,
         environments: {
           client: { build: clientBuild },
           ssr: {
@@ -239,13 +264,15 @@ async function discoverInputs({
   );
   const distinct = [...new Set([...matches.flat(), ...explicit])];
   const resolved = await Promise.all(
-    distinct.map((p) =>
-      p.startsWith("virtual:")
-        ? Promise.resolve(p)
-        : stat(p)
-            .then(() => p)
-            .catch(() => null),
-    ),
+    distinct.map((p) => {
+      if (p.startsWith("virtual:")) return Promise.resolve(p);
+      // Markers like `/Pages/Foo.ts` are project-relative (the C# side trims
+      // the leading slash too) — strip it so `stat` doesn't look at fs root.
+      const localPath = p.startsWith("/") ? p.slice(1) : p;
+      return stat(localPath)
+        .then(() => localPath)
+        .catch(() => null);
+    }),
   );
   return resolved.filter((p): p is string => p !== null);
 }

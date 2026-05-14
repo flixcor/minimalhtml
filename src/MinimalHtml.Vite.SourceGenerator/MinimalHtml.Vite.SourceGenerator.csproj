@@ -1,22 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <!-- 👇 Source generators must target netstandard 2.0 -->
+        <!-- Source generators must target netstandard 2.0 -->
         <TargetFramework>netstandard2.0</TargetFramework>
-        <!-- 👇 We don't want to reference the source generator dll directly in consuming projects -->
+        <!-- Don't pack this project on its own; it ships inside MinimalHtml.Vite -->
         <IncludeBuildOutput>false</IncludeBuildOutput>
-        <!-- 👇 New project, why not! -->
         <Nullable>enable</Nullable>
         <ImplicitUsings>true</ImplicitUsings>
         <LangVersion>latest</LangVersion>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-        <!-- Generates a package at build -->
+        <IsPackable>false</IsPackable>
+        <IsAotCompatible>false</IsAotCompatible>
     </PropertyGroup>
 
-    <!-- This ensures the library will be packaged as a source generator when we use `dotnet pack` -->
-    <ItemGroup>
-        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Common" />
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" GeneratePathProperty="true" PrivateAssets="all" />
@@ -30,7 +26,6 @@
         <PackageReference Include="System.Text.Json" GeneratePathProperty="true" PrivateAssets="all" />
         <PackageReference Include="System.Threading.Tasks.Extensions" GeneratePathProperty="true" PrivateAssets="all" />
     </ItemGroup>
-
 
     <PropertyGroup>
         <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
@@ -50,4 +45,5 @@
             <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Threading_Tasks_Extensions)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
         </ItemGroup>
     </Target>
+
 </Project>
