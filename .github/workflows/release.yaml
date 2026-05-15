@@ -21,7 +21,20 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.x.x
-    
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10.4.1
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+        registry-url: https://registry.npmjs.org/
+        cache: pnpm
+        cache-dependency-path: npm/vite/pnpm-lock.yaml
+
     - name: Restore dependencies
       run: dotnet restore
 
@@ -38,6 +51,7 @@ jobs:
         sed -i "s|\(<PackageVersion Include=\"MinimalHtml\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version-without-v }}\2|" Directory.Packages.props
         sed -i "s|\(<PackageVersion Include=\"MinimalHtml.AspNetCore\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version-without-v }}\2|" Directory.Packages.props
         sed -i "s|\(<PackageVersion Include=\"MinimalHtml.Vite\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version-without-v }}\2|" Directory.Packages.props
+        sed -i "s|\(<PackageVersion Include=\"MinimalHtml.Vite.Lit\" Version=\"\)[^\"]*\(\" />\)|\1${{ steps.get_version.outputs.version-without-v }}\2|" Directory.Packages.props
 
     - name: Pack MinimalHtml (ci)
       run: dotnet pack src/MinimalHtml --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }}
@@ -51,8 +65,29 @@ jobs:
     - name: Pack MinimalHtml.Vite (ci)
       run: dotnet pack src/MinimalHtml.Vite --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }}
 
+    - name: Pack MinimalHtml.Vite.Lit (ci)
+      run: dotnet pack src/MinimalHtml.Vite.Lit --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }}
+
     - name: Publish Package (ci)
       run: |
         for file in ./artifacts/ci/*.nupkg; do
           dotnet nuget push "$file" -k ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
         done
+
+    - name: Set @minimalhtml/vite version
+      working-directory: npm/vite
+      run: npm pkg set version=${{ steps.get_version.outputs.version-without-v }}
+
+    - name: Install @minimalhtml/vite dependencies
+      working-directory: npm/vite
+      run: pnpm install --frozen-lockfile
+
+    - name: Build @minimalhtml/vite
+      working-directory: npm/vite
+      run: pnpm build
+
+    - name: Publish @minimalhtml/vite
+      working-directory: npm/vite
+      run: pnpm publish --access public --no-git-checks
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
