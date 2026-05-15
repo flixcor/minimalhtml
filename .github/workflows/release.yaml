@@ -99,4 +99,4 @@ jobs:
 
     - name: Publish @minimalhtml/vite
       working-directory: npm/vite
-      run: pnpm publish --access public --no-git-checks
+      run: pnpm publish --tag latest
