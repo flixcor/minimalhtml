@@ -72,10 +72,17 @@ jobs:
     - name: Pack MinimalHtml.Vite.Lit (ci)
       run: dotnet pack src/MinimalHtml.Vite.Lit --output ./artifacts/ci --verbosity normal -p:Version=${{ steps.get_version.outputs.version-without-v }}
 
+ # Get a short-lived NuGet API key
+    - name: NuGet login (OIDC → temp API key)
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ secrets.NUGET_USER }}
+
     - name: Publish Package (ci)
       run: |
         for file in ./artifacts/ci/*.nupkg; do
-          dotnet nuget push "$file" -k ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+          dotnet nuget push "$file" --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
         done
 
     - name: Set @minimalhtml/vite version
