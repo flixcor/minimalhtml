@@ -14,10 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Jint" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MinimalHtml.Vite\MinimalHtml.Vite.csproj" />
+    <PackageReference Include="MinimalHtml.Vite" />
   </ItemGroup>
 
 </Project>

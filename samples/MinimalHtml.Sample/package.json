@@ -12,7 +12,7 @@
     "build:only": "vite build"
   },
   "devDependencies": {
-    "@minimalhtml/vite": "file:../../npm/vite",
+    "@minimalhtml/vite": "0.0.1-alpha.11",
     "@types/node": "^25.6.0",
     "lightningcss-jit-props": "0.0.1-alpha.8",
     "postcss-custom-media": "^11.0.5",
