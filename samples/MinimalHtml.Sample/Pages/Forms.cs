@@ -15,9 +15,7 @@ public class Forms
         var group = builder.MapGroup("/forms");
 
         group.MapGet("/", static () => Results
-            .WithLayout(static page => Render(page, null), Assets.Style(/*vite*/"/Pages/Forms.css")))
-            .WithSwr()
-            .CacheOutput();
+            .WithLayout(static page => Render(page, null), Assets.Style(/*vite*/"/Pages/Forms.css")));
 
         group.MapPost("/", static (FormModel starship) => Results.WithLayout(Render, starship, Assets.Style(/*vite*/"/Pages/Forms.css")))
             .DisableAntiforgery()

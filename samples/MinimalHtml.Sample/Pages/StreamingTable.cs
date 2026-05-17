@@ -49,6 +49,5 @@ public static class StreamingTable
     
     
     public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/streaming", static (FakeDatabase db) => 
-        Results.WithLayout(Page, db.GetRows()))
-        .WithSwr();
+        Results.WithLayout(Page, db.GetRows()));
 }

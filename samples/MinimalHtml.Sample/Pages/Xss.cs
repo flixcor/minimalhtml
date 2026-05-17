@@ -11,7 +11,5 @@ public class Xss
          <h2>Cross site scripting (XSS)</h2>
          <p>Strings are escaped by default, so this unsafe text is not interpreted as html:</p>
          <p><code>{UnsafeText}</code></p>
-         """)))
-        .WithSwr()
-        .CacheOutput();
+         """)));
 }

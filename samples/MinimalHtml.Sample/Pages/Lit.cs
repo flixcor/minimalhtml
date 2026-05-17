@@ -21,6 +21,5 @@ public static class Lit
     private static readonly Template s_head = static page => page.Html($$"""{{Assets.Script(/*vite*/"virtual:minimal-html/lit-hydrate")}}{{Assets.Script(/*vite*/"Pages/Lit.ts")}}""");
         
     public static void Map(IEndpointRouteBuilder builder) => builder
-        .MapGet("/Lit", static () => Results.WithLayout(s_body, s_head))
-        .WithSwr();
+        .MapGet("/Lit", static () => Results.WithLayout(s_body, s_head));
 }
