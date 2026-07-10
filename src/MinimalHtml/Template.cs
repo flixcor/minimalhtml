@@ -9,7 +9,7 @@ namespace MinimalHtml;
 /// <param name="writer"></param>
 /// <param name="context"></param>
 /// <returns></returns>
-public delegate ValueTask<FlushResult> Template<in T>(PipeWriter writer, T context);
+public delegate ValueTask<FlushResult> Template<in T>(PipeWriter writer, T context) where T : allows ref struct;
 
 /// <summary>
 /// A template for rendering HTML. A template is a delegate that takes a <see cref="PipeWriter"/> and writes HTML to the <see cref="PipeWriter"/>. The template can be asynchronous, allowing for streaming of data as it becomes available.
