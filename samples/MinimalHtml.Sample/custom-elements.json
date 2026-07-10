@@ -1,0 +1,1052 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "serviceworker.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "Components/ActiveSearch.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ActiveSearch",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#formController",
+              "privacy": "private",
+              "default": "new AbortController()"
+            },
+            {
+              "kind": "field",
+              "name": "#slotController",
+              "privacy": "private",
+              "default": "new AbortController()"
+            },
+            {
+              "kind": "method",
+              "name": "slotchange"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "active-search",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "active-search",
+          "declaration": {
+            "name": "ActiveSearch",
+            "module": "Components/ActiveSearch.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "Components/FormDependency.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FormDependency",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#targetElement",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#value",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "#currentValue",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#name",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "#operator",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#form",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#numeric",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#whenTrue",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#whenFalse",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#elementsSetup",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "handleChange"
+            },
+            {
+              "kind": "method",
+              "name": "parseValue",
+              "parameters": [
+                {
+                  "name": "value"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setupElements"
+            },
+            {
+              "kind": "method",
+              "name": "getValue",
+              "parameters": [
+                {
+                  "name": "element"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "data-is-client"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "form-dependency",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "form-dependency",
+          "declaration": {
+            "name": "FormDependency",
+            "module": "Components/FormDependency.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "Components/TabList.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TabList",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#destroy",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#anchors",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLAnchorElement[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#panels",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#current",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "init"
+            },
+            {
+              "kind": "method",
+              "name": "click",
+              "parameters": [
+                {
+                  "name": "e"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "keydown",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "activate",
+              "parameters": [
+                {
+                  "name": "i",
+                  "default": "0"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "loopElements"
+            },
+            {
+              "kind": "method",
+              "name": "isValidIndex",
+              "parameters": [
+                {
+                  "name": "i",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "text": "i is number"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "tab-list",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "tab-list",
+          "declaration": {
+            "name": "TabList",
+            "module": "Components/TabList.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "Components/optimistic-update.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "OptimisticUpdate",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#abortController",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleSubmit",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#getClonedTemplate",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#fillTemplate",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "template",
+                  "type": {
+                    "text": "DocumentFragment"
+                  }
+                },
+                {
+                  "name": "formData",
+                  "type": {
+                    "text": "FormData"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#addTemplateToDOM",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "clone",
+                  "type": {
+                    "text": "DocumentFragment"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'replace-children' | 'replace' | 'append' | 'prepend' | 'before' | 'after'"
+              },
+              "description": "The mode of how the template should be added to the DOM. Default is 'replace'.",
+              "name": "mode"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of the target element where the template should be added. Default is the optimistic-update element itself.",
+              "name": "target"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of the template to use. Default is the first template child of the optimistic-update element.",
+              "name": "template"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "optimistic-update",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "optimistic-update",
+          "declaration": {
+            "name": "OptimisticUpdate",
+            "module": "Components/optimistic-update.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "Components/recurring-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "AddGroupButton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#controller",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#parent",
+              "privacy": "private",
+              "type": {
+                "text": "RecurringGroups | undefined"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "add-group-button",
+          "customElement": true
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "RemoveGroupButton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#controller",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | undefined"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeGroup",
+              "privacy": "private"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "remove-group-button",
+          "customElement": true
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "RecurringGroups",
+          "members": [
+            {
+              "kind": "field",
+              "name": "groups",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "clone",
+              "type": {
+                "text": "Element | DocumentFragment | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "namePrefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "idPrefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "addButton",
+              "type": {
+                "text": "AddGroupButton | undefined"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "initialize",
+              "parameters": [
+                {
+                  "name": "addGroupButton",
+                  "type": {
+                    "text": "AddGroupButton"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "addGroup"
+            },
+            {
+              "kind": "method",
+              "name": "removeGroup",
+              "parameters": [
+                {
+                  "name": "group",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleNewIndex",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "Node"
+                  }
+                },
+                {
+                  "name": "i",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleVisibility"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "recurring-groups",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "recurring-groups",
+          "declaration": {
+            "name": "RecurringGroups",
+            "module": "Components/recurring-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "remove-group-button",
+          "declaration": {
+            "name": "RemoveGroupButton",
+            "module": "Components/recurring-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "add-group-button",
+          "declaration": {
+            "name": "AddGroupButton",
+            "module": "Components/recurring-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "Layouts/DefaultLayout.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "anonymous_0",
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "version-number",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "version-number",
+          "declaration": {
+            "name": "anonymous_0",
+            "module": "Layouts/DefaultLayout.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "Pages/Lit.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "An example element.",
+          "name": "MyElement",
+          "cssParts": [
+            {
+              "description": "The button",
+              "name": "button"
+            }
+          ],
+          "slots": [
+            {
+              "description": "This element has a slot",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "docsHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Click on the Vite and Lit logos to learn more'",
+              "description": "Copy for the read the docs hint."
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The number of times the button has been clicked."
+            },
+            {
+              "kind": "method",
+              "name": "render"
+            },
+            {
+              "kind": "method",
+              "name": "_onClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "static": true,
+              "default": "css` :host { max-width: 1280px; margin: 0 auto; padding: 2rem; text-align: center; } .logo { height: 6em; padding: 1.5em; will-change: filter; transition: filter 300ms; } .logo:hover { filter: drop-shadow(0 0 2em #646cffaa); } .logo.lit:hover { filter: drop-shadow(0 0 2em #325cffaa); } .card { padding: 2em; } .read-the-docs { color: #888; } ::slotted(h1) { font-size: 3.2em; line-height: 1.1; } a { font-weight: 500; color: #646cff; text-decoration: inherit; } a:hover { color: #535bf2; } button { border-radius: 8px; border: 1px solid transparent; padding: 0.6em 1.2em; font-size: 1em; font-weight: 500; font-family: inherit; background-color: #1a1a1a; cursor: pointer; transition: border-color 0.25s; } button:hover { border-color: #646cff; } button:focus, button:focus-visible { outline: 4px auto -webkit-focus-ring-color; } @media (prefers-color-scheme: light) { a:hover { color: #747bff; } button { background-color: #f9f9f9; } } `"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MyElement",
+          "declaration": {
+            "name": "MyElement",
+            "module": "Pages/Lit.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "wwwroot/serviceworker-DTKgsZjK.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/server/server.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "e",
+          "type": {
+            "text": "array"
+          },
+          "default": "[]"
+        },
+        {
+          "kind": "variable",
+          "name": "t"
+        },
+        {
+          "kind": "variable",
+          "name": "H",
+          "default": "class { get tagName() { return this.element.tagName; } get _$AU() { return this._$AM._$AU; } constructor(t, i, s, e, h) { this.type = 1, this._$AH = A, this._$AN = void 0, this.element = t, this.name = i, this._$AM = e, this.options = h, s.length > 2 || \"\" !== s[0] || \"\" !== s[1] ? (this._$AH = Array(s.length - 1).fill(/* @__PURE__ */ new String()), this.strings = s) : this._$AH = A; } _$AI(t, i = this, s, e) { const h = this.strings; let o = !1; if (void 0 === h) t = M$1(this, t, i, 0), o = !a$1(t) || t !== this._$AH && t !== E, o && (this._$AH = t); else { const e = t; let n, r; for (t = h[0], n = 0; n < h.length - 1; n++) r = M$1(this, e[s + n], i, n), r === E && (r = this._$AH[n]), o ||= !a$1(r) || r !== this._$AH[n], r === A ? t = A : t !== A && (t += (r ?? \"\") + h[n + 1]), this._$AH[n] = r; } o && !e && this.j(t); } j(t) { t === A ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, t ?? \"\"); } }"
+        },
+        {
+          "kind": "function",
+          "name": "e",
+          "parameters": [
+            {
+              "name": "t"
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "code"
+        },
+        {
+          "kind": "variable",
+          "name": "name"
+        },
+        {
+          "kind": "variable",
+          "name": "publicId"
+        },
+        {
+          "kind": "variable",
+          "name": "systemId"
+        },
+        {
+          "kind": "function",
+          "name": "t",
+          "parameters": [
+            {
+              "name": "t"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "renderHtml",
+          "parameters": [
+            {
+              "name": "strings"
+            },
+            {
+              "name": "values"
+            },
+            {
+              "name": "write"
+            },
+            {
+              "name": "flush"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "t",
+          "declaration": {
+            "name": "e",
+            "module": "dist/server/server.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "t",
+          "declaration": {
+            "name": "e",
+            "module": "dist/server/server.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "renderHtml",
+          "declaration": {
+            "name": "renderHtml",
+            "module": "dist/server/server.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "wwwroot/assets/ActiveSearch-Dh-vsXu3.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "t"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "active-search",
+          "declaration": {
+            "name": "t",
+            "module": "wwwroot/assets/ActiveSearch-Dh-vsXu3.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "wwwroot/assets/CssModules.module-D8fibDNK.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "wwwroot/assets/DefaultLayout-C-Ri7rJi.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "anonymous_0",
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "version-number",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "version-number",
+          "declaration": {
+            "name": "anonymous_0",
+            "module": "wwwroot/assets/DefaultLayout-C-Ri7rJi.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "wwwroot/assets/Lit-CqMOhXbV.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "e"
+        },
+        {
+          "kind": "variable",
+          "name": "t"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "e",
+          "declaration": {
+            "name": "t",
+            "module": "/wwwroot/assets/lit-html-BetVcq9t.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "e",
+          "declaration": {
+            "name": "t",
+            "module": "/wwwroot/assets/lit-html-BetVcq9t.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "wwwroot/assets/TabList-B0Y9bQsv.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "e",
+          "default": "class extends HTMLElement{#e;#t=[];#n=[];#r;connectedCallback(){if(this.addEventListener(`click`,this.click),this.addEventListener(`keydown`,this.keydown),this.#e=()=>{this.removeEventListener(`click`,this.click),this.removeEventListener(`keydown`,this.keydown)},document.readyState!==`loading`){this.init();return}document.addEventListener(`DOMContentLoaded`,()=>this.init())}disconnectedCallback(){this.#e?.()}init(){let e=this.querySelector(`:scope > nav`);e instanceof HTMLElement&&(e.role=`tablist`,this.#t=[...e.getElementsByTagName(`a`)],this.#n=[...this.querySelectorAll(`:scope > section`)],this.#r=0,this.loopElements())}click(e){let t=this.#t.indexOf(e.target.closest(`a`));this.isValidIndex(t)&&this.activate(t)}keydown(e){if(e.target instanceof HTMLAnchorElement&&this.#t.includes(e.target)){if(e.key===`ArrowRight`){e.preventDefault(),this.activate(this.#r+1);return}if(e.key===`ArrowLeft`){e.preventDefault(),this.activate(this.#r-1);return}e.key===`ArrowDown`&&(e.preventDefault(),this.#n[this.#r]?.focus())}}activate(e=0){if(e<0?e=this.#t.length-1:e>this.#t.length-1&&(e=0),this.#r===e)return;let t=this.#t[this.#r],n=this.#n[this.#r],r=this.#t[e],i=this.#n[e];t.removeAttribute(`aria-selected`),t.tabIndex=-1,n.hidden=!0,r.ariaSelected=`true`,r.removeAttribute(`tabindex`),i.hidden=!1,document.location.hash=i.id,r.focus(),this.#r=e}loopElements(){document.startViewTransition(()=>new Promise(e=>{for(var t=0;t<this.#t.length;t++){let e=this.#t[t],n=this.#n[t];n.role=`tabpanel`,n.tabIndex=-1,e.role=`tab`,t===0?(e.ariaSelected=`true`,e.removeAttribute(`tabindex`),n.hidden=!1):(e.removeAttribute(`aria-selected`),e.tabIndex=-1,n.hidden=!0)}e()}))}isValidIndex(e){return typeof e==`number`&&!isNaN(e)&&e!==-1}}"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "tab-list",
+          "declaration": {
+            "name": "e",
+            "module": "wwwroot/assets/TabList-B0Y9bQsv.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "wwwroot/assets/lit-html-BDpuC1ef.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "t",
+          "parameters": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "n"
+        },
+        {
+          "kind": "variable",
+          "name": "r"
+        },
+        {
+          "kind": "variable",
+          "name": "i",
+          "default": "`$lit$`"
+        },
+        {
+          "kind": "variable",
+          "name": "x"
+        },
+        {
+          "kind": "variable",
+          "name": "S"
+        },
+        {
+          "kind": "variable",
+          "name": "L",
+          "type": {
+            "text": "object"
+          },
+          "default": "{M:i,P:a,A:o,C:1,L:D,R:A,D:f,V:k,I:j,H:M,N:P,U:F,B:N,F:I}"
+        },
+        {
+          "kind": "function",
+          "name": "z",
+          "parameters": [
+            {
+              "name": "e"
+            },
+            {
+              "name": "t"
+            },
+            {
+              "name": "n"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "i",
+          "declaration": {
+            "name": "L",
+            "module": "wwwroot/assets/lit-html-BDpuC1ef.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "n",
+          "declaration": {
+            "name": "S",
+            "module": "wwwroot/assets/lit-html-BDpuC1ef.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "r",
+          "declaration": {
+            "name": "x",
+            "module": "wwwroot/assets/lit-html-BDpuC1ef.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "t",
+          "declaration": {
+            "name": "z",
+            "module": "wwwroot/assets/lit-html-BDpuC1ef.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "wwwroot/assets/lit-hydrate-tI475PTz.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "wwwroot/assets/recurring-group-CXKcV1Zm.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "n"
+        },
+        {
+          "kind": "variable",
+          "name": "r"
+        },
+        {
+          "kind": "variable",
+          "name": "i"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "recurring-groups",
+          "declaration": {
+            "name": "i",
+            "module": "wwwroot/assets/recurring-group-CXKcV1Zm.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "remove-group-button",
+          "declaration": {
+            "name": "r",
+            "module": "wwwroot/assets/recurring-group-CXKcV1Zm.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "add-group-button",
+          "declaration": {
+            "name": "n",
+            "module": "wwwroot/assets/recurring-group-CXKcV1Zm.js"
+          }
+        }
+      ]
+    }
+  ]
+}

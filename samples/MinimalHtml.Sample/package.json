@@ -11,9 +11,11 @@
     "build:server": "vite build --ssr server.ts --outDir dist/server",
     "preview": "vite preview",
     "build:watch": "vite build --watch --mode development",
-    "build:only": "vite build"
+    "build:only": "vite build",
+    "analyze": "custom-elements-manifest analyze"
   },
   "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.11.0",
     "@types/node": "^25.6.0",
     "lightningcss-jit-props": "0.0.1-alpha.8",
     "postcss-custom-media": "^11.0.5",
@@ -34,5 +36,6 @@
     "onlyBuiltDependencies": [
       "esbuild"
     ]
-  }
+  },
+  "customElements": "custom-elements.json"
 }
