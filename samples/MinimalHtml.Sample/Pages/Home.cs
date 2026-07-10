@@ -9,6 +9,8 @@ public partial class Home
 {
     private static readonly Bogus.DataSets.Lorem s_lorem = new();
 
+    private static readonly Template<int> Paragraphs = (page, _) => page.Html($"""<p>{s_lorem.Paragraphs(4)}</p>""");
+
     private static readonly TabListItem s_firstTab = new()
     {
         Id = "im-the-first-tab",
@@ -65,8 +67,7 @@ public partial class Home
             """)
     };
 
-    private static readonly Template<int> Paragraphs = (page, _) => page.Html($"""<p>{s_lorem.Paragraphs(4)}</p>""");
-
+    
     private static readonly Template Page = (page) => page.Html($"""
       <h2>Progressive enhancement</h2>
       <p>
@@ -79,7 +80,7 @@ public partial class Home
       {TabList.Render(s_fourthTab, s_fifthTab)}
       """);
 
-    private static readonly Template Head = (page) => page.Html($"{Assets.Script:Components/TabList.js}{Assets.Style:Components/TabList.css}");
+    private static readonly Template Head = (page) => page.Html($$"""{{Assets.Script(/*vite*/"Components/TabList.js")}}{{Assets.Style(/*vite*/"Components/TabList.css")}}""");
 
     public static void Map(IEndpointRouteBuilder builder) => builder.MapGet("/", static () => Results.WithLayout(Page, Head));
 }

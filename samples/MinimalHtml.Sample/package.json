@@ -6,9 +6,7 @@
   "packageManager": "pnpm@10.4.1",
   "scripts": {
     "dev": "vite",
-    "build:client": "tsc && vite build",
-    "build": "pnpm run build:client && pnpm run build:server",
-    "build:server": "vite build --ssr server.ts --outDir dist/server",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "build:watch": "vite build --watch --mode development",
     "build:only": "vite build",
@@ -16,12 +14,12 @@
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.11.0",
+    "@minimalhtml/vite": "0.0.1-alpha.11",
     "@types/node": "^25.6.0",
     "lightningcss-jit-props": "0.0.1-alpha.8",
     "postcss-custom-media": "^11.0.5",
     "postcss-jit-props": "^1.0.16",
     "prettier": "^3.8.3",
-    "tinyglobby": "^0.2.16",
     "typescript": "^6.0.3",
     "vite": "^8.0.8"
   },

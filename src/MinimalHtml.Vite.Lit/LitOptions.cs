@@ -1,4 +1,4 @@
-namespace MinimalHtml.Lit;
+namespace MinimalHtml.Vite.Lit;
 
 public class LitOptions
 {

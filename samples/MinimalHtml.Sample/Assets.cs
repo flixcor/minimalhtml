@@ -1,58 +1,62 @@
-﻿using System.IO.Pipelines;
+using System.IO.Pipelines;
+using MinimalHtml.Vite;
 
 namespace MinimalHtml.Sample;
 
 public static class Assets
 {
-    private static GetAsset s_getAsset = MinimalHtml.Assets.Noop;
+    private static GetAsset s_getAsset = MinimalHtml.Vite.Assets.Noop;
 
-    public static void Initialize(WebApplication app) => s_getAsset = app.Services.GetService<GetAsset>() ?? MinimalHtml.Assets.Noop;
+    public static void Initialize(WebApplication app) => s_getAsset = app.Services.GetService<GetAsset>() ?? MinimalHtml.Vite.Assets.Noop;
 
-    public static ValueTask<FlushResult> Script(PipeWriter page, string id) => Script(page, (id, true, false));
+    public static Template Script(string id) => Script((id, true, false));
 
-    public static async ValueTask<FlushResult> Script(PipeWriter page, (string id, bool isModule, bool async) context)
+    public static Template Script((string id, bool isModule, bool async) context) => async page =>
     {
         var asset = await s_getAsset(context.id);
         return await page.Html($"""
          {(asset.Imports, Preload)}
-         <script 
+         <script
              src="{asset.Src}"
              {IfTrueish("integrity", asset.Integrity)}
+             {IfTrueish("crossorigin", asset.Integrity is null ? null : "anonymous")}
              {IfTrueish("type", context.isModule ? "module" : null)}
              {IfTrueish("async", context.async)}
-         ></script>                                                                                             
+         ></script>
          """);
-    }
+    };
 
-    public static readonly Template<string> Style = async (page, id) =>
+    public static Template Style(string id) => async page =>
     {
         var asset = await s_getAsset(id);
         return await page.Html($"""
          {(asset.Imports, Preload)}
-         <link 
+         <link
              href="{asset.Src}"
              rel="stylesheet"
              {IfTrueish("integrity", asset.Integrity)}
-         />                                                                                                 
+             {IfTrueish("crossorigin", asset.Integrity is null ? null : "anonymous")}
+         />
          """);
     };
 
-    public static readonly Template<string> SvgFavIcon = async (page, id) =>
+    public static Template SvgFavIcon(string id) => async page =>
     {
         var asset = await s_getAsset(id);
         return await page.Html($"""
          {(asset.Imports, Preload)}
-         <link 
+         <link
              href="{asset.Src}"
              rel="icon"
-             sizes="any" 
+             sizes="any"
              type="image/svg+xml"
              {IfTrueish("integrity", asset.Integrity)}
-         />                                                                                                 
+             {IfTrueish("crossorigin", asset.Integrity is null ? null : "anonymous")}
+         />
          """);
     };
 
-    public static readonly Template<string> ServiceWorker = async (page, id) =>
+    public static Template ServiceWorker(string id) => async page =>
     {
         var asset = await s_getAsset(id);
         return await page.Html($$"""
@@ -78,9 +82,10 @@ public static class Assets
             "css" => ("preload", "style", ""),
             _ => ("preload", "image", "")
         };
+        var crossorigin = asset.Integrity is null ? cors : "anonymous";
         return page.Html($"""
-            {(asset.Imports, Preload)}
-            <link href="{asset.Src}" rel="{rel}" {IfTrueish("as", loadAs)} {IfTrueish("crossorigin", cors)} />
+            {(asset.Imports, Preload!)}
+            <link href="{asset.Src}" rel="{rel}" {IfTrueish("as", loadAs)} {IfTrueish("integrity", asset.Integrity)} {IfTrueish("crossorigin", crossorigin)} />
             """);
     };
 }

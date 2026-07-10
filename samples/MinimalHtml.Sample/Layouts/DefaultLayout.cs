@@ -1,5 +1,4 @@
 ﻿
-using System.Collections.Immutable;
 using System.IO.Pipelines;
 using MinimalHtml.Sample.Components;
 using MinimalHtml.Vite;
@@ -13,23 +12,6 @@ public readonly struct LayoutProps<T>
     public required Template<string> NavLink { get; init; }
     public required Template ImportMap { get; init; }
     public Template? Head { get; init; }
-}
-
-public readonly struct LayoutProps
-{
-    public required Template Body { get; init; }
-    public required Template<string> NavLink { get; init; }
-    public Template? Head { get; init; }
-    public required Template ImportMap { get; init; }
-
-    public static implicit operator LayoutProps<Template>(LayoutProps value) => new()
-    {
-        Context = value.Body,
-        Body = static (page, template) => template(page),
-        NavLink = value.NavLink,
-        Head = value.Head,
-        ImportMap = value.ImportMap
-    };
 }
 
 public static class DefaultLayout
@@ -63,10 +45,10 @@ public static class DefaultLayout
              <meta name="view-transition" content="same-origin" />
                  <!-- the props -->
              {{context.ImportMap}}
-             {{Assets.SvgFavIcon:img/favicon.svg}}
-             {{(Assets.Script, ("Layouts/DefaultLayout.ts", true, true))}}
-             {{Assets.Style:Layouts/DefaultLayout.css}}
-             {{Assets.ServiceWorker:serviceworker.js}}
+             {{Assets.SvgFavIcon(/*vite*/"img/favicon.svg")}}
+             {{Assets.Script((/*vite*/"Layouts/DefaultLayout.ts", true, true))}}
+             {{Assets.Style(/*vite*/"Layouts/DefaultLayout.css")}}
+             {{Assets.ServiceWorker(/*vite*/"serviceworker.js")}}
              {{context.Head}}
              <script type="speculationrules">
                 {
@@ -130,16 +112,4 @@ public static class DefaultLayout
          </body>
          </html>
          """);
-
-    private static readonly Template<ImmutableDictionary<string, Asset>> ImportMap = (page, importedAssets) => page.Html($$"""
-        <script type="importmap">
-        {
-            "imports": {
-            {{(importedAssets.Select((k, i) => (k.Key, k.Value.Src, i == importedAssets.Count - 1)), ImportMapAsset)}}
-            }
-        }
-        </script>
-        """);
-
-    private static readonly Template<(string key, string value, bool last)> ImportMapAsset = (page, tup) => page.Html($""" "{tup.key}": "{tup.value}"{(tup.last ? "" : ",")} """);
 }

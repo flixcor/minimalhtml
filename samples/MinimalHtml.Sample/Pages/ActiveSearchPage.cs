@@ -60,7 +60,7 @@ public class ActiveSearchPage
 
     private static readonly Template<string?> Page = (page, query) => page.Html($"""
          <h2>Active search</h2>
-         {Assets.Script:Components/ActiveSearch.js}
+         {Assets.Script(/*vite*/"Components/ActiveSearch.js")}
          <active-search>
               <form data-target="#results" data-debounce="500">
                   <fieldset>

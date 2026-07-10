@@ -1,18 +1,12 @@
-﻿using System.IO.Pipelines;
+using System.IO.Pipelines;
 using System.Text.Unicode;
 using Jint;
 using Jint.Native;
 
-namespace MinimalHtml.Lit;
+namespace MinimalHtml.Vite.Lit;
 
-public class LitRenderer
+public class LitRenderer : IDisposable
 {
-    public static void Setup(LitOptions options)
-    {
-        Default = options;
-    }
-    public static LitOptions? Default { get; internal set; }
-
     private readonly Engine _engine;
 
     public LitRenderer(LitOptions options)
@@ -150,4 +144,7 @@ public class LitRenderer
         await _engine.InvokeAsync("renderHtml", literals, values, write, flush);
         return new();
     }
+
+    /// <inheritdoc />
+    public void Dispose() => _engine.Dispose();
 }

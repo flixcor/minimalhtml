@@ -8,7 +8,9 @@ public class AnyOrder
     public static void Map(IEndpointRouteBuilder builder) => builder
         .MapGet("/any-order", static () => Results.WithLayout(Page, Head));
 
-    private static Template Head = (page) => page.Html($"{Assets.Style:/Pages/AnyOrder.css}");
+    private static readonly Template Head = Assets.Style(/*vite*/"/Pages/AnyOrder.css");
+
+    private static readonly Template<Delayed> DelayedTemplate = (page, delayed) => page.Html($"""<a href="#" slot="{delayed.Index}">Took {delayed.Delay} ms</a>""");
 
     private static Template Page = (page) => page.Html($$"""
     <h2>Unordered streaming</h2>
@@ -52,7 +54,6 @@ public class AnyOrder
     {{(Each(Delay(1), Delay(2), Delay(3), Delay(4)), DelayedTemplate)}}
     """);
 
-    private static readonly Template<Delayed> DelayedTemplate = (page, delayed) => page.Html($"""<a href="#" slot="{delayed.Index}">Took {delayed.Delay} ms</a>""");
 
     readonly record struct Delayed(int Index, int Delay);
 

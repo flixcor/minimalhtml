@@ -2,12 +2,11 @@
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Memory;
 using MinimalHtml;
-using MinimalHtml.AspNetCore;
 using MinimalHtml.Sample;
 using MinimalHtml.Sample.Components;
 using MinimalHtml.Sample.Pages;
-using MinimalHtml.Lit;
 using MinimalHtml.Vite;
+using MinimalHtml.Vite.Lit;
 
 #if DEBUG
 // Use the default builder during inner-loop so Hot Reload works
@@ -28,10 +27,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<NavLink>();
 builder.Services.RegisterViteAssets(importmapPath: ".vite/importmap.json");
-LitRenderer.Setup(new LitOptions
-{
-    ServerPath = Path.Combine(AppContext.BaseDirectory, "dist", "server")
-});
+builder.Services.AddViteWatch();
+builder.Services.AddLitRenderer();
 if (!builder.Environment.IsDevelopment())
 {
     builder.Services.AddResponseCompression();
@@ -41,6 +38,7 @@ if (!builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
+app.UseMinimalHtmlVite();
 MinimalHtml.Sample.Assets.Initialize(app);
 
 if (!app.Environment.IsDevelopment())

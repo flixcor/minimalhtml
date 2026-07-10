@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace MinimalHtml.CssModules
+namespace MinimalHtml.Vite.SourceGenerator
 {
     [Generator]
     public class CssGenerator : IIncrementalGenerator
@@ -12,7 +12,7 @@ namespace MinimalHtml.CssModules
         {
             var additionalTexts = context.AdditionalTextsProvider
                 .Where(static f => f.Path.EndsWith(".module.css.json", StringComparison.OrdinalIgnoreCase))
-                .Select(static (f, t) => (f.Path, Text: f.GetText(t).ToString()))
+                .Select(static (f, t) => (f.Path, Text: f.GetText(t)?.ToString() ?? ""))
                 .Collect();
 
             var rootDirectory = context.AnalyzerConfigOptionsProvider
@@ -51,9 +51,9 @@ namespace MinimalHtml.CssModules
             public partial class {{classOnly}}
             {
                 {{(classes.Count == 0 ? "" : $$"""
-            
 
-                public static class Classes 
+
+                public static class Classes
                 {
                     {{string.Join("\n        ", classes.Select(kv => $"""public static ReadOnlySpan<byte> {kv.Key}() => "{kv.Value}"u8;"""))}}
                 }

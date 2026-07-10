@@ -238,6 +238,18 @@ csharp_style_prefer_tuple_swap = true:suggestion
 csharp_style_prefer_primary_constructors = true:suggestion
 
 # Verify settings
+
+# IL2026: Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
+dotnet_diagnostic.IL2026.severity = silent
+
+
+# CS1591: Missing XML comment for publicly visible type or member
+[*.{cs,vb}]
+dotnet_diagnostic.CS1591.severity = none
+
+[*.{cs,vb}]
+dotnet_diagnostic.CA2007.severity = none
+
 [*.{received,verified}.{txt,xml,json}]
 charset = "utf-8-bom"
 end_of_line = lf

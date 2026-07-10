@@ -1,4 +1,4 @@
-﻿namespace MinimalHtml.CssModules
+namespace MinimalHtml.Vite.SourceGenerator
 {
     internal static class Helpers
     {
