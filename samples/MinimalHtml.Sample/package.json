@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "build:watch": "vite build --watch --mode development",
     "build:only": "vite build",
-    "analyze": "custom-elements-manifest analyze"
+    "analyze": "custom-elements-manifest analyze --exclude wwwroot"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.11.0",

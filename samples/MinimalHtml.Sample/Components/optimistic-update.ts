@@ -54,28 +54,31 @@ class OptimisticUpdate extends HTMLElement {
         const mode = this.getAttribute('mode') || 'replace';
         const targetId = this.getAttribute('target');
         const target = (targetId && document.getElementById(targetId)) || this;
-        switch (mode) {
-            case 'replace-children':
-                target.replaceChildren(clone);
-                break;
-            case 'replace':
-                target.replaceWith(clone);
-                break;
-            case 'append':
-                target.append(clone);
-                break;
-            case 'prepend':
-                target.prepend(clone);
-                break;
-            case 'before':
-                target.before(clone);
-                break;
-            case 'after':
-                target.after(clone);
-                break;
-            default:
-                console.warn(`Unknown mode: ${mode}`);
-        }
+        requestAnimationFrame(() => {
+            switch (mode) {
+                case 'replace-children':
+                    target.replaceChildren(clone);
+                    break;
+                case 'replace':
+                    target.replaceWith(clone);
+                    break;
+                case 'append':
+                    target.append(clone);
+                    break;
+                case 'prepend':
+                    target.prepend(clone);
+                    break;
+                case 'before':
+                    target.before(clone);
+                    break;
+                case 'after':
+                    target.after(clone);
+                    break;
+                default:
+                    console.warn(`Unknown mode: ${mode}`);
+            }
+        })
+
     }
 }
 customElements.define('optimistic-update', OptimisticUpdate);

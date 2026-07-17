@@ -27,7 +27,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<NavLink>();
 builder.Services.RegisterViteAssets(importmapPath: ".vite/importmap.json");
-builder.Services.AddViteWatch();
+// builder.Services.AddViteWatch();
 builder.Services.AddLitRenderer();
 if (!builder.Environment.IsDevelopment())
 {
@@ -70,6 +70,7 @@ ActiveSearchPage.Map(app);
 AnyOrder.Map(app);
 StaleWhileRevalidate.Map(app);
 CssModules.Map(app);
+OptimisticUpdates.Map(app);
 MinimalHtml.Sample.Api.Version.Map(app);
 
 app.Run();

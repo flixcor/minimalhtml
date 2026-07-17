@@ -102,6 +102,9 @@ public static class DefaultLayout
                     <li>
                         <a {{context.NavLink:/css-modules}}>CSS modules</a>
                     </li>
+                    <li>
+                        <a {{context.NavLink:/optimistic-updates}}>Optimistic updates</a>
+                    </li>
                 </ul>
             </nav>
          </header>
