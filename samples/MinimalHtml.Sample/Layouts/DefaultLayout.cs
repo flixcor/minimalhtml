@@ -48,7 +48,6 @@ public static class DefaultLayout
              {{Assets.SvgFavIcon(/*vite*/"img/favicon.svg")}}
              {{Assets.Script((/*vite*/"Layouts/DefaultLayout.ts", true, true))}}
              {{Assets.Script((/*vite*/"code-highlight.ts", true, true))}}
-             {{Assets.Style(/*vite*/"code-highlight.css")}}
              {{Assets.Style(/*vite*/"Layouts/DefaultLayout.css")}}
              {{Assets.ServiceWorker(/*vite*/"serviceworker.js")}}
              {{context.Head}}

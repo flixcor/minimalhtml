@@ -79,7 +79,7 @@ public static class Assets
         {
             "js" => ("modulepreload", "", ""),
             "woff2" => ("preload", "font", "anonymous"),
-            "css" => ("preload", "style", ""),
+            "css" => ("stylesheet", "", ""),
             _ => ("preload", "image", "")
         };
         var crossorigin = asset.Integrity is null ? cors : "anonymous";

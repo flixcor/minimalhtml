@@ -7,6 +7,7 @@
 import { createGrammarLoader } from "microlighter/grammar-dependencies.js";
 import { htmlsharpGrammar, patchedHtmlGrammar, csharpGrammar } from "./grammars/htmlsharp";
 import "microlighter/micro-lighter-element.min.js";
+import "microlighter/themes/github.css";
 
 type AnyGrammar = Record<string, any>;
 
