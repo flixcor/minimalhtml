@@ -47,6 +47,8 @@ public static class DefaultLayout
              {{context.ImportMap}}
              {{Assets.SvgFavIcon(/*vite*/"img/favicon.svg")}}
              {{Assets.Script((/*vite*/"Layouts/DefaultLayout.ts", true, true))}}
+             {{Assets.Script((/*vite*/"code-highlight.ts", true, true))}}
+             {{Assets.Style(/*vite*/"code-highlight.css")}}
              {{Assets.Style(/*vite*/"Layouts/DefaultLayout.css")}}
              {{Assets.ServiceWorker(/*vite*/"serviceworker.js")}}
              {{context.Head}}
@@ -61,7 +63,7 @@ public static class DefaultLayout
                 }
                 </script>
          </head>
-         <body>
+         <body data-syntax-theme="github">
          <template shadowrootmode="open">
              <slot name="header"></slot>
              <slot name="main"></slot>

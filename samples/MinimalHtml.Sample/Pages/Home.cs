@@ -68,6 +68,28 @@ public partial class Home
     };
 
     
+    private static readonly Template CodeExample = (page) => page.Html($$""""
+<micro-lighter language="htmlsharp" line-numbers><pre><code class="language-htmlsharp">
+// Method trigger: regular string
+var html = Html("{{"<p>Hello <b>world</b></p>"}}");
+
+// Method trigger: interpolated
+var tmpl = Html($"{{"<h1>{title}</h1>"}}");
+
+// Method trigger: raw interpolated
+var raw = Html($"""{{"""
+
+    <div class="card">
+        <h2>{user.Name}</h2>
+        <p>{user.Email}</p>;
+    </div>;
+
+"""    }}""");
+
+// Marker trigger: verbatim
+/* lang=html */ @"{{"<ul><li>One</li><li>Two</li></ul>"}}";</code></pre></micro-lighter>
+"""");
+
     private static readonly Template Page = (page) => page.Html($"""
       <h2>Progressive enhancement</h2>
       <p>
@@ -78,6 +100,8 @@ public partial class Home
       </p>
       {TabList.Render(s_firstTab, s_secondTab, s_thirdTab)}
       {TabList.Render(s_fourthTab, s_fifthTab)}
+      <h2>Code example</h2>
+      {CodeExample}
       """);
 
     private static readonly Template Head = (page) => page.Html($$"""{{Assets.Script(/*vite*/"Components/TabList.js")}}{{Assets.Style(/*vite*/"Components/TabList.css")}}""");

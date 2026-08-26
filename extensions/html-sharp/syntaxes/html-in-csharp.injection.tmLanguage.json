@@ -213,7 +213,7 @@
     "marker-interp-regular": {
       "name": "meta.embedded.block.html.cs",
       "contentName": "text.html.basic",
-      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\$(?!\\$)\")",
+      "begin": "(?i:(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\$(?!\\$)\"))",
       "beginCaptures": {
         "1": { "name": "comment.block.html-marker.cs" },
         "2": { "name": "punctuation.definition.string.begin.cs" }
@@ -272,7 +272,7 @@
     "marker-interp-verbatim": {
       "name": "meta.embedded.block.html.cs",
       "contentName": "text.html.basic",
-      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?:(?<!\\$)\\$@|(?<!@)@\\$)\")",
+      "begin": "(?i:(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?:(?<!\\$)\\$@|(?<!@)@\\$)\"))",
       "beginCaptures": {
         "1": { "name": "comment.block.html-marker.cs" },
         "2": { "name": "punctuation.definition.string.begin.cs" }
@@ -289,7 +289,7 @@
     "marker-interp-raw-n1": {
       "name": "meta.embedded.block.html.cs",
       "contentName": "text.html.basic",
-      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\$\"{3})(?!\")",
+      "begin": "(?i:(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\$\"{3})(?!\"))",
       "beginCaptures": {
         "1": { "name": "comment.block.html-marker.cs" },
         "2": { "name": "punctuation.definition.string.begin.cs" }
@@ -306,7 +306,7 @@
     "marker-interp-raw-n2": {
       "name": "meta.embedded.block.html.cs",
       "contentName": "text.html.basic",
-      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\${2}\"{3})(?!\")",
+      "begin": "(?i:(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\${2}\"{3})(?!\"))",
       "beginCaptures": {
         "1": { "name": "comment.block.html-marker.cs" },
         "2": { "name": "punctuation.definition.string.begin.cs" }
@@ -323,7 +323,7 @@
     "marker-interp-raw-n3": {
       "name": "meta.embedded.block.html.cs",
       "contentName": "text.html.basic",
-      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\${3}\"{3})(?!\")",
+      "begin": "(?i:(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\\${3}\"{3})(?!\"))",
       "beginCaptures": {
         "1": { "name": "comment.block.html-marker.cs" },
         "2": { "name": "punctuation.definition.string.begin.cs" }
@@ -340,7 +340,7 @@
     "marker-regular": {
       "name": "meta.embedded.block.html.cs",
       "contentName": "text.html.basic",
-      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)(?<!@)\"(?!\"))",
+      "begin": "(?i:(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)(?<!@)\"(?!\")))",
       "beginCaptures": {
         "1": { "name": "comment.block.html-marker.cs" },
         "2": { "name": "punctuation.definition.string.begin.cs" }
@@ -356,7 +356,7 @@
     "marker-verbatim": {
       "name": "meta.embedded.block.html.cs",
       "contentName": "text.html.basic",
-      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)@\")",
+      "begin": "(?i:(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)@\"))",
       "beginCaptures": {
         "1": { "name": "comment.block.html-marker.cs" },
         "2": { "name": "punctuation.definition.string.begin.cs" }
@@ -372,7 +372,7 @@
     "marker-raw3": {
       "name": "meta.embedded.block.html.cs",
       "contentName": "text.html.basic",
-      "begin": "(?i)(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\"{3})(?!\")",
+      "begin": "(?i:(/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/)\\s*((?<!\\$)\"{3})(?!\"))",
       "beginCaptures": {
         "1": { "name": "comment.block.html-marker.cs" },
         "2": { "name": "punctuation.definition.string.begin.cs" }
@@ -386,7 +386,7 @@
       ]
     },
     "marker-multiline": {
-      "begin": "(?i)((?://(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b.*|/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/))\\s*$",
+      "begin": "(?i:((?://(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b.*|/\\*(?:[^*\\n]|\\*(?!/))*?\\blang(?:uage)?\\s*=\\s*html\\b(?:[^*\\n]|\\*(?!/))*?\\*/))\\s*$)",
       "beginCaptures": {
         "1": { "name": "comment.block.html-marker.cs" }
       },
