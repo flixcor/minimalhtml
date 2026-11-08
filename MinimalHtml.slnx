@@ -16,10 +16,10 @@
     <Project Path="test/MinimalForms.Test/MinimalForms.Test.csproj" />
     <Project Path="test/MinimalHtml.Test/MinimalHtml.Test.csproj" />
   </Folder>
+  <Project Path="experimental/MinimalHtml.Vite.Lit/MinimalHtml.Vite.Lit.csproj" />
   <Project Path="src/MinimalHtml.AspNetCore/MinimalHtml.AspNetCore.csproj" />
   <Project Path="src/MinimalHtml.SourceGenerator/MinimalHtml.SourceGenerator.csproj" />
   <Project Path="src/MinimalHtml.Vite/MinimalHtml.Vite.csproj" />
-  <Project Path="src/MinimalHtml.Vite.Lit/MinimalHtml.Vite.Lit.csproj" />
   <Project Path="src/MinimalHtml.Vite.SourceGenerator/MinimalHtml.Vite.SourceGenerator.csproj" />
   <Project Path="src/MinimalHtml/MinimalHtml.csproj" />
 </Solution>

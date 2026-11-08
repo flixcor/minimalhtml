@@ -41,7 +41,6 @@
         <PackageReference Include="Bogus" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
         <PackageReference Include="MinimalHtml.AspNetCore" />
-        <PackageReference Include="MinimalHtml.Vite.Lit" />
         <PackageReference Include="System.IO.Hashing" />
     </ItemGroup>
 
@@ -59,6 +58,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="../../experimental/MinimalHtml.Vite.Lit/MinimalHtml.Vite.Lit.csproj" />
       <ProjectReference Include="..\..\experimental\MinimalForms\MinimalForms.csproj" />
       <ProjectReference Include="..\..\experimental\MinimalForms.ModelGenerator\MinimalForms.ModelGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
