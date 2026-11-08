@@ -18,10 +18,6 @@
 
 
     <ItemGroup>
-      <Content Include="dist\server\**" CopyToOutputDirectory="PreserveNewest" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="wwwroot\.vite\**" />
     </ItemGroup>
     
@@ -58,7 +54,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="../../experimental/MinimalHtml.Vite.Lit/MinimalHtml.Vite.Lit.csproj" />
+      <ProjectReference Include="..\..\src\MinimalHtml.Vite\MinimalHtml.Vite.csproj" />
+      <ProjectReference Include="..\..\src\MinimalHtml.Vite.SourceGenerator\MinimalHtml.Vite.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\..\experimental\MinimalForms\MinimalForms.csproj" />
       <ProjectReference Include="..\..\experimental\MinimalForms.ModelGenerator\MinimalForms.ModelGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>

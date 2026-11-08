@@ -6,7 +6,7 @@ export default defineConfig(() => ({
   css: {
     transformer: "postcss",
   },
-  plugins: [minimalHtml({ lit: {}, cssModules: true })],
+  plugins: [minimalHtml({ cssModules: true })],
   build: {
     outDir: "wwwroot",
     assetsInlineLimit: -1,
