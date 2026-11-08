@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.11.0",
-    "@minimalhtml/vite": "0.0.1-alpha.11",
+    "@minimalhtml/vite": "0.0.1-alpha.12",
     "@types/node": "^26.6.6",
     "postcss-custom-media": "^11.0.6",
     "postcss-jit-props": "^1.0.16",
