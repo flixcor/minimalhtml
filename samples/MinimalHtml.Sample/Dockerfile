@@ -37,6 +37,7 @@ WORKDIR /samples
 COPY ["samples/MinimalHtml.Sample/MinimalHtml.Sample.csproj", "MinimalHtml.Sample/"]
 COPY ["samples/MinimalHtml.Sample/package.json", "MinimalHtml.Sample/"]
 COPY ["samples/MinimalHtml.Sample/pnpm-lock.yaml", "MinimalHtml.Sample/"]
+COPY ["samples/MinimalHtml.Sample/pnpm-workspace.yaml", "MinimalHtml.Sample/"]
 WORKDIR /experimental
 COPY ["experimental/MinimalForms/MinimalForms.csproj", "MinimalForms/"]
 COPY ["experimental/MinimalForms.ModelGenerator/MinimalForms.ModelGenerator.csproj", "MinimalForms.ModelGenerator/"]
