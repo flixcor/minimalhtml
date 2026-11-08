@@ -18,9 +18,17 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-noble-aot AS bu
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     clang zlib1g-dev curl binutils-aarch64-linux-gnu
-RUN curl -sL https://deb.nodesource.com/setup_23.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_26.x | bash
 RUN apt-get -y install nodejs
-RUN corepack enable
+# pnpm 12 ships bin/pnpm.mjs, but Corepack hardcodes bin/pnpm.cjs
+# (nodejs/corepack#775), so installing via the corepack shim fails with MODULE_NOT_FOUND.
+# Install pnpm directly instead. Keep this in sync with "packageManager" in package.json.
+ARG PNPM_VERSION=12.18.0
+RUN npm install -g pnpm@${PNPM_VERSION}
+# With PNPM_HOME set, pnpm's store defaults to /pnpm/store, which is where the
+# buildkit cache is mounted below. Without it, pnpm uses ~/.local/share/pnpm/store
+# and the cache mount is never used.
+ENV PNPM_HOME=/pnpm
 ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
 ARG REVISION=latest
